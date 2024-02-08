@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+# This file is placed in the Public Domain.
+#
+# pylint: disable=C.R
+
+
+"all types json dumps,loads tests"
+
+
+import io
+import os
+import sys
+import traceback
+import types
+
+
+sys.path.insert(0, os.getcwd())
+
+
+from obx import Object, dumps, loads, items
+
+
+name = "obx fuzzer"
+errors = []
+local = locals()
+
+def code():
+    print("code called")
+
+
+def exec(exc):
+    name = str(exc)
+    if "cannot" in name:
+        continue
+    nme = name.split("argument ")[-1].split()[0]
+    try:
+        typ = getattr(types, tpe)
+        o = typ()
+        txt = dumps(o)
+        oo = loads(txt)
+        result.append((typ, oo))
+    except TypeError as ex:
+        exec(ex)
+    obj = getattr(local, nme, None)
+    if obj:
+        
+
+def format(exc):
+    res = ""
+    stream = io.StringIO(
+                         traceback.print_exception(
+                                                   type(exc),
+                                                   exc,
+                                                   exc.__traceback__
+                                                  )
+                        )
+    for line in stream.readlines():
+        res += line + "\n"
+    return res
+
+
+def main():
+    haz = Object()
+    has = []
+    need = []
+    nms = []
+    res = []
+    result = []
+    tps = []
+    for tpe in dir(types):
+       if 'Type' in tpe:
+           if tpe in has:
+               continue
+               tps.append(ex)
+           except Exception as ex:
+               res.append(ex)
+           has.append(tpe)
+    for tpi in tps:
+        nme = str(tpi)
+        if "cannot" in nme:
+            continue
+        nms.append(nme)
+    for nnm in nms:
+        need.append(nnm.split("argument ")[-1].split()[0].strip())
+    print(f"needed: {','.join(sorted(need))}")
+    print(f"acceptable: {','.join(sorted([str(x[0]) for x in result]))}")
+
+if __name__ == '__main__':
+    main()
