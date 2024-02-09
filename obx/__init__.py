@@ -228,3 +228,6 @@ def update(obj, data, empty=True):
 
 def values(obj):
     return obj.__dict__.values()
+
+
+from .default import Default
