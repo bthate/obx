@@ -123,10 +123,10 @@ class TestObject(unittest.TestCase):
         self.assertEqual(len(obj), 0)
 
     def test_module(self):
-        self.assertEqual(Object().__module__, "obx")
+        self.assertEqual(Object().__module__, "obx.objects")
 
     def test_fqn(self):
-        self.assertEqual(fqn(Object()), "obx.Object")
+        self.assertEqual(fqn(Object()), "obx.objects.Object")
 
     def test_repr(self):
         self.assertTrue(update(Object(), {"key": "value"}).__repr__(), {"key": "value"})
