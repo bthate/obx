@@ -31,7 +31,7 @@ def code():
 def exec(exc):
     name = str(exc)
     if "cannot" in name:
-        continue
+        return
     nme = name.split("argument ")[-1].split()[0]
     try:
         typ = getattr(types, tpe)
@@ -42,7 +42,7 @@ def exec(exc):
     except TypeError as ex:
         exec(ex)
     obj = getattr(local, nme, None)
-    if obj:
+    print(obj)
         
 
 def format(exc):
@@ -71,9 +71,7 @@ def main():
        if 'Type' in tpe:
            if tpe in has:
                continue
-               tps.append(ex)
-           except Exception as ex:
-               res.append(ex)
+           tps.append(tpe)
            has.append(tpe)
     for tpi in tps:
         nme = str(tpi)
