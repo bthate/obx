@@ -18,7 +18,8 @@ from .excepts import Error
 def __dir__():
     return (
        'Thread',
-       'launch'
+       'launch',
+       'name'
     )
 
 

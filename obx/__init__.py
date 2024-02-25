@@ -14,7 +14,7 @@ from .repeats import *
 from .threads import *
 
 
-def __dir__():
+def __obx__():
     return (
             'Broker',
             'Client',
@@ -37,27 +37,6 @@ def __dir__():
             'spl',
             'wrap'
      )
-# This file is placed in the Public Domain.
-#
-# pylint: disable=C,R,W0401,W0622,W0614,E0402,E0603
-
-
-"""objects library
-
-
-OBX provides an obx namespace that allows for easy json save//load
-to/from disk of objects. It provides an "clean namespace" Object class
-that only has dunder methods, so the namespace is not cluttered with
-method names. This makes storing and reading to/from json possible.
-
-    >>> from obx import Object, dumps, loads
-    >>> o = Object()
-    >>> o.a = "b"
-    >>> txt = dumps(o)
-    >>> loads(txt)
-    {"a": "b"}
-
-OBX is Public Domain."""
 
 
 from .default import *
@@ -87,6 +66,7 @@ def __dir__():
         'last',
         'load',
         'loads',
+        'name',
         'read',
         'search',
         'spl',
@@ -94,7 +74,7 @@ def __dir__():
         'update',
         'values',
         'write'
-     )
+     ) + __obx__()
 
 
 __all__ = __dir__()
