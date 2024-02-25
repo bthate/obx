@@ -1,0 +1,3 @@
+grep -R "print(" obx
+grep -R "__import__" obx
+grep -R sys obx
