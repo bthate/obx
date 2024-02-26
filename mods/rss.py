@@ -137,6 +137,8 @@ class Parser(Object):
         try:
             index1 = line.index(f'<{item}>') + len(item) + 2
             index2 = line.index(f'</{item}>')
+            if not index2:
+                index2 = line.index("/>", index1)
             lne = line[index1:index2]
             if 'CDATA' in lne:
                 lne = lne.replace('![CDATA[', '')
@@ -145,6 +147,7 @@ class Parser(Object):
         except ValueError:
             lne = None
         return lne
+
 
     @staticmethod
     def parse(txt, item='title,link'):
@@ -166,13 +169,9 @@ class OPML(Parser):
         try:
             index1 = line.index(f"{item}") + len(item) + 2
             sub1 = line[index1:]
-            lne = sub1.split('" ')[0][:-3]
+            lne = sub1.split('" ')[0]
         except ValueError:
             pass
-        if 'CDATA' in lne:
-            lne = lne.replace('![CDATA[', '')
-            lne = lne.replace(']]', '')
-            lne = lne[1:-1]
         return lne
 
     @staticmethod
@@ -180,7 +179,9 @@ class OPML(Parser):
         result = []
         for line in txt.split("<outline "):
             line = line.strip()
-            line = line[2:]
+            if not line.endswith("/>"):
+                continue
+            print(line)
             obj = Object()
             for itm in item.split(","):
                 lne = OPML.getitem(line, itm)
@@ -271,7 +272,7 @@ def nme(event):
 def opm(event):
     result = OPML.parse(TXT)
     for obj in result:
-        event.reply(f"{obj.title} {obj.xmlUrl}")
+        event.reply(fmt(obj))
 
 
 def rem(event):
