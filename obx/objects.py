@@ -11,21 +11,22 @@ import json
 
 def __dir__():
     return (
-        "Object",
-        "construct",
-        "dump",
-        "dumps",
-        "edit",
-        "fmt",
-        "fqn",
-        "items",
-        "keys",
-        "load",
-        "loads",
-        "search",
+        'Default',
+        'Object',
+        'construct',
+        'dump',
+        'dumps',
+        'edit',
+        'fmt',
+        'fqn',
+        'items',
+        'keys',
+        'load',
+        'loads',
+        'search',
         'spl',
-        "update",
-        "values",
+        'update',
+        'values'
     )
 
 
@@ -48,6 +49,18 @@ class Object:
 
     def __str__(self):
         return str(self.__dict__)
+
+
+class Default(Object):
+
+    __slots__ = ("__default__",)
+
+    def __init__(self):
+        Object.__init__(self)
+        self.__default__ = ""
+
+    def __getattr__(self, key):
+        return self.__dict__.get(key, self.__default__)
 
 
 def construct(obj, *args, **kwargs):
@@ -244,3 +257,4 @@ def spl(txt):
     except (TypeError, ValueError):
         res = txt
     return [x for x in res if x]
+

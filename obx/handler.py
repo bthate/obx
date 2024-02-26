@@ -13,8 +13,7 @@ import time
 import _thread
 
 
-from .default import Default
-from .objects import Object, spl
+from .objects import Default, Object, spl
 from .persist import Persist
 from .brokers import Broker
 from .excepts import Error

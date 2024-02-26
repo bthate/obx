@@ -39,9 +39,8 @@ def __obx__():
      )
 
 
-from .default import *
-from .locates import *
 from .objects import *
+from .locates import *
 from .persist import *
 from .workdir import *
 

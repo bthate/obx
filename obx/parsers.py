@@ -12,7 +12,7 @@ import re
 import time as ttime
 
 
-from .default import Default
+from .objects import Default
 
 
 def __dir__():

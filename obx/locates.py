@@ -10,8 +10,7 @@ import os
 import time
 
 
-from .default import Default
-from .objects import fqn, search, update
+from .objects import Default, fqn, search, update
 from .persist import fetch, long, strip
 from .workdir import store
 

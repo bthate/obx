@@ -19,7 +19,7 @@ from urllib.parse import quote_plus, urlencode
 
 
 from obx import Broker, Default, Object, Repeater
-from obx import find, fmt, find, fntime, launch, laps, last, update
+from obx import find, fmt, find, fntime, launch, laps, last, sync, update
 
 
 
