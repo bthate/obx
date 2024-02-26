@@ -7,10 +7,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "obx"
-description = "objects library"
-version = "1"
+description = "program your own commands"
+version = "2"
 authors = [
-    {name = "Bart Thate",email = "bthate@dds.nl"},
+    {name = "Bart Thate",email = "objx@proton.me"},
 ]
 readme = "README.rst"
 license = {text="Public Domain"}
