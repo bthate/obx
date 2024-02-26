@@ -10,7 +10,7 @@ name = "obx"
 description = "program your own commands"
 version = "2"
 authors = [
-    {name = "Bart Thate",email = "objx@proton.me"},
+    {name = "Bart Thate",email = "bthate@dds.nl"},
 ]
 readme = "README.rst"
 license = {text="Public Domain"}
