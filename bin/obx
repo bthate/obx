@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # This file is placed in the Public Domain.
 #
-# pylint: disable=C,R,W0212,E0402
+# pylint: disable=C0413
 
 
-"obx"
+"main"
 
 
-import getpass
 import os
 import readline
 import sys
@@ -18,79 +17,63 @@ import time
 sys.path.insert(0, os.getcwd())
 
 
-from obx import Client, Command, Default, Error, Message, Workdir
-from obx import cmnd, debug, enable, forever, parse_cmd, scan, skel
+from obx.client  import Client, cmnd, parse
+from obx.disk    import Workdir, skel
+from obx.handler import Event
+from obx.log     import debug, enable
+from obx.object  import Default
+from obx.run     import broker, init, scan
+from obx.thread  import errors, setout
 
 
-Cfg         = Default()
-Cfg.mod     = "cmd,ena,mod"
-Cfg.version = 103
-Cfg.wd      = os.path.expanduser(f"~/.{Cfg.name}")
-Cfg.pidfile = os.path.join(Cfg.wd, f"{Cfg.name}.pid")
-Workdir.wd = Cfg.wd
+from obx import modules
 
 
-names    = __file__.split(os.sep)
+Cfg             = Default()
+Cfg.dis         = ""
+Cfg.mod         = "cmd,err,log,mod,tdo,thr,tmr"
+Cfg.opts        = ""
+Cfg.name        = __file__.rsplit(os.sep, maxsplit=1)[-1]
+Cfg.version     = "14"
+Cfg.wdr         = os.path.expanduser(f"~/.{Cfg.name}")
+Cfg.pidfile     = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
 
 
-if names[-2] == "bin":
-    Cfg.name = names[-1]
-else:
-    Cfg.name = names[-2]
-
-
-if os.path.exists("mods"):
-    import mods
-else:
-    mods = None
+Workdir.workdir = Cfg.wdr
 
 
 class Console(Client):
 
+    "Console"
+
+    def __init__(self):
+        Client.__init__(self)
+        broker.add(self)
+
     def announce(self, txt):
-        pass
+        "disable announce."
 
     def callback(self, evt):
+        "wait for callback."
         Client.callback(self, evt)
         evt.wait()
 
     def poll(self):
-        evt = Message()
+        "poll console and create event."
+        evt = Event()
         evt.orig = object.__repr__(self)
         evt.txt = input("> ")
         evt.type = "command"
         return evt
 
-    def say(self, channel, txt):
+    def say(self, _channel, txt):
+        "print to console"
         txt = txt.encode('utf-8', 'replace').decode()
         print(txt)
 
 
-def daemon(pidfile, verbose=False):
-    pid = os.fork()
-    if pid != 0:
-        os._exit(0)
-    os.setsid()
-    pid2 = os.fork()
-    if pid2 != 0:
-        os._exit(0)
-    if not verbose:
-        with open('/dev/null', 'r', encoding="utf-8") as sis:
-            os.dup2(sis.fileno(), sys.stdin.fileno())
-        with open('/dev/null', 'a+', encoding="utf-8") as sos:
-            os.dup2(sos.fileno(), sys.stdout.fileno())
-        with open('/dev/null', 'a+', encoding="utf-8") as ses:
-            os.dup2(ses.fileno(), sys.stderr.fileno())
-    os.umask(0)
-    os.chdir("/")
-    if os.path.exists(pidfile):
-        os.unlink(pidfile)
-    cdir(os.path.dirname(pidfile))
-    with open(pidfile, "w", encoding="utf-8") as fds:
-        fds.write(str(os.getpid()))
-
-
 def wrap(func):
+    "restore console."
     old2 = None
     try:
         old2 = termios.tcgetattr(sys.stdin.fileno())
@@ -105,58 +88,31 @@ def wrap(func):
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old2)
 
 
-"runtime"
-
-
-def cmd(event):
-    event.reply(",".join(sorted(list(Command.cmds))))
-
-
-def ver(event):
-    event.reply(f"{fg.name} {Cfg.version}")
-    
-
 def main():
-    Command.add(cmd)
-    Command.add(ver)
-    enable(print)
+    "main"
+    parse(Cfg, " ".join(sys.argv[1:]))
     skel()
-    parse_cmd(Cfg, " ".join(sys.argv[1:]))
-    readline.redisplay()
-    if 'a' in Cfg.opts:
-        Cfg.mod = ",".join(mods.__dir__())
+    enable(print)
+    setout(print)
+    if "a" in Cfg.opts:
+        Cfg.mod = ",".join(modules.__dir__())
     if "v" in Cfg.opts:
-        dte = time.ctime(time.time()).replace("  ", " ")
-        debug(f"{Cfg.name.upper()} {Cfg.opts.upper()} started {dte}")
+        dte = " ".join(time.ctime(time.time()).replace("  ", " ").split()[1:])
+        debug(f'{dte} {Cfg.name.upper()} {Cfg.opts.upper()} {Cfg.mod.upper()}')
     if "h" in Cfg.opts:
-        from . import __doc__ as txt
-        print(txt)
-        return
-    if "d" in Cfg.opts:
-        Cfg.mod = ",".join(mods.__dir__())
-        Cfg.user = getpass.getuser()
-        daemon(Cfg.pidfile, "v" in Cfg.opts)
-        privileges(Cfg.user)
-        scan(mods, Cfg.mod, True, Cfg.dis, True)
-        forever()
-        return
+        print(__doc__)
+    scan(modules, Cfg.mod, Cfg.sets.dis)
     if "c" in Cfg.opts:
-        scan(mods, Cfg.mod, True, Cfg.sets.dis, True)
+        init(modules, Cfg.mod, Cfg.sets.dis)
         csl = Console()
-        if 'z' in Cfg.opts:
-            csl.threaded = False
         csl.start()
-        forever()
-        return
-    if Cfg.otxt:
-        Cfg.mod = ",".join(mods.__dir__())
-        scan(mods, Cfg.mod, False, Cfg.sets.dis, False)
-        return cmnd(Cfg.otxt, print)
-
-def wrapped():
-    wrap(main)
-    Error.show()
+        while 1:
+            time.sleep(1.0)
+    elif Cfg.otxt:
+        cmnd(Cfg.otxt, print)
 
 
 if __name__ == "__main__":
-    wrapped()
+    readline.redisplay()
+    wrap(main)
+    errors()
