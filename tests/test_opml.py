@@ -1,13 +1,26 @@
 # This file is placed in the Public Domain.
 #
-#
-# pylint: disable=C,R,W1503
+# pylint: disable=C,R,W0105
 
 
 "no tests"
 
 
-import os
+import unittest
+
+
+from obx.modules.rss import Parser
+
+
+class TestOPML(unittest.TestCase):
+
+    "test opml."
+
+    def test_opml(self):
+        "test opml parser."
+        p = Parser()
+        res = p.parse(TXT, "outline", "title,type,text,xmlUrl")
+        self.assertTrue(len(res) == 4)
 
 
 TXT = """<opml version="1.0">
@@ -47,30 +60,4 @@ TXT = """<opml version="1.0">
             <outline text="Reuters Technology" title="Reuters Technology" type="rss" xmlUrl="http://feeds.reuters.com/reuters/technologyNews"/>
         </outline>
     </body>
-</opml>
-"""
-
-
-import sys
-import unittest
-
-if os.path.exists("mods"):
-    from mods.rss import OPML
-else:
-    OPML = None
-
-
-def cprint(txt):
-    sys.stdout.write(txt)
-    sys.stdout.write("\n")
-    sys.stdout.flush()
-
-
-class TestOPML(unittest.TestCase):
-
-    def test_opml(self):
-        if not OPML:
-            result = True
-        else:
-            result = OPML.parse(TXT)
-        self.assertTrue(True, result)
+</opml>"""
