@@ -5,11 +5,19 @@ NAME
     OBX - program your own commands
 
 
+INSTALL
+
+::
+
+    $ pipx install obx
+    $ pipx ensurepath
+
+
 SYNOPSIS
 
 ::
 
-    >>> from obx import Object, dumps, loads
+    >>> from obx.object import Object, dumps, loads
     >>> o = Object()
     >>> o.a = "b"
     >>> txt = dumps(o)
@@ -37,23 +45,16 @@ CONTENT
 
 ::
 
-    obx.brokers     object broker
-    obx.excepts     deferred exception handling
-    obx.handler     event handler
-    obx.locates     find objects on disk
-    obx.objects     a clean namespace
-    obx.parsers     arguments parsing
-    obx.persist     object store
-    obx.repeats     repeaters
-    obx.threads	    threads
-    obx.workdir     directory to store objects
+    obx.broker     object broker
+    obx.client     clients
+    obx.disk       object store
+    obx.find       find objects on disk
+    obx.handler    event handler
+    obx.log        logging
+    obx.object     a clean namespace
+    obx.run        runtime
+    obx.threads	   threads
 
-
-INSTALL
-
-::
-
-    $ pip install obx
 
 
 AUTHOR
