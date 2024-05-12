@@ -28,7 +28,12 @@ classifiers = [
 "source" = "https://github.com/bthate/obx"
 
 [tool.setuptools]
+script-files = [
+    "bin/obx",
+    "bin/obxd"
+]
 packages = [
     "obx",
+    "obx.modules"
 ]
 zip-safe=true
