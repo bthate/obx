@@ -296,7 +296,12 @@ def main():
     add(cmd)
     scan(Cfg.mod, MODS, Cfg.dis)
     csl = Client()
-    csl.loop()
+    if Cfg.otxt:
+        event = Event()
+        event.txt = Cfg.otxt
+        command(csl, event)
+    else:
+        csl.loop()
 
 
 if __name__ == "__main__":
