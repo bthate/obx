@@ -5,7 +5,7 @@
 "configuration"
 
 
-from obx.dft import Default
+from .dft import Default
 
 
 class Config(Default):
