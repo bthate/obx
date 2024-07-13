@@ -4,10 +4,10 @@
 "list of commands"
 
 
-
-from ..client import Command
+from ..cmds   import Commands
+from ..object import keys
 
 
 def cmd(event):
     "list commands."
-    event.reply(",".join(sorted(list(Command.cmds))))
+    event.reply(",".join(sorted(keys(Commands.modnames))))

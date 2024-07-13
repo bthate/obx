@@ -1,4 +1,5 @@
 # This file is placed in the Public Domain.
+# pylint: disable=W0212,W0718
 
 
 "handler"
@@ -9,11 +10,8 @@ import threading
 import _thread
 
 
-from .object import Default, Object
-from .thread import launch
-
-
-rpr = object.__repr__
+from .object import Object
+from .launch import launch
 
 
 class Handler:
@@ -24,15 +22,15 @@ class Handler:
         self.cbs      = Object()
         self.queue    = queue.Queue()
         self.stopped  = threading.Event()
-        self.threaded = True
 
     def callback(self, evt):
         "call callback based on event type."
+        evt.orig = repr(self)
         func = getattr(self.cbs, evt.type, None)
         if not func:
             evt.ready()
             return
-        evt._thr = launch(func, self, evt) # pylint: disable=W0212
+        evt._thr = launch(func, self, evt)
 
     def loop(self):
         "proces events until interrupted."
@@ -64,38 +62,7 @@ class Handler:
         self.stopped.set()
 
 
-class Event(Default): # pylint: disable=R0902
-
-    "Event"
-
-    def __init__(self):
-        Default.__init__(self)
-        self._thr    = None
-        self._ready  = threading.Event()
-        self.done    = False
-        self.orig    = None
-        self.result  = []
-        self.txt     = ""
-        self.type    = "event"
-
-    def ready(self):
-        "event is ready."
-        self._ready.set()
-
-    def reply(self, txt):
-        "add text to the result"
-        self.result.append(txt)
-
-    def wait(self):
-        "wait for event to be ready."
-        if self._thr:
-            self._thr.join()
-        self._ready.wait()
-        return self.result
-
-
 def __dir__():
     return (
-        'Event',
-        'Handler'
+        'Handler',
     )
