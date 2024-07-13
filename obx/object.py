@@ -126,10 +126,9 @@ def match(obj, txt):
     return False
 
 
-def register(obj, item):
+def register(obj, item, value):
     "add an object to the broker."
-    ids = object.__repr__(item)
-    setattr(obj, ids, item)
+    setattr(obj, item, value)
 
 
 def search(obj, selector):

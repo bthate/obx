@@ -8,6 +8,7 @@
 import inspect
 import os
 import pathlib
+import time
 
 
 from .decode import read
@@ -15,6 +16,9 @@ from .dft    import Default
 from .encode import write
 from .object import Object, fqn, ident, search, update
 from .lock   import disklock
+
+
+SEP = os.sep
 
 
 class Persist(Object):

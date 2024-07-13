@@ -9,23 +9,18 @@
 import os, sys ; sys.path.insert(0, os.getcwd())
 
 
+import inspect
 import queue
 import termios
 import threading
+import time
 import _thread
 
 
 from obx.cfg    import Config
 from obx.dft    import Default
 from obx.disk   import Persist, skel
-from obx.object import Object
-
-
-
-if os.path.exists("mods"):
-    import mods as MODS
-else:
-    MODS = None
+from obx.object import Object, keys, register
 
 
 Cfg         = Config()
@@ -40,14 +35,18 @@ Cfg.pidfile = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
 Persist.workdir = Cfg.wdr
 
 
+if os.path.exists("mods"):
+    import mods as MODS
+else:
+    MODS = None
+
+
 class Commands:
 
     "Commands"
 
     cmds     = Object()
     modnames = Object()
-
-
 
 
 class Handler:
@@ -64,7 +63,6 @@ class Handler:
         evt.orig = repr(self)
         func = getattr(self.cbs, evt.type, None)
         if not func:
-            evt.ready()
             return
         func(self, evt)
             
@@ -85,71 +83,41 @@ class Handler:
         "put event into the queue."
         self.queue.put_nowait(evt)
 
-    def register(self, typ, cbs):
-        "register callback for a type."
-        setattr(self.cbs, typ, cbs)
 
-    def start(self):
-        "start the event loop."
-        self.loop()
+class Client(Handler):
 
-    def stop(self):
-        "stop the event loop."
-        self.stopped.set()
-
-
-class CLI(Handler):
-
-    "CLI"
+    "client"
 
     cache = Object()
-    out = None
 
-    def __init__(self, outer=None):
+    def __init__(self):
         Handler.__init__(self)
-        self.register("command", command)
-        self.out = outer
-
-    def say(self, _channel, txt):
-        "echo on verbose."
-        self.raw(txt)
-
-    def raw(self, txt):
-        "print to screen."
-        if self.out:
-            txt = txt.encode('utf-8', 'replace').decode()
-            self.out(txt)
-
-    def show(self, evt):
-        "show results into a channel."
-        for txt in evt.result:
-            self.say(evt.channel, txt)
-
-
-class Console(CLI):
-
-    "Console"
-
-    def __init__(self, outer, inner, prompt="> "):
-        CLI.__init__(self, outer)
-        self.inner = inner
-        self.prompt = prompt
+        register(self.cbs, "command", command)
 
     def announce(self, txt):
         "echo text"
         self.raw(txt)
 
-    def callback(self, evt):
-        "wait for callback."
-        CLI.callback(self, evt)
-        evt.wait()
-
     def poll(self):
         "poll console and create event."
         evt = Event()
-        evt.txt = self.inner(self.prompt)
+        evt.txt = input("> ")
         evt.type = "command"
         return evt
+
+    def raw(self, txt):
+        "print to screen."
+        txt = txt.encode('utf-8', 'replace').decode()
+        print(txt)
+
+    def say(self, _channel, txt):
+        "echo on verbose."
+        self.raw(txt)
+
+    def show(self, evt):
+        "show results into a channel."
+        for txt in evt.result:
+            self.say(evt.channel, txt)
 
 
 class Event(Default):
@@ -158,64 +126,24 @@ class Event(Default):
 
     def __init__(self):
         Default.__init__(self)
-        self._ready  = threading.Event()
-        self._thr    = None
         self.orig    = ""
         self.result  = []
         self.txt     = ""
         self.type    = "command"
 
-    def ready(self):
-        "event is ready."
-        self._ready.set()
-
     def reply(self, txt):
         "add text to the result"
         self.result.append(txt)
 
-    def wait(self):
-        "wait for event to be ready."
-        if self._thr:
-            self._thr.join()
-        self._ready.wait()
-        return self.result
+
+"utilities"
 
 
 def add(func):
     "add command."
-    setattr(Commands.cmds, func.__name__, func)
+    register(Commands.cmds, func.__name__, func)
     if func.__module__ != "__main__":
-        setattr(Commands.modnames, func.__name__, func.__module__)
-
-
-def command(bot, evt):
-    "check for and run a command."
-    parse(evt)
-    func = getattr(Commands.cmds, evt.cmd, None)
-    if func:
-        func(evt)
-        bot.show(evt)
-    evt.ready()
-
-
-def init(modstr, *pkgs, disable=None):
-    "scan modules for commands and classes"
-    mds = []
-    for mod in spl(modstr):
-        if disable and mod in spl(disable):
-            continue
-        for pkg in pkgs:
-            module = getattr(pkg, mod, None)
-            if not module:
-                continue
-            if "init" not in dir(module):
-                continue
-            try:
-                module.init()
-            except Exception as ex:
-                later(ex)
-            break
-    return mds
+        register(Commands.modnames, func.__name__, func.__module__)
 
 
 def modnames(*args):
@@ -291,7 +219,6 @@ def scan(modstr, *pkgs, disable=""):
             if not module:
                 continue
             scancmd(module)
-            scancls(module)
     return mds
 
 
@@ -337,23 +264,39 @@ def wrap(func):
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old3)
 
 
+"callbacks"
+
+
+def command(bot, evt):
+    "check for and run a command."
+    parse(evt)
+    func = getattr(Commands.cmds, evt.cmd, None)
+    if func:
+        func(evt)
+        bot.show(evt)
+
+
+"commands"
+
+
+def cmd(event):
+    "list commands."
+    event.reply(",".join(sorted(keys(Commands.cmds))))
+
+
+"runtime"
+
+
 def main():
     "main"
-    skel()
     parse(Cfg, " ".join(sys.argv[1:]))
     Cfg.dis = Cfg.sets.dis
     Cfg.mod += "," + ",".join(modnames(MODS))
-    if "v" in Cfg.opts:
-        dte = " ".join(time.ctime(time.time()).replace("  ", " ").split()[1:])
-        mods = ','.join(sorted({x.upper() for x in spl(Cfg.mod)}))
-        print(f'{dte} {Cfg.name.upper()} {Cfg.opts.upper()} {mods}'.replace("  ", " "))
+    skel()
+    add(cmd)
     scan(Cfg.mod, MODS, Cfg.dis)
-    csl = Console(print, input)
-    if "i" in Cfg.opts:
-        init(Cfg.mod, modules, user, MODS, Cfg.dis)
-    csl.start()
-    cmnd(Cfg.otxt, print)
-    forever()
+    csl = Client()
+    csl.loop()
 
 
 if __name__ == "__main__":
