@@ -297,11 +297,11 @@ def main():
     add(cmd)
     scan(Cfg.mod, MODS, Cfg.dis)
     csl = Client()
-    if Cfg.otxt:
+    if Cfg.txt:
         event = Event()
         event.txt = Cfg.otxt
-        command(csl, event)
-    else:
+        return command(csl, event)
+    if "c" in Cfg.opts:
         csl.loop()
 
 
