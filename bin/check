@@ -1,7 +1,7 @@
-grep -R splg genocide
-grep -R sys genocide
-grep -R "print(" genocide
-grep -R __import__ genocide
-grep -R importlib genocide
-grep -R "import sys" genocide
-#grep -R "import os" genocide
+grep -R splg obx
+grep -R sys obx
+grep -R "print(" obx
+grep -R __import__ obx
+grep -R importlib obx
+grep -R "import sys" obx
+#grep -R "import os" obx
