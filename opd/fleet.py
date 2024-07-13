@@ -4,7 +4,7 @@
 "list of bots."
 
 
-from .object import Object, values
+from obx.object import Object, values
 
 
 rpr = object.__repr__

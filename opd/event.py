@@ -8,7 +8,7 @@
 import threading
 
 
-from .dft import Default
+from obx.dft import Default
 
 
 class Event(Default):

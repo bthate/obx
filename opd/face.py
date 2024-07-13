@@ -20,7 +20,6 @@ from .event  import *
 from .handle import *
 from .launch import *
 from .log    import *
-from .object import *
 from .parse  import *
 from .repeat import *
 from .term   import *

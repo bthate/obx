@@ -4,7 +4,7 @@
 "parsing"
 
 
-from .dft import Default
+from obx.dft import Default
 
 
 def parse(obj, txt=None):

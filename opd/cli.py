@@ -5,9 +5,9 @@
 "command line interface"
 
 
-from .cmds   import command
-from .handle import Handler
-from .object import Object
+from obx.object import Object
+from .cmds      import command
+from .handle    import Handler
 
 
 class CLI(Handler):

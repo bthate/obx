@@ -8,8 +8,8 @@
 import inspect
 
 
-from .object import Object
-from .parse  import parse
+from obx.object import Object
+from .parse     import parse
 
 
 class Commands:

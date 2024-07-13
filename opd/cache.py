@@ -4,7 +4,7 @@
 "caching"
 
 
-from .object import Object
+from obx.object import Object
 
 
 class Broker:

@@ -8,9 +8,9 @@ import time
 import threading
 
 
-from .object import Object
-from .launch import launch
-from .utils  import named
+from obx.object import Object
+from .launch    import launch
+from .utils     import named
 
 
 class Timer(Object):

@@ -10,11 +10,11 @@ import os
 import pathlib
 
 
-from .decode import read
-from .dft    import Default
-from .encode import write
-from .object import Object, fqn, ident, search, update
-from .lock   import disklock
+from obx.decode import read
+from obx.dft    import Default
+from obx.encode import write
+from obx.object import Object, fqn, ident, search, update
+from obx.lock   import disklock
 from .utils  import fntime, strip
 
 

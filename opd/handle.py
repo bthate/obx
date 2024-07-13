@@ -10,8 +10,8 @@ import threading
 import _thread
 
 
-from .object import Object
-from .launch import launch
+from obx.object import Object
+from .launch 	import launch
 
 
 class Handler:

@@ -4,8 +4,8 @@
 "list of commands"
 
 
-from ..cmds   import Commands
-from ..object import keys
+from obx.object import keys
+from ..cmds     import Commands
 
 
 def cmd(event):
