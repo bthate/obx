@@ -20,11 +20,8 @@ sys.path.insert(0, os.getcwd())
 
 
 from obx.object import *
-from opd.face   import *
-
-
-from opd import modules
-from opd import user
+from obr.face   import *
+from obr        import modules, user
 
 
 modules.rss.DEBUG = True

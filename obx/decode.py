@@ -6,6 +6,7 @@
 
 
 import json
+import pathlib
 
 
 from .lock   import lock
@@ -65,8 +66,15 @@ def read(obj, pth):
 "interface"
 
 
+def cdir(pth):
+    "create directory."
+    path = pathlib.Path(pth)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+
 def __dir__():
     return (
+        'cdir',
         'hook',
         'load',
         'loads',

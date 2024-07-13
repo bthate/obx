@@ -94,6 +94,11 @@ def fqn(obj):
     return kin
 
 
+def get(obj, orig):
+    "return object by origin (repr)"
+    return getattr(obj, orig, None)
+
+
 def ident(obj):
     "return an id for an object."
     return pjoin(fqn(obj), *str(datetime.datetime.now()).split())
@@ -119,6 +124,12 @@ def match(obj, txt):
         if txt in key:
             return True
     return False
+
+
+def register(obj, item):
+    "add an object to the broker."
+    ids = object.__repr__(item)
+    setattr(obj, ids, item)
 
 
 def search(obj, selector):
@@ -166,11 +177,13 @@ def __dir__():
         'edit',
         'fmt',
         'fqn',
+        'get',
         'ident',
         'items',
         'keys',
         'match',
+        'register',
         'search',
         'update',
-        'values',
+        'values'
     )

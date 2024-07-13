@@ -10,12 +10,11 @@ import os
 import pathlib
 
 
-from obx.decode import read
-from obx.dft    import Default
-from obx.encode import write
-from obx.object import Object, fqn, ident, search, update
-from obx.lock   import disklock
-from .utils  import fntime, strip
+from .decode import read
+from .dft    import Default
+from .encode import write
+from .object import Object, fqn, ident, search, update
+from .lock   import disklock
 
 
 class Persist(Object):
@@ -144,6 +143,28 @@ def types():
 def whitelist(clz):
     "whitelist classes."
     Persist.fqns.append(fqn(clz))
+
+
+"interface"
+
+
+def fntime(daystr):
+    "convert file name to it's saved time."
+    daystr = daystr.replace('_', ':')
+    datestr = ' '.join(daystr.split(SEP)[-2:])
+    if '.' in datestr:
+        datestr, rest = datestr.rsplit('.', 1)
+    else:
+        rest = ''
+    timed = time.mktime(time.strptime(datestr, '%Y-%m-%d %H:%M:%S'))
+    if rest:
+        timed += float('.' + rest)
+    return timed
+
+
+def strip(pth, nmr=3):
+    "reduce to path with directory."
+    return SEP.join(pth.split(SEP)[-nmr:])
 
 
 def __dir__():
