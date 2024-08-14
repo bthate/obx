@@ -1,27 +1,16 @@
 NAME
 
-::
-
-    OBX - program your own commands
-
-
-NAME
-
-    **OBX** - write your own commands
+    OBX - write your own commands
 
 
 SYNOPSIS
 
-    ::
-
-        obx  <cmd> [key=val] [key==val]
-        obxc [-i] [-v]
-        obxd 
+    obx  <cmd> [key=val] [key==val]
+    obxc [-i] [-v]
+    obxd 
 
 
 SYNOPSIS
-
-::
 
     >>> from obx.object import Object, dumps, loads
     >>> o = Object()
@@ -32,8 +21,6 @@ SYNOPSIS
 
 
 DESCRIPTION
-
-::
 
     OBX has all the python3 code to program a unix cli program, such as
     disk perisistence for configuration files, event handler to
@@ -54,116 +41,90 @@ DESCRIPTION
     OBX is Public Domain.
 
 
+INSTALL
 
-**INSTALL**
+    $ pipx install obx
+    $ pipx ensurepath
 
-    ::
+    $ obx srv > obx.service
+    # mv *.service /etc/systemd/system/
+    # systemctl enable obx --now
 
-        $ pipx install obx
-        $ pipx ensurepath
-
-        $ obx srv > obx.service
-        # mv *.service /etc/systemd/system/
-        # systemctl enable obx --now
-
-        joins #obx on localhost
+    joins #obx on localhost
 
 
-**USAGE**
+USAGE
 
     without any argument the bot does nothing
 
-    ::
-
-        $ obx
-        $
+    $ obx
+    $
 
     see list of commands
 
-    ::
-
-        $ obx cmd
-        cmd,skl,srv
+    $ obx cmd
+    cmd,skl,srv
 
 
     start a console
 
-    ::
-
-        $ obxc
-        >
+    $ obxc
+    >
 
     start daemon
 
-    ::
-
-        $ obxd
-        $ 
+    $ obxd
+    $ 
 
 
 CONFIGURATION
 
     irc
 
-    ::
-
-        $ obx cfg server=<server>
-        $ obx cfg channel=<channel>
-        $ obx cfg nick=<nick>
+    $ obx cfg server=<server>
+    $ obx cfg channel=<channel>
+    $ obx cfg nick=<nick>
 
     sasl
 
-    ::
-
-        $ obx pwd <nsvnick> <nspass>
-        $ obx cfg password=<frompwd>
+    $ obx pwd <nsvnick> <nspass>
+    $ obx cfg password=<frompwd>
 
     rss
 
-    ::
-
-        $ obx rss <url>
-        $ obx dpl <url> <item1,item2>
-        $ obx rem <url>
-        $ obx nme <url> <name>
+    $ obx rss <url>
+    $ obx dpl <url> <item1,item2>
+    $ obx rem <url>
+    $ obx nme <url> <name>
 
 
 COMMANDS
 
-    ::
-
-        cfg - irc configuration
-        cmd - commands
-        mre - displays cached output
-        pwd - sasl nickserv name/pass
+    cfg - irc configuration
+    cmd - commands
+    mre - displays cached output
+    pwd - sasl nickserv name/pass
 
 
-**SOURCE**
-
+SOURCE
 
     source is :ref:`here <source>`
 
 
-**FILES**
+FILES
 
-    ::
-
-        ~/.obx
-        ~/.local/bin/obx
-        ~/.local/bin/obxc
-        ~/.local/bin/obxd
-        ~/.local/pipx/venvs/obx/*
+    ~/.obx
+    ~/.local/bin/obx
+    ~/.local/bin/obxc
+    ~/.local/bin/obxd
+    ~/.local/pipx/venvs/obx/*
 
 
 AUTHOR
-
-::
 
     Bart Thate <bthate@dds.nl>
 
 
 COPYRIGHT
-
-::
 
     OBX is Public Domain.
