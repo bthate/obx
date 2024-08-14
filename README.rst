@@ -1,16 +1,18 @@
 NAME
-
+====
     OBX - write your own commands
 
 
 SYNOPSIS
+========
 
-    obx  <cmd> [key=val] [key==val]
-    obxc [-i] [-v]
-    obxd 
+    | obx  <cmd> [key=val] [key==val]
+    | obxc [-i] [-v]
+    | obxd 
 
 
 SYNOPSIS
+========
 
     >>> from obx.object import Object, dumps, loads
     >>> o = Object()
@@ -21,6 +23,7 @@ SYNOPSIS
 
 
 DESCRIPTION
+===========
 
     OBX has all the python3 code to program a unix cli program, such as
     disk perisistence for configuration files, event handler to
