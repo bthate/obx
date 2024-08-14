@@ -1,4 +1,4 @@
-grep -R splg obx
+grep -R obx obx
 grep -R sys obx
 grep -R "print(" obx
 grep -R __import__ obx

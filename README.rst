@@ -2,22 +2,28 @@ NAME
 
 ::
 
-    OBX - program your own commands
+    NOTAI - program your own commands
 
 
-INSTALL
+NAME
 
-::
+    **NOTAI** - write your own commands
 
-    $ pipx install obx
-    $ pipx ensurepath
+
+SYNOPSIS
+
+    ::
+
+        notai  <cmd> [key=val] [key==val]
+        notaic [-i] [-v]
+        notaid 
 
 
 SYNOPSIS
 
 ::
 
-    >>> from obx.object import Object, dumps, loads
+    >>> from notai.object import Object, dumps, loads
     >>> o = Object()
     >>> o.a = "b"
     >>> txt = dumps(o)
@@ -29,32 +35,117 @@ DESCRIPTION
 
 ::
 
-    OBX has all the python3 code to program a unix cli program, such as
+    NOTAI has all the python3 code to program a unix cli program, such as
     disk perisistence for configuration files, event handler to
     handle the client/server connection, code to introspect modules
     for commands, deferred exception handling to not crash on an
     error, a parser to parse commandline options and values, etc.
 
-    OBX uses object programming (OP) that allows for easy json save//load
+    NOTAI uses object programming (OP) that allows for easy json save//load
     to/from disk of objects. It provides an "clean namespace" Object class
     that only has dunder methods, so the namespace is not cluttered with
     method names. This makes storing and reading to/from json possible.
 
 
-CONTENT
+**INSTALL**
 
-::
+    ::
 
-    obx.broker     object broker
-    obx.client     clients
-    obx.disk       object store
-    obx.find       find objects on disk
-    obx.handler    event handler
-    obx.log        logging
-    obx.object     a clean namespace
-    obx.run        runtime
-    obx.threads	   threads
+        $ pipx install notai
+        $ pipx ensurepath
 
+        $ notai srv > notai.service
+        # mv *.service /etc/systemd/system/
+        # systemctl enable notai --now
+
+        joins #notai on localhost
+
+
+**USAGE**
+
+    without any argument the bot does nothing
+
+    ::
+
+        $ notai
+        $
+
+    see list of commands
+
+    ::
+
+        $ notai cmd
+        cmd,req,skl,srv
+
+
+    start a console
+
+    ::
+
+        $ notaic
+        >
+
+    start daemon
+
+    ::
+
+        $ notaid
+        $ 
+
+
+CONFIGURATION
+
+    irc
+
+    ::
+
+        $ notai cfg server=<server>
+        $ notai cfg channel=<channel>
+        $ notai cfg nick=<nick>
+
+    sasl
+
+    ::
+
+        $ notai pwd <nsvnick> <nspass>
+        $ notai cfg password=<frompwd>
+
+    rss
+
+    ::
+
+        $ notai rss <url>
+        $ notai dpl <url> <item1,item2>
+        $ notai rem <url>
+        $ notai nme <url> <name>
+
+
+COMMANDS
+
+    ::
+
+        cfg - irc configuration
+        cmd - commands
+        mre - displays cached output
+        pwd - sasl nickserv name/pass
+        req - reconsider
+
+
+**SOURCE**
+
+
+    source is :ref:`here <source>`
+
+
+**FILES**
+
+    ::
+
+        ~/.notai 
+        ~/.local/bin/notai
+        ~/.local/bin/notaic
+        ~/.local/bin/notaid
+        ~/.local/pipx/venvs/notai/*
 
 
 AUTHOR
@@ -68,4 +159,4 @@ COPYRIGHT
 
 ::
 
-    OBX is Public Domain.
+    NOTAI is Public Domain.
