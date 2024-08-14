@@ -2,28 +2,28 @@ NAME
 
 ::
 
-    NOTAI - program your own commands
+    OBX - program your own commands
 
 
 NAME
 
-    **NOTAI** - write your own commands
+    **OBX** - write your own commands
 
 
 SYNOPSIS
 
     ::
 
-        notai  <cmd> [key=val] [key==val]
-        notaic [-i] [-v]
-        notaid 
+        obx  <cmd> [key=val] [key==val]
+        obxc [-i] [-v]
+        obxd 
 
 
 SYNOPSIS
 
 ::
 
-    >>> from notai.object import Object, dumps, loads
+    >>> from obx.object import Object, dumps, loads
     >>> o = Object()
     >>> o.a = "b"
     >>> txt = dumps(o)
@@ -35,30 +35,38 @@ DESCRIPTION
 
 ::
 
-    NOTAI has all the python3 code to program a unix cli program, such as
+    OBX has all the python3 code to program a unix cli program, such as
     disk perisistence for configuration files, event handler to
     handle the client/server connection, code to introspect modules
     for commands, deferred exception handling to not crash on an
     error, a parser to parse commandline options and values, etc.
 
-    NOTAI uses object programming (OP) that allows for easy json save//load
+    OBX uses object programming (OP) that allows for easy json save//load
     to/from disk of objects. It provides an "clean namespace" Object class
     that only has dunder methods, so the namespace is not cluttered with
     method names. This makes storing and reading to/from json possible.
+
+    OBX has a demo bot, it can connect to IRC, fetch and display RSS
+    feeds, take todo notes, keep a shopping list and log text. You can
+    also copy/paste the service file and run it under systemd for 24/7
+    presence in a IRC channel.
+
+    OBX is Public Domain.
+
 
 
 **INSTALL**
 
     ::
 
-        $ pipx install notai
+        $ pipx install obx
         $ pipx ensurepath
 
-        $ notai srv > notai.service
+        $ obx srv > obx.service
         # mv *.service /etc/systemd/system/
-        # systemctl enable notai --now
+        # systemctl enable obx --now
 
-        joins #notai on localhost
+        joins #obx on localhost
 
 
 **USAGE**
@@ -67,29 +75,29 @@ DESCRIPTION
 
     ::
 
-        $ notai
+        $ obx
         $
 
     see list of commands
 
     ::
 
-        $ notai cmd
-        cmd,req,skl,srv
+        $ obx cmd
+        cmd,skl,srv
 
 
     start a console
 
     ::
 
-        $ notaic
+        $ obxc
         >
 
     start daemon
 
     ::
 
-        $ notaid
+        $ obxd
         $ 
 
 
@@ -99,25 +107,25 @@ CONFIGURATION
 
     ::
 
-        $ notai cfg server=<server>
-        $ notai cfg channel=<channel>
-        $ notai cfg nick=<nick>
+        $ obx cfg server=<server>
+        $ obx cfg channel=<channel>
+        $ obx cfg nick=<nick>
 
     sasl
 
     ::
 
-        $ notai pwd <nsvnick> <nspass>
-        $ notai cfg password=<frompwd>
+        $ obx pwd <nsvnick> <nspass>
+        $ obx cfg password=<frompwd>
 
     rss
 
     ::
 
-        $ notai rss <url>
-        $ notai dpl <url> <item1,item2>
-        $ notai rem <url>
-        $ notai nme <url> <name>
+        $ obx rss <url>
+        $ obx dpl <url> <item1,item2>
+        $ obx rem <url>
+        $ obx nme <url> <name>
 
 
 COMMANDS
@@ -128,7 +136,6 @@ COMMANDS
         cmd - commands
         mre - displays cached output
         pwd - sasl nickserv name/pass
-        req - reconsider
 
 
 **SOURCE**
@@ -141,11 +148,11 @@ COMMANDS
 
     ::
 
-        ~/.notai 
-        ~/.local/bin/notai
-        ~/.local/bin/notaic
-        ~/.local/bin/notaid
-        ~/.local/pipx/venvs/notai/*
+        ~/.obx
+        ~/.local/bin/obx
+        ~/.local/bin/obxc
+        ~/.local/bin/obxd
+        ~/.local/pipx/venvs/obx/*
 
 
 AUTHOR
@@ -159,4 +166,4 @@ COPYRIGHT
 
 ::
 
-    NOTAI is Public Domain.
+    OBX is Public Domain.
