@@ -110,13 +110,6 @@ COMMANDS
     pwd - sasl nickserv name/pass
 
 
-SOURCE
-
-::
-
-    source is :ref:`here <source>`
-
-
 FILES
 
 ::
