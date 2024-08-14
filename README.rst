@@ -44,6 +44,8 @@ INSTALL
     $ pipx install obx
     $ pipx ensurepath
 
+    <new terminal>
+
     $ obx srv > obx.service
     # mv *.service /etc/systemd/system/
     # systemctl enable obx --now
