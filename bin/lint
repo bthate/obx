@@ -1,0 +1,1 @@
+pylint obx bin/obx bin/obxc bin/obxd tests
