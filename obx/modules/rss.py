@@ -24,7 +24,7 @@ from ..default  import Default
 from ..fleet    import Fleet
 from ..object   import Object, construct, fmt, update
 from ..persist  import find, last, sync
-from ..group    import Group, append
+from ..group    import Group
 from ..repeater import Repeater
 from ..thread   import launch
 from ..log      import debug
@@ -35,7 +35,7 @@ def init():
     "start fetcher."
     fetcher = Fetcher()
     fetcher.start()
-    debug(f'started rss {fmt(fetcher,skip="seen,seenfn")}')
+    debug(f'started rss {fmt(fetcher,skip="seen")}')
     return fetcher
 
 
@@ -50,8 +50,7 @@ TEMPLATE = """<opml version="1.0">
         <outline title="opml" text="rss feeds">"""
 
 
-
-fetchlock = _thread.allocate_lock()
+fetchlock  = _thread.allocate_lock()
 
 
 class Feed(Default):
@@ -73,20 +72,6 @@ class Rss(Default):
 class Urls(Group):
 
     "Seen"
-
-    def __init__(self):
-        Group.__init__(self)
-        self.nrlinks = Object()
-
-
-def append_url(obj, url, item):
-    "urls add."
-    links = getattr(obj, url, None)
-    if links:
-        nrs = getattr(obj.nrlinks, url, None)
-        if nrs and len(links) > nrs:
-            links.pop(0)
-    append(obj, url, item)
 
 
 class Fetcher(Object):
@@ -123,8 +108,10 @@ class Fetcher(Object):
     def fetch(self, feed, silent=False):
         "fetch feed."
         with fetchlock:
-            counter = 0
             result = []
+            seen = getattr(self.seen, feed.rss, [])
+            urls = []
+            counter = 0
             for obj in reversed(getfeed(feed.rss, feed.display_list)):
                 counter += 1
                 fed = Feed()
@@ -135,15 +122,14 @@ class Fetcher(Object):
                     uurl = f'{url.scheme}://{url.netloc}/{url.path}'
                 else:
                     uurl = fed.link
-                if uurl in getattr(self.seen, feed.rss, []):
+                urls.append(uurl)
+                if uurl in seen:
                     continue
-                append_url(self.seen, feed.rss, uurl)
                 if self.dosave:
                     sync(fed)
                 result.append(fed)
-            if counter > getattr(self.seen.nrlinks, feed.rss, 0):
-                setattr(self.seen.nrlinks, feed.rss, counter)
-        self.seenfn = sync(self.seen, self.seenfn)
+            setattr(self.seen, feed.rss, urls)
+            self.seenfn = sync(self.seen, self.seenfn)
         if silent:
             return counter
         txt = ''

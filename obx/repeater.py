@@ -1,7 +1,7 @@
 # This file is placed in the Public Domain.
 
 
-"at repeating intervals."
+"at repeating intervals"
 
 
 from .thread import launch

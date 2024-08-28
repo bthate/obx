@@ -192,6 +192,7 @@ class IRC(Client, Output):
         self.register('PRIVMSG', cb_privmsg)
         self.register('QUIT', cb_quit)
         self.register("366", cb_ready)
+        Fleet.register(self)
 
     def announce(self, txt):
         "announce on all channels."

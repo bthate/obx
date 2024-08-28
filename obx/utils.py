@@ -158,6 +158,8 @@ def __dir__():
         'laps',
         'modnames',
         'named',
+        'pidfile',
+        'privileges',
         'skip',
         'spl',
         'strip'

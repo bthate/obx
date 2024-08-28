@@ -1,7 +1,7 @@
 # This file is placed in the Public Domain.
 
 
-"show available modules."
+"show available modules"
 
 
 import os

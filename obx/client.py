@@ -7,7 +7,6 @@
 
 from .cache   import Cache
 from .cmds    import Commands
-from .fleet   import Fleet
 from .parse   import parse
 from .reactor import Reactor
 
@@ -23,14 +22,13 @@ class Client(Reactor):
         Reactor.__init__(self)
         self.register("command", command)
         self.out = outer
-        Fleet.register(self)
 
     def say(self, _channel, txt):
         "echo on verbose."
         self.raw(txt)
 
     def raw(self, txt):
-        "echo to screen."
+        "print to screen."
         if self.out:
             txt = txt.encode('utf-8', 'replace').decode()
             self.out(txt)

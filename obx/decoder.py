@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R0902,W0105
+# pylint: disable=R0902
 
 
 "object decoder"
@@ -60,9 +60,6 @@ def read(obj, pth):
     with lock:
         with open(pth, 'r', encoding='utf-8') as ofile:
             update(obj, load(ofile))
-
-
-"interface"
 
 
 def __dir__():

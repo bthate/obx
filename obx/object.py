@@ -175,5 +175,5 @@ def __dir__():
         'match',
         'search',
         'update',
-        'values',
+        'values'
     )

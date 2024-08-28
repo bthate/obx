@@ -1,18 +1,16 @@
 # This file is placed in the Public Domain.
 
 
-"show running threads."
+"show running threads"
 
 
 import threading
 import time
 
 
-from ..object import Object, update
-from ..utils  import laps
-
-
-STARTTIME = time.time()
+from ..object  import Object, update
+from ..runtime import STARTTIME
+from ..utils   import laps
 
 
 def thr(event):

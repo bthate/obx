@@ -1,7 +1,7 @@
 # This file is placed in the Public Domain.
 
 
-"list of bots."
+"list of bots"
 
 
 from .object import Object
@@ -25,19 +25,8 @@ class Fleet(Object):
     def announce(txt):
         "announce on all bots."
         for bot in Fleet.bots:
-            try:
+            if "announce" in dir(bot):
                 bot.announce(txt)
-            except AttributeError:
-                pass
-
-    @staticmethod
-    def say(channel, txt):
-        "announce on all bots."
-        for bot in Fleet.bots:
-            try:
-                bot.say(channel, txt)
-            except AttributeError:
-                pass
 
     @staticmethod
     def get(orig):

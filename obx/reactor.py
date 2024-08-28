@@ -2,7 +2,7 @@
 # pylint: disable=W0212,W0718
 
 
-"reacting"
+"reactor"
 
 
 import queue

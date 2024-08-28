@@ -2,7 +2,7 @@
 # pylint: disable=R0902
 
 
-"at a specific time."
+"at a specific time"
 
 
 import time

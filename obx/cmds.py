@@ -18,7 +18,6 @@ class Commands:
     cmds     = Object()
     modnames = Object()
 
-
     @staticmethod
     def add(func):
         "add command."

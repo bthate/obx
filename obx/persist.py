@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R0903,W0105
+# pylint: disable=R0903
 
 
 "persistence"
@@ -36,9 +36,6 @@ class Persist(Object):
             whitelist(clz)
 
 
-"methods"
-
-
 def fetch(obj, pth):
     "read object from disk."
     with disklock:
@@ -71,9 +68,6 @@ def sync(obj, pth=None):
         pth2 = store(pth)
         write(obj, pth2)
         return pth
-
-
-"utilities"
 
 
 def fns(mtc=""):
@@ -141,9 +135,6 @@ def types():
 def whitelist(clz):
     "whitelist classes."
     Persist.fqns.append(fqn(clz))
-
-
-"interface"
 
 
 def __dir__():
