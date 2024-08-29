@@ -57,7 +57,7 @@ USAGE
 
 ::
 
-    without any argument the bot does nothing::
+    without any argument the bot does nothing
 
     $ obx
     $
@@ -66,7 +66,6 @@ USAGE
 
     $ obx cmd
     cmd,skl,srv
-
 
     start a console
 
