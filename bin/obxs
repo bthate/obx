@@ -14,13 +14,13 @@ from obx.persist import skel
 from obx.errors  import errors, later
 from obx.main    import init, scan, wrap
 from obx.runtime import Cfg
-from obx.utils   import forever, pidfile, privileges
+from obx.utils   import forever, modnames, pidfile, privileges
 
 
 from obx import modules
 
 
-Cfg.mod = "cmd,irc,log,rss,tdo"
+Cfg.mod = ",".join(modnames(modules))
 
 
 def main():
