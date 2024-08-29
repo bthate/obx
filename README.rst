@@ -14,6 +14,7 @@
 
 **DESCRIPTION**
 
+
 ``OBX`` has all the python3 code to program a unix cli program, such as
 disk perisistence for configuration files, event handler to
 handle the client/server connection, code to introspect modules
@@ -51,6 +52,7 @@ presence in a IRC channel.
 
 **USAGE**
 
+
 without any argument the bot does nothing::
 
      $ obx
@@ -73,6 +75,7 @@ start daemon::
 
 
 **CONFIGURATION**
+
 
 irc
 
