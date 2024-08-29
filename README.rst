@@ -1,7 +1,10 @@
-NAME
-####
+README
+######
 
-    OBX - write your own commands
+NAME
+====
+
+OBX - write your own commands
 
 
 SYNOPSIS
@@ -17,23 +20,23 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-    OBX has all the python3 code to program a unix cli program, such as
-    disk perisistence for configuration files, event handler to
-    handle the client/server connection, code to introspect modules
-    for commands, deferred exception handling to not crash on an
-    error, a parser to parse commandline options and values, etc.
+OBX has all the python3 code to program a unix cli program, such as
+disk perisistence for configuration files, event handler to
+handle the client/server connection, code to introspect modules
+for commands, deferred exception handling to not crash on an
+error, a parser to parse commandline options and values, etc.
 
-    OBX uses object programming (OP) that allows for easy json save//load
-    to/from disk of objects. It provides an "clean namespace" Object class
-    that only has dunder methods, so the namespace is not cluttered with
-    method names. This makes storing and reading to/from json possible.
+OBX uses object programming (OP) that allows for easy json save//load
+to/from disk of objects. It provides an "clean namespace" Object class
+that only has dunder methods, so the namespace is not cluttered with
+method names. This makes storing and reading to/from json possible.
 
-    OBX has a demo bot, it can connect to IRC, fetch and display RSS
-    feeds, take todo notes, keep a shopping list and log text. You can
-    also copy/paste the service file and run it under systemd for 24/7
-    presence in a IRC channel.
+OBX has a demo bot, it can connect to IRC, fetch and display RSS
+feeds, take todo notes, keep a shopping list and log text. You can
+also copy/paste the service file and run it under systemd for 24/7
+presence in a IRC channel.
 
-    OBX is Public Domain.
+OBX is Public Domain.
 
 
 INSTALL
