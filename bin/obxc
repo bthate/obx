@@ -54,8 +54,7 @@ def main():
     "main"
     parse(Cfg, " ".join(sys.argv[1:]))
     Cfg.dis = Cfg.sets.dis
-    if "a" in Cfg.opts:
-        Cfg.mod += ",".join(modnames(modules, MODS))
+    Cfg.mod += "," + ",".join(modnames(modules, MODS))
     readline.redisplay()
     if "v" in Cfg.opts:
         enable(print)
@@ -63,7 +62,7 @@ def main():
     scan(Cfg.mod, modules, MODS)
     csl = Console(print, input)
     if "i" in Cfg.opts:
-        init(Cfg.mod, modules, MODS)
+        init(Cfg.mod, modules, MODS, disable=Cfg.dis)
     csl.start()
     cmnd(Cfg.otxt, print)
     forever()

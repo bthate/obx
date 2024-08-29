@@ -24,7 +24,7 @@ from obx.thread  import launch
 def init():
     rest = REST((Config.hostname, int(Config.port)), RESTHandler)
     launch(rest.start)
-    debug(f"started {fmt(Config)}")
+    debug(f"started rst {fmt(Config)}")
     return rest
 
 

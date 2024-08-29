@@ -11,6 +11,8 @@ import time as ttime
 
 
 from ..fleet   import Fleet
+from ..log     import debug
+from ..object  import fmt
 from ..persist import find, sync
 from ..thread  import launch
 from ..timer   import Timer
@@ -24,7 +26,8 @@ def init():
         if diff > 0:
             timer = Timer(diff, Fleet.announce, obj.rest)
             launch(timer.start)
-
+            debug(f'started tmr {fmt(timer, skip="func,state,args")}')
+            
 
 MONTHS = [
     'Bo',

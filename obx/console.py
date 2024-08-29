@@ -18,7 +18,8 @@ class Console(Client):
         self.prompt = prompt
 
     def announce(self, txt):
-        "echo text"
+        "echo text."
+        self.raw(txt)
 
     def callback(self, evt):
         "wait for callback."

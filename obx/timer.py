@@ -13,7 +13,7 @@ from .thread import launch
 from .utils  import named
 
 
-class Timer(Object):
+class Timer(Object): # pylint: disable=R0902
 
     "Timer"
 

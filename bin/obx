@@ -24,7 +24,7 @@ def main():
     skel()
     enable(print)
     Cfg.dis = Cfg.sets.dis
-    Cfg.mod = ",".join(modnames(modules))
+    Cfg.mod += "," + ",".join(modnames(modules))
     scan(Cfg.mod, modules)
     cmnd(Cfg.otxt, print)
 
