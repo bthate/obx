@@ -27,7 +27,7 @@ def init():
             timer = Timer(diff, Fleet.announce, obj.rest)
             launch(timer.start)
             debug(f'started tmr {fmt(timer, skip="func,state,args")}')
-            
+
 
 MONTHS = [
     'Bo',
