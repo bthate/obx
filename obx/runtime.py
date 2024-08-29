@@ -9,11 +9,16 @@ import os
 import time
 
 
-from .config  import Config
+from .default import Default
 from .persist import Persist
 
 
 STARTTIME   = time.time()
+
+
+class Config(Default):
+
+    "configuration"
 
 
 Cfg         = Config()

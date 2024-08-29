@@ -6,33 +6,18 @@
 "main"
 
 
-import getpass
 import os
 import sys
 
 
-sys.path.insert(0, os.getcwd())
-
-
-from obx.config  import Config
 from obx.persist import Persist, skel
 from obx.errors  import errors, later
 from obx.main    import init, scan
+from obx.runtime import Cfg
 from obx.utils   import forever, pidfile, privileges
 
 
 from obx import modules
-
-
-Cfg         = Config()
-Cfg.name    = Config.__module__.rsplit(".", maxsplit=2)[-2]
-Cfg.mod     = "irc,rss"
-Cfg.wdr     = os.path.expanduser(f"~/.{Cfg.name}")
-Cfg.user    = getpass.getuser()
-Cfg.pidfile = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
-
-
-Persist.workdir = Cfg.wdr
 
 
 def daemon(verbose=False):

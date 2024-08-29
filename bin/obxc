@@ -15,12 +15,12 @@ import termios
 sys.path.insert(0, os.getcwd())
 
 
-from obx.config  import Config
 from obx.console import Console
 from obx.errors  import errors
 from obx.persist import Persist, skel
 from obx.main    import cmnd, enable, init, scan
 from obx.parse   import parse
+from obx.runtime import Cfg
 from obx.utils   import forever, modnames
 
 
@@ -31,16 +31,6 @@ if os.path.exists("mods"):
     import mods as MODS
 else:
     MODS = None
-
-
-Cfg         = Config()
-Cfg.name    = Config.__module__.rsplit(".", maxsplit=2)[-2]
-Cfg.mod     = "cmd,mod,thr,err"
-Cfg.wdr     = os.path.expanduser(f"~/.{Cfg.name}")
-Cfg.pidfile = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
-
-
-Persist.workdir = Cfg.wdr
 
 
 def wrap(func):

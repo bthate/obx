@@ -5,8 +5,8 @@
 "client"
 
 
-from .cache   import Cache
 from .cmds    import Commands
+from .object  import Object
 from .parse   import parse
 from .reactor import Reactor
 
@@ -15,7 +15,7 @@ class Client(Reactor):
 
     "Client"
 
-    cache = Cache()
+    cache = Object()
     out = None
 
     def __init__(self, outer=None):

@@ -69,7 +69,7 @@ def wrap(func):
     try:
         func()
     except (KeyboardInterrupt, EOFError):
-        print("")
+        pass
     except Exception as exc:
         later(exc)
     errors()
