@@ -13,9 +13,9 @@ import pathlib
 from .decoder import read
 from .default import Default
 from .encoder import write
-from .object  import Object, fqn, ident, search, update
+from .object  import Object, search, update
 from .lock    import disklock
-from .utils   import fntime, strip
+from .utils   import fntime, fqn, ident, strip
 
 
 class Persist(Object):

@@ -4,13 +4,10 @@
 "list of bots"
 
 
-from .object import Object
-
-
 rpr = object.__repr__
 
 
-class Fleet(Object):
+class Fleet:
 
     "Fleet"
 

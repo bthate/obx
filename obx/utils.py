@@ -1,10 +1,10 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R0911,C0415,W0212,E0401
 
 
 "utilities"
 
 
+import datetime
 import os
 import pathlib
 import pwd
@@ -43,6 +43,19 @@ def forever():
             time.sleep(1.0)
         except (KeyboardInterrupt, EOFError):
             _thread.interrupt_main()
+
+
+def fqn(obj):
+    "return full qualified name of an object."
+    kin = str(type(obj)).split()[-1][1:-2]
+    if kin == "type":
+        kin = f"{obj.__module__}.{obj.__name__}"
+    return kin
+
+
+def ident(obj):
+    "return an id for an object."
+    return os.path.join(fqn(obj), *str(datetime.datetime.now()).split())
 
 
 def laps(seconds, short=True):
@@ -93,7 +106,7 @@ def modnames(*args):
     return sorted(res)
 
 
-def named(obj):
+def named(obj): # pylint: disable=R0911
     "return a full qualified name of an object/function/module."
     if isinstance(obj, rtypes.ModuleType):
         return obj.__name__
@@ -155,6 +168,8 @@ def __dir__():
         'cdir',
         'fntime',
         'forever',
+        'fqn',
+        'ident',
         'laps',
         'modnames',
         'named',

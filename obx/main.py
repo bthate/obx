@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=W0718
 
 
 "main"
@@ -70,7 +69,7 @@ def wrap(func):
         func()
     except (KeyboardInterrupt, EOFError):
         pass
-    except Exception as exc:
+    except Exception as exc: # pylint: disable=W0718
         later(exc)
     errors()
 

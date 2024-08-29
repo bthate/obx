@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R0903,W0201
 
 
 "runtime"
@@ -11,23 +10,28 @@ import time
 
 
 from .default import Default
+from .object  import Object
 from .persist import Persist
 
 
 STARTTIME   = time.time()
 
 
-class Config(Default):
+class Config(Default, Object): # pylint: disable=R0903
 
     "configuration"
 
+    def __init__(self):
+        Default.__init__(self)
+        Object.__init__(self)
+        self.name    = Config.__module__.rsplit(".", maxsplit=1)[-2]
+        self.user    = getpass.getuser()
+        self.mod     = "cmd,skl,req,srv"
+        self.wdr     = os.path.expanduser(f"~/.{Cfg.name}")
+        self.pidfile = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
 
-Cfg         = Config()
-Cfg.name    = Config.__module__.rsplit(".", maxsplit=1)[-2]
-Cfg.user    = getpass.getuser()
-Cfg.mod     = "cmd,skl,req,srv"
-Cfg.wdr     = os.path.expanduser(f"~/.{Cfg.name}")
-Cfg.pidfile = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
+
+Cfg = Config()
 
 
 Persist.workdir = Cfg.wdr

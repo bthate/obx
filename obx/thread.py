@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R0902,W0718
 
 
 "threads"
@@ -53,7 +52,7 @@ class Thread(threading.Thread):
         func, args = self.queue.get()
         try:
             self._result = func(*args)
-        except Exception as ex:
+        except Exception as ex: # pylint: disable=W0718
             later(ex)
             for arg in args:
                 if isinstance(arg, Event):

@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=W0212,W0718
 
 
 "reactor"
@@ -33,7 +32,7 @@ class Reactor:
         if "target" in dir(func) and func.target not in str(func).lower():
             evt.ready()
             return
-        evt._thr = launch(func, self, evt)
+        evt._thr = launch(func, self, evt) # pylint: disable=W0212
 
     def loop(self):
         "proces events until interrupted."

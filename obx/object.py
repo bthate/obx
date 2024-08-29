@@ -1,11 +1,7 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R0902,W0105
 
 
 "a clean namespace"
-
-
-import datetime
 
 
 class Object:
@@ -89,19 +85,6 @@ def fmt(obj, args=None, skip=None, plain=False):
     return txt.strip()
 
 
-def fqn(obj):
-    "return full qualified name of an object."
-    kin = str(type(obj)).split()[-1][1:-2]
-    if kin == "type":
-        kin = f"{obj.__module__}.{obj.__name__}"
-    return kin
-
-
-def ident(obj):
-    "return an id for an object."
-    return pjoin(fqn(obj), *str(datetime.datetime.now()).split())
-
-
 def items(obj):
     "return the items of an object."
     if isinstance(obj, type({})):
@@ -154,9 +137,6 @@ def values(obj):
     return obj.__dict__.values()
 
 
-"interface"
-
-
 def pjoin(*args):
     "path join."
     return "/".join(args)
@@ -168,8 +148,6 @@ def __dir__():
         'construct',
         'edit',
         'fmt',
-        'fqn',
-        'ident',
         'items',
         'keys',
         'match',

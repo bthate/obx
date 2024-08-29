@@ -9,7 +9,8 @@
 import unittest
 
 
-from obx.object import Object, fmt, fqn, items, keys, update, values
+from obx.object import Object, fmt, items, keys, update, values
+from obx.utils  import fqn
 
 
 VALIDJSON = '{"test": "bla"}'
