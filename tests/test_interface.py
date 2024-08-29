@@ -34,7 +34,7 @@ PACKAGE = [
     'encoder',
     'errors',
     'event',
-    'interface',
+    'face',
     'lock',
     'log',
     'main',
