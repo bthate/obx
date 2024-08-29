@@ -1,11 +1,11 @@
 NAME
-
-::
+####
 
     OBX - write your own commands
 
 
 SYNOPSIS
+========
 
 ::
 
@@ -15,8 +15,7 @@ SYNOPSIS
 
 
 DESCRIPTION
-
-::
+===========
 
     OBX has all the python3 code to program a unix cli program, such as
     disk perisistence for configuration files, event handler to
@@ -38,6 +37,7 @@ DESCRIPTION
 
 
 INSTALL
+=======
 
 ::
 
@@ -54,46 +54,44 @@ INSTALL
 
 
 USAGE
+=====
 
-::
+without any argument the bot does nothing::
 
-    without any argument the bot does nothing
+     $ obx
+     $
 
-    $ obx
-    $
+see list of commands::
 
-    see list of commands
+     $ obx cmd
+     cmd,skl,srv
 
-    $ obx cmd
-    cmd,skl,srv
+start a console::
 
-    start a console
+     $ obxc
+     >
 
-    $ obxc
-    >
+start daemon::
 
-    start daemon
-
-    $ obxd
-    $ 
+     $ obxd
+     $ 
 
 
 CONFIGURATION
+=============
 
-::
-
-    irc
+irc::
 
     $ obx cfg server=<server>
     $ obx cfg channel=<channel>
     $ obx cfg nick=<nick>
 
-    sasl
+sasl::
 
     $ obx pwd <nsvnick> <nspass>
     $ obx cfg password=<frompwd>
 
-    rss
+rss::
 
     $ obx rss <url>
     $ obx dpl <url> <item1,item2>
@@ -102,6 +100,7 @@ CONFIGURATION
 
 
 COMMANDS
+========
 
 ::
 
@@ -112,6 +111,7 @@ COMMANDS
 
 
 FILES
+=====
 
 ::
 
@@ -123,14 +123,12 @@ FILES
 
 
 AUTHOR
-
-::
+======
 
     Bart Thate <bthate@dds.nl>
 
 
 COPYRIGHT
-
-::
+=========
 
     OBX is Public Domain.
