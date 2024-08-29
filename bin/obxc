@@ -17,7 +17,7 @@ sys.path.insert(0, os.getcwd())
 
 from obx.console import Console
 from obx.errors  import errors
-from obx.persist import Persist, skel
+from obx.persist import skel
 from obx.main    import cmnd, enable, init, scan
 from obx.parse   import parse
 from obx.runtime import Cfg

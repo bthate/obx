@@ -10,7 +10,7 @@ import os
 import sys
 
 
-from obx.persist import Persist, skel
+from obx.persist import skel
 from obx.errors  import errors, later
 from obx.main    import init, scan
 from obx.runtime import Cfg
