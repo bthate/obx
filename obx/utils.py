@@ -13,9 +13,6 @@ import types as rtypes
 import _thread
 
 
-SEP = "/"
-
-
 def cdir(pth):
     "create directory."
     path = pathlib.Path(pth)
