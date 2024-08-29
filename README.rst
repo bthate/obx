@@ -1,6 +1,6 @@
 **NAME**
 
-OBX - write your own commands
+``OBX`` - write your own commands
 
 
 **SYNOPSIS**
@@ -14,23 +14,23 @@ OBX - write your own commands
 
 **DESCRIPTION**
 
-OBX has all the python3 code to program a unix cli program, such as
+``OBX`` has all the python3 code to program a unix cli program, such as
 disk perisistence for configuration files, event handler to
 handle the client/server connection, code to introspect modules
 for commands, deferred exception handling to not crash on an
 error, a parser to parse commandline options and values, etc.
 
-OBX uses object programming (OP) that allows for easy json save//load
+``OBX`` uses object programming (OP) that allows for easy json save//load
 to/from disk of objects. It provides an "clean namespace" Object class
 that only has dunder methods, so the namespace is not cluttered with
 method names. This makes storing and reading to/from json possible.
 
-OBX has a demo bot, it can connect to IRC, fetch and display RSS
+``OBX`` has a demo bot, it can connect to IRC, fetch and display RSS
 feeds, take todo notes, keep a shopping list and log text. You can
 also copy/paste the service file and run it under systemd for 24/7
 presence in a IRC channel.
 
-OBX is Public Domain.
+``OBX`` is Public Domain.
 
 
 **INSTALL**
@@ -74,18 +74,24 @@ start daemon::
 
 **CONFIGURATION**
 
-irc::
+irc
+
+::
 
     $ obx cfg server=<server>
     $ obx cfg channel=<channel>
     $ obx cfg nick=<nick>
 
-sasl::
+sasl
+
+::
 
     $ obx pwd <nsvnick> <nspass>
     $ obx cfg password=<frompwd>
 
-rss::
+rss
+
+::
 
     $ obx rss <url>
     $ obx dpl <url> <item1,item2>
@@ -116,11 +122,13 @@ rss::
 
 **AUTHOR**
 
+::
 
-Bart Thate <bthate@dds.nl>
+    Bart Thate <bthate@dds.nl>
 
 
 **COPYRIGHT**
 
+::
 
-OBX is Public Domain.
+    OBX is Public Domain.
