@@ -11,7 +11,7 @@ import sys
 import unittest
 
 
-from obx.interface import *
+from obx.face import *
 
 
 import obx

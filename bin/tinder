@@ -19,7 +19,7 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.interface import *
+from obx.face import *
 
 
 from obx import modules
