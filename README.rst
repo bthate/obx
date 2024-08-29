@@ -10,6 +10,7 @@
     obx  <cmd> [key=val] [key==val]
     obxc [-i] [-v]
     obxd 
+    obxs
 
 
 **DESCRIPTION**
@@ -55,23 +56,28 @@ presence in a IRC channel.
 
 without any argument the bot does nothing::
 
-     $ obx
-     $
+    $ obx
+    $
 
 see list of commands::
 
-     $ obx cmd
-     cmd,skl,srv
+    $ obx cmd
+    cmd,skl,srv
 
 start a console::
 
-     $ obxc
-     >
+    $ obxc
+    >
 
 start daemon::
 
-     $ obxd
-     $ 
+    $ obxd
+    $ 
+
+
+start a service::
+
+    $ obxs
 
 
 **CONFIGURATION**
@@ -120,6 +126,7 @@ rss
     ~/.local/bin/obx
     ~/.local/bin/obxc
     ~/.local/bin/obxd
+    ~/.local/bin/obxs
     ~/.local/pipx/venvs/obx/*
 
 
