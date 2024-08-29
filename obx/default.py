@@ -4,7 +4,10 @@
 "default values"
 
 
-class Default: # pylint: disable=R0902,R0903
+from .object import Object
+
+
+class Default(Object): # pylint: disable=R0902,R0903
 
     "Default"
 

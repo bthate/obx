@@ -29,7 +29,7 @@ class Reactor:
         if not func:
             evt.ready()
             return
-        if "target" in dir(func) and func.target not in str(func).lower():
+        if "target" in dir(func) and func.target not in str(self).lower():
             evt.ready()
             return
         evt._thr = launch(func, self, evt) # pylint: disable=W0212

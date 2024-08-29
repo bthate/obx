@@ -31,7 +31,8 @@ classifiers = [
 script-files = [
     "bin/obx",
     "bin/obxc",
-    "bin/obxd"
+    "bin/obxd",
+    "bin/obxs"
 ]
 packages = [
     "obx",

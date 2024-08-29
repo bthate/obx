@@ -69,10 +69,5 @@ def main():
     forever()
 
 
-def wrapped():
-    "wrap main function."
-    wrap(main)
-
-
 if __name__ == "__main__":
-    wrapped()
+    wrap(main)
