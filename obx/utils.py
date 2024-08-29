@@ -25,7 +25,7 @@ def cdir(pth):
 def fntime(daystr):
     "convert file name to it's saved time."
     daystr = daystr.replace('_', ':')
-    datestr = ' '.join(daystr.split(SEP)[-2:])
+    datestr = ' '.join(daystr.split(os.sep)[-2:])
     if '.' in datestr:
         datestr, rest = datestr.rsplit('.', 1)
     else:
@@ -160,7 +160,7 @@ def spl(txt):
 
 def strip(pth, nmr=3):
     "reduce to path with directory."
-    return SEP.join(pth.split(SEP)[-nmr:])
+    return os.sep.join(pth.split(os.sep)[-nmr:])
 
 
 def __dir__():
