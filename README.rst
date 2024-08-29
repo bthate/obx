@@ -134,4 +134,4 @@ rss
 
 ::
 
-    ``OBX`` is Public Domain.
+    OBX is Public Domain.
