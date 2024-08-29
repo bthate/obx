@@ -57,7 +57,8 @@ def main():
     if "a" in Cfg.opts:
         Cfg.mod += ",".join(modnames(modules, MODS))
     readline.redisplay()
-    enable(print)
+    if "v" in Cfg.opts:
+        enable(print)
     skel()
     scan(Cfg.mod, modules, MODS)
     csl = Console(print, input)
