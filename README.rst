@@ -1,14 +1,9 @@
-README
-######
-
-NAME
-====
+**NAME**
 
 OBX - write your own commands
 
 
-SYNOPSIS
-========
+**SYNOPSIS**
 
 ::
 
@@ -17,8 +12,7 @@ SYNOPSIS
     obxd 
 
 
-DESCRIPTION
-===========
+**DESCRIPTION**
 
 OBX has all the python3 code to program a unix cli program, such as
 disk perisistence for configuration files, event handler to
@@ -39,8 +33,7 @@ presence in a IRC channel.
 OBX is Public Domain.
 
 
-INSTALL
-=======
+**INSTALL**
 
 ::
 
@@ -56,8 +49,7 @@ INSTALL
     joins #obx on localhost
 
 
-USAGE
-=====
+**USAGE**
 
 without any argument the bot does nothing::
 
@@ -80,8 +72,7 @@ start daemon::
      $ 
 
 
-CONFIGURATION
-=============
+**CONFIGURATION**
 
 irc::
 
@@ -102,8 +93,7 @@ rss::
     $ obx nme <url> <name>
 
 
-COMMANDS
-========
+**COMMANDS**
 
 ::
 
@@ -113,8 +103,7 @@ COMMANDS
     pwd - sasl nickserv name/pass
 
 
-FILES
-=====
+**FILES**
 
 ::
 
@@ -125,13 +114,13 @@ FILES
     ~/.local/pipx/venvs/obx/*
 
 
-AUTHOR
-======
-
-    Bart Thate <bthate@dds.nl>
+**AUTHOR**
 
 
-COPYRIGHT
-=========
+Bart Thate <bthate@dds.nl>
 
-    OBX is Public Domain.
+
+**COPYRIGHT**
+
+
+OBX is Public Domain.
