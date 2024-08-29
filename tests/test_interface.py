@@ -1,4 +1,6 @@
 # This file is placed in the Public Domain.
+# pylint: disable=W0401,W0614,W0622
+# ruff: noqa: F403,F405
 
 
 "interface"
@@ -9,21 +11,76 @@ import sys
 import unittest
 
 
-import obx.object
+from obx.interface import *
+
+
+import obx
+
+
+PACKAGE = [
+    '__builtins__',
+    '__cached__',
+    '__doc__',
+    '__file__',
+    '__loader__',
+    '__name__',
+    '__package__',
+    '__path__',
+    '__spec__',
+    'client',
+    'cmds',
+    'decoder',
+    'default',
+    'encoder',
+    'errors',
+    'event',
+    'interface',
+    'lock',
+    'log',
+    'main',
+    'object',
+    'parse',
+    'persist',
+    'reactor',
+    'repeater',
+    'thread',
+    'timer',
+    'utils'
+]
 
 
 METHODS = [
-    "Object",
-    "construct",
-    "edit",
-    "fmt",
-    "fqn",
-    "items",
-    "keys",
-    "update",
-    "values",
+    '__class__',
+    '__contains__',
+    '__delattr__',
+    '__dict__',
+    '__dir__',
+    '__doc__',
+    '__eq__',
+    '__format__',
+    '__ge__',
+    '__getattribute__',
+    '__getstate__',
+    '__gt__',
+    '__hash__',
+    '__init__',
+    '__init_subclass__',
+    '__iter__',
+    '__le__',
+    '__len__',
+    '__lt__',
+    '__module__',
+    '__ne__',
+    '__new__',
+    '__reduce__',
+    '__reduce_ex__',
+    '__repr__',
+    '__setattr__',
+    '__sizeof__',
+    '__str__',
+    '__subclasshook__',
+    '__weakref__'
 ]
-
 
 
 DICT = {}
@@ -36,18 +93,36 @@ DIFF = [
 ]
 
 
-OBJECT = obx.object
+OBJECT = obx
 
 
 class TestInterface(unittest.TestCase): # pylint: disable=R0903
 
     "TestInterface"
 
-    def test_methodinterface(self):
+    def test_package(self):
         "test methods interface."
         okd = True
-        for meth in METHODS:
+        for meth in PACKAGE:
             func1 = getattr(OBJECT, meth)
+            if not func1:
+                continue
+            func2 = DICT.get(meth)
+            if not func2:
+                continue
+            if dir(func1) != dir(func2):
+                print(func1, func2)
+                okd = False
+            sys.stdout.flush()
+        self.assertTrue(okd)
+
+
+    def test_objects(self):
+        "test methods interface."
+        okd = True
+        obj = Object()
+        for meth in METHODS:
+            func1 = getattr(obj, meth)
             if not func1:
                 continue
             func2 = DICT.get(meth)

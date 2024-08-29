@@ -27,8 +27,8 @@ class Config(Default, Object): # pylint: disable=R0903
         self.name    = Config.__module__.rsplit(".", maxsplit=1)[-2]
         self.user    = getpass.getuser()
         self.mod     = "cmd,skl,req,srv"
-        self.wdr     = os.path.expanduser(f"~/.{Cfg.name}")
-        self.pidfile = os.path.join(Cfg.wdr, f"{Cfg.name}.pid")
+        self.wdr     = os.path.expanduser(f"~/.{self.name}")
+        self.pidfile = os.path.join(self.wdr, f"{self.name}.pid")
 
 
 Cfg = Config()
