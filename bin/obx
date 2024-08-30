@@ -8,6 +8,7 @@
 import sys
 
 
+from obx.errors  import errors
 from obx.persist import skel
 from obx.main    import cmnd, enable, scan, wrap
 from obx.parse   import parse
@@ -31,3 +32,4 @@ def main():
 
 if __name__ == "__main__":
     wrap(main)
+    errors()
