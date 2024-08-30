@@ -4,7 +4,7 @@
 "a clean namespace"
 
 
-class Object:
+class Object: # pylint: disable=R0902
 
     "Object"
 

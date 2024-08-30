@@ -122,7 +122,7 @@ def payload(clt):
 payload.threaded = True
 
 
-def wrap(function):
+def wrap(function): # pylint: disable=E0102
     "reset terminal."
     old2 = None
     try:

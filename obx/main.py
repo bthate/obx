@@ -6,7 +6,7 @@
 
 from .client  import Client, command
 from .cmds    import Commands
-from .errors  import Errors, errors, later
+from .errors  import Errors, later
 from .persist import Persist
 from .event   import Event
 from .log     import Logging
@@ -71,7 +71,6 @@ def wrap(func):
         pass
     except Exception as exc: # pylint: disable=W0718
         later(exc)
-    errors()
 
 
 def __dir__():
