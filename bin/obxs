@@ -13,10 +13,10 @@ import pwd
 
 from obx.modules import face
 from obx.persist import Workdir
-from obx.runtime import errors, forever, init, wrap
+from obx.runtime import NAME, errors, forever, init, wrap
 
 
-from obx import NAME as PROGNAME
+PROGNAME = NAME
 
 
 def pidfile(name):

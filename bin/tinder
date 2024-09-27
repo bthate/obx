@@ -17,8 +17,10 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
+from obx import Default, Object
+
+
 from obx.command import Commands, command, parse
-from obx.object  import Default, Object
 from obx.modules import face
 from obx.persist import Workdir, laps, skel
 from obx.runtime import STARTTIME, Client, Event, errors, later, launch
