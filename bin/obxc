@@ -2,67 +2,96 @@
 # This file is placed in the Public Domain.
 
 
-"main"
+"console"
 
 
 import os
 import readline
 import sys
 import termios
+import time
 
 
-from obx.console import Console
-from obx.errors  import errors
-from obx.persist import skel
-from obx.main    import cmnd, enable, init, scan
-from obx.parse   import parse
-from obx.runtime import Cfg
-from obx.utils   import forever, modnames
+from obx.command import command, parse
+from obx.modules import face
+from obx.object  import Default
+from obx.runtime import Client, Event, errors, forever, init, later
 
 
-from obx import modules
+MODS = None
+NAME = Default.__module__.split(".", maxsplit=2)[-2]
 
 
-if os.path.exists("mods"):
-    import mods as MODS # pylint: disable=E0401
-else:
-    MODS = None
+if os.path.exists('mods'):
+    from mods import face as MODS # pylint: disable=E0401
 
 
-def wrap(func):
-    "reset terminal."
-    old3 = None
+class Console(Client):
+
+    "Console"
+
+    def __init__(self):
+        Client.__init__(self)
+        self.register("command", command)
+
+    def callback(self, evt):
+        "wait for result."
+        Client.callback(self, evt)
+        evt.wait()
+
+    def poll(self):
+        "poll console and create event."
+        evt = Event()
+        evt.txt = input("> ")
+        return evt
+
+    def raw(self, txt):
+        "print text."
+        print(txt)
+
+
+def banner():
+    "show banner."
+    tme = time.ctime(time.time()).replace("  ", " ")
+    print(f"{NAME.upper()} since {tme}")
+
+
+def wrap(func, outer):
+    "reset console."
+    old2 = None
     try:
-        old3 = termios.tcgetattr(sys.stdin.fileno())
+        old2 = termios.tcgetattr(sys.stdin.fileno())
     except termios.error:
         pass
     try:
         func()
     except (KeyboardInterrupt, EOFError):
-        print("")
+        outer("")
+    except Exception as ex: # pylint: disable=W0718
+        later(ex)
     finally:
-        if old3:
-            termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old3)
-    errors()
+        if old2:
+            termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old2)
 
 
 def main():
     "main"
-    parse(Cfg, " ".join(sys.argv[1:]))
-    Cfg.dis = Cfg.sets.dis
-    Cfg.mod += "," + ",".join(modnames(modules, MODS))
     readline.redisplay()
-    if "v" in Cfg.opts:
-        enable(print)
-    skel()
-    scan(Cfg.mod, modules, MODS)
-    csl = Console(print, input)
-    if "i" in Cfg.opts:
-        init(Cfg.mod, modules, MODS, disable=Cfg.dis)
+    cfg = Default()
+    parse(cfg, " ".join(sys.argv[1:]))
+    if "v" in cfg.opts:
+        banner()
+    if "i" in cfg.opts:
+        for mod, thr in init(face, MODS):
+            if "v" in cfg.opts:
+                mod.VERBOSE = print
+            if "w" in cfg.opts:
+                thr.join()
+    csl = Console()
     csl.start()
-    cmnd(Cfg.otxt, print)
     forever()
 
 
 if __name__ == "__main__":
-    wrap(main)
+    wrap(main, print)
+    errors(print)

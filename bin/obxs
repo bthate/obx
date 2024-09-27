@@ -2,34 +2,49 @@
 # This file is placed in the Public Domain.
 
 
-"main"
+"service"
 
 
+import getpass
 import os
+import pathlib
+import pwd
 
 
-from obx.persist import skel
-from obx.main    import init, scan, wrap
-from obx.runtime import Cfg
-from obx.utils   import forever, modnames, pidfile, privileges
+from obx.modules import face
+from obx.persist import Workdir
+from obx.runtime import errors, forever, init, wrap
 
 
-from obx import modules
+from obx import NAME as PROGNAME
 
 
-Cfg.mod = ",".join(modnames(modules))
+def pidfile(name):
+    "write the pid to a file."
+    filename = os.path.join(Workdir.wdr, f"{name}.pid")
+    if os.path.exists(filename):
+        os.unlink(filename)
+    path = pathlib.Path(filename)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(filename, "w", encoding="utf-8") as fds:
+        fds.write(str(os.getpid()))
+
+
+def privileges(username):
+    "privileges."
+    pwnam = pwd.getpwnam(username)
+    os.setgid(pwnam.pw_gid)
+    os.setuid(pwnam.pw_uid)
 
 
 def main():
     "main"
-    privileges(Cfg.user)
-    skel()
-    pidfile(Cfg.pidfile)
-    scan(Cfg.mod, modules)
-    init(Cfg.mod, modules)
+    privileges(getpass.getuser())
+    pidfile(PROGNAME)
+    init(face)
     forever()
 
 
 if __name__ == "__main__":
-    wrap(main)
-    os._exit(0) # pylint: disable=W0212
+    wrap(main, print)
+    errors(print)
