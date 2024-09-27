@@ -7,9 +7,7 @@
 import unittest
 
 
-from obx.decoder import loads
-from obx.encoder import dumps
-from obx.object  import Object
+from obx import Object, dumps, loads
 
 
 VALIDJSON = "{'test': 'bla'}"

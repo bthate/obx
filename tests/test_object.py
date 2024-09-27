@@ -9,8 +9,7 @@
 import unittest
 
 
-from obx.object import Object, fmt, items, keys, update, values
-from obx.utils  import fqn
+from obx import Object, fmt, fqn, items, keys, update, values
 
 
 VALIDJSON = '{"test": "bla"}'
@@ -140,11 +139,11 @@ class TestObject(unittest.TestCase):
 
     def test_module(self):
         "test module name."
-        self.assertEqual(Object().__module__, "obx.object")
+        self.assertEqual(Object().__module__, "obx")
 
     def test_fqn(self):
         "test full qualified domain name."
-        self.assertEqual(fqn(Object()), "obx.object.Object")
+        self.assertEqual(fqn(Object()), "obx.Object")
 
     def test_repr(self):
         "test representation."

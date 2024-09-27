@@ -2,7 +2,7 @@
 # pylint: disable=R
 
 
-"a clean namespace"
+"OBX"
 
 
 import json

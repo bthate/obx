@@ -27,25 +27,10 @@ PACKAGE = [
     '__package__',
     '__path__',
     '__spec__',
-    'client',
-    'cmds',
-    'decoder',
-    'default',
-    'encoder',
-    'errors',
-    'event',
+    'command',
     'face',
-    'lock',
-    'log',
-    'main',
-    'object',
-    'parse',
     'persist',
-    'reactor',
-    'repeater',
-    'thread',
-    'timer',
-    'utils'
+    'runtime'
 ]
 
 
