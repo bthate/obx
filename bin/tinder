@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 # This file is placed in the Public Domain.
-#
-# pylint: disable=C0103,C0413,W0201,W0401,W0614,W0622,E0401
+# pylint: disable=C0413,W0212,W0401,W0614,W0622,W0718
 
 
 "tinder"
 
 
 import os
-import profile
 import shutil
 import sys
 import termios
@@ -19,19 +17,17 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.face import *
+from obx.command import Commands, command, parse
+from obx.object  import Default, Object
+from obx.modules import face
+from obx.persist import Workdir, laps, skel
+from obx.runtime import STARTTIME, Client, Event, errors, later, launch
 
 
-from obx import modules
+cfg = Default()
 
 
-if os.path.exists("files"):
-    import files as mods
-else:
-    mods = None
-
-
-modules.rss.DEBUG = True
+face.rss.DEBUG = True
 
 
 LAP = 1
@@ -39,19 +35,6 @@ NRS = 1
 NRCOMMAND = 1
 PERCALL   = 1
 STARTTIME = time.time()
-Client.out   = print
-
-
-Cfg         = Default()
-Cfg.debug   = True
-Cfg.mod     = ""
-Cfg.name    = "tinder"
-Cfg.silent  = False
-Cfg.skip    = ["debug",]
-Cfg.wdr     = ".test"
-
-
-Persist.workdir = Cfg.wdr
 
 
 events = []
@@ -80,101 +63,89 @@ class CLI(Client):
 
     "command line interface."
 
+    def __init__(self):
+        Client.__init__(self)
+        self.register("command", command)
+
+    def callback(self, evt):
+        Client.callback(self, evt)
+        evt.wait()
+
     def raw(self, txt):
-        if "v" in Cfg.opts:
+        if "v" in cfg.opts:
             print(txt)
 
 
+def banner():
+    "show banner."
+    tme = time.ctime(time.time()).replace("  ", " ")
+    print(f"{Workdir.name.upper()} since {tme}")
+
+
 def consume(evts):
-    "wait for events."
-    fixed = []
-    res = []
+    "wait for all events to finish."
     for evt in evts:
-        #print(f"waiting {evt}")
-        res.append(evt.wait())
-        fixed.append(evt)
-    for fff in fixed:
-        try:
-            evts.remove(fff)
-        except ValueError:
-            continue
-    return res
+        evt.wait()
 
 
 def payload(clt):
     "do payload."
-    cmdz = Commands.cmds
     with paylock:
         nmr = 0
-        for cmdd in cmdz:
+        for cmdd in sorted(Commands.cmds):
             for ex in getattr(param, cmdd, [""]):
                 evt = Event()
-                evt.channel = "#nixt"
-                evt.orig = repr(clt)
                 evt.txt = cmdd + " " + ex
-                evt.type = "command"
                 clt.put(evt)
                 events.append(evt)
                 nmr += 1
         return nmr
 
 
-payload.threaded = True
-
-
-def wrap(function): # pylint: disable=E0102
-    "reset terminal."
-    old2 = None
+def wrap(function):
+    "reset console."
+    old3 = None
     try:
-        old2 = termios.tcgetattr(sys.stdin.fileno())
+        old3 = termios.tcgetattr(sys.stdin.fileno())
     except termios.error:
         pass
     try:
         function()
     except (KeyboardInterrupt, EOFError):
         print("")
+    except Exception as ex:
+        later(ex)
     finally:
-        if old2:
-            termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old2)
+        if old3:
+            termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old3)
 
 
 def main():
     "main"
-    enable(print)
-    Cfg.dis = Cfg.sets.dis
-    Cfg.mod = ",".join(modnames(modules, mods))
-    if "v" in Cfg.opts:
-        dte = " ".join(time.ctime(time.time()).replace("  ", " ").split()[1:])
-        print(f'{dte} {Cfg.name.upper()} {Cfg.opts.upper()} {Cfg.mod.upper()}'.replace("  ", " "))
-    scan(Cfg.mod, modules, mods)
-    nrs = Cfg.index or 1
-    nrcommand = len(Commands.cmds) or 1
+    Workdir.wdr = ".test"
+    parse(cfg, " ".join(sys.argv[1:]))
+    nrcommands = len(Commands.cmds) or 1
+    if "v" in cfg.opts:
+        banner()
+    if "f" in cfg.opts:
+        if os.path.exists(Workdir.wdr):
+            shutil.rmtree(Workdir.wdr)
+    skel()
     clt = CLI()
     clt.start()
-    clt.threaded = "t" in Cfg.opts
-    thrs = []
+    nrs = cfg.index or 1
     for _nr in range(nrs):
-        thrs.append(launch(payload, clt))
-    for thr in thrs:
-        thr.join()
-    #shutdown()
+        launch(payload, clt)
     consume(events)
-    endtime = time.time()
-    lap = laps(endtime-STARTTIME)
-    percall = (endtime-STARTTIME)/(nrs*nrcommand)
-    errors()
-    if "v" in Cfg.opts:
-        print(f"{lap} {nrs} {nrcommand} {percall}")
+    clt.wait()
+    if "v" in cfg.opts:
+        endtime = time.time()
+        lap = laps(endtime-STARTTIME)
+        percall = (endtime-STARTTIME)/(nrs*nrcommands)
+        print(",".join(Commands.cmds))
+        print(f"{lap} {nrs} {nrcommands} {percall}")
 
 
 if __name__ == "__main__":
-    parse(Cfg, " ".join(sys.argv[1:]))
-    if "f" in Cfg.opts:
-        if os.path.exists(Persist.workdir):
-            shutil.rmtree(Persist.workdir)
-    skel()
-    if "p" in Cfg.opts:
-        profile.runctx(main.__code__, globals(), locals())
-    else:
-        wrap(main)
-    sys.exit()
+    wrap(main)
+    errors(print)
