@@ -15,6 +15,7 @@ import _thread
 
 NAME      = __file__.rsplit("/", maxsplit=2)[-2]
 STARTTIME = time.time()
+VERBOSE   = None
 
 
 class Broker:
@@ -278,6 +279,25 @@ class Repeater(Timer):
         super().run()
 
 
+class Logging:
+
+    "Logging"
+
+    filter = []
+
+
+Logging.filter = ["PING", "PONG", "PRIVMSG"]
+
+
+def debug(txt):
+    "print to console."
+    for skp in Logging.filter:
+        if skp in txt:
+            return
+    if VERBOSE:
+        VERBOSE(txt)
+
+
 def forever():
     "it doesn't stop, until ctrl-c"
     while True:
@@ -360,6 +380,7 @@ def __dir__():
         'Repeater',
         'Thread',
         'Timer',
+        'debug',
         'forever',
         'errors',
         'init',

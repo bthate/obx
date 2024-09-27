@@ -8,9 +8,7 @@ import threading
 import time
 
 
-from .. import Object, update
-
-
+from ..        import Object, update
 from ..command import Commands
 from ..persist import laps
 from ..runtime import STARTTIME

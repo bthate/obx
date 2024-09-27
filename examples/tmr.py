@@ -10,13 +10,15 @@ import re
 import time as ttime
 
 
-from ..fleet   import Fleet
-from ..log     import debug
-from ..object  import fmt
-from ..persist import find, sync
-from ..thread  import launch
-from ..timer   import Timer
-from ..utils   import laps
+from obx         import fmt
+from obx.command import Commands
+from obx.persist import find, laps, sync
+from obx.runtime import Broker, Timer, debug, launch
+
+
+def announce(txt):
+    for bot in Broker.all("IRC"):
+        bot.announce(txt)
 
 
 def init():
@@ -24,7 +26,7 @@ def init():
     for _fnm, obj in find("timer"):
         diff = float(obj.time) - ttime.time()
         if diff > 0:
-            timer = Timer(diff, Fleet.announce, obj.rest)
+            timer = Timer(diff, announce, obj.rest)
             launch(timer.start)
             debug(f'started tmr {fmt(timer, skip="func,state,args")}')
 
@@ -217,9 +219,12 @@ def tmr(event):
         return res
     diff = target - ttime.time()
     event.reply("ok " +  laps(diff))
-    timer = Timer(diff, Fleet.announce, event.rest, thrname=event.cmd)
+    timer = Timer(diff, announce, event.rest, thrname=event.cmd)
     timer.time = target
     timer.rest = event.rest
     sync(timer)
     launch(timer.start)
     return res
+
+
+Commands.add(tmr)

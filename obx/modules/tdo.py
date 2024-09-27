@@ -8,9 +8,7 @@
 import time
 
 
-from .. import Object
-
-
+from ..        import Object
 from ..command import Commands
 from ..persist import find, fntime, laps, sync
 

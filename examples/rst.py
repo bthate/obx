@@ -12,12 +12,9 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
-from ..errors  import later
-from ..default import Default
-from ..log     import debug
-from ..object  import Object, fmt
-from ..persist import Persist, fns
-from ..thread  import launch
+from obx         import Default, Object, fmt
+from obx.persist import Workdir, fns
+from obx.runtime import debug, later, launch
 
 
 def init():
@@ -116,7 +113,7 @@ class RESTHandler(BaseHTTPRequestHandler):
                 txt += f'<a href="http://{Config.hostname}:{Config.port}/{fnm}">{fnm}</a><br>\n'
             self.send(html(txt.strip()))
             return
-        fnm = Persist.workdir + os.sep + "store" + os.sep + self.path
+        fnm = Workdir.wdr + os.sep + "store" + os.sep + self.path
         try:
             with open(fnm, "r", encoding="utf-8") as file:
                 txt = file.read()

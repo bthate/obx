@@ -12,10 +12,14 @@ import threading
 import time
 
 
-from ..fleet  import Fleet
-from ..log    import debug
-from ..object import Object, fmt
-from ..thread import launch
+from obx         import Object, fmt
+from obx.command import Commands
+from obx.runtime import debug, launch
+
+
+def announce(txt):
+    for bot in Broker.all("IRC"):
+        bot.announce(txt)
 
 
 def init():
@@ -47,7 +51,7 @@ class UDP(Object):
     def output(self, txt, addr=None):
         if addr:
             Cfg.addr = addr
-        Fleet.announce(txt.replace("\00", ""))
+        announce(txt.replace("\00", ""))
 
     def loop(self):
         try:
@@ -115,3 +119,6 @@ def udp(event):
             toudp(Cfg.host, Cfg.port, txt)
         if stop:
             break
+
+
+Commands.add(udp)

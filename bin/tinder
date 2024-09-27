@@ -26,6 +26,11 @@ from obx.persist import Workdir, laps, skel
 from obx.runtime import STARTTIME, Client, Event, errors, later, launch
 
 
+if os.path.exists('examples'):
+    from examples import face as MODS  # pylint: disable=W0611,E0401
+
+
+
 cfg = Default()
 
 
@@ -58,6 +63,8 @@ param.req = [""]
 param.res = [""]
 param.rss = ["http://hnrss.org/newest",]
 param.tdo = ["mekker"]
+param.tmr = ["13:00 bla", "23:59 mekker"]
+param.udp = ["mekker"]
 param.ver = [""]
 
 

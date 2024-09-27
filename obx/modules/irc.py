@@ -16,12 +16,10 @@ import time
 import _thread
 
 
-from .. import Default, Object, edit, fmt, keys
-
-
+from ..        import Default, Object, edit, fmt, keys
 from ..command import Commands, command
 from ..persist import last, sync
-from ..runtime import Broker, Client, Event, later, launch
+from ..runtime import Broker, Client, Event, debug, later, launch
 
 
 NAME = Client.__module__.split(".", maxsplit=2)[-2]
@@ -65,25 +63,6 @@ class Config(Default):
         self.realname = self.realname or Config.realname
         self.server = self.server or Config.server
         self.username = self.username or Config.username
-
-
-class Logging:
-
-    "Logging"
-
-    filter = []
-
-
-Logging.filter = ["PING", "PONG", "PRIVMSG"]
-
-
-def debug(txt):
-    "print to console."
-    for skp in Logging.filter:
-        if skp in txt:
-            return
-    if VERBOSE:
-        VERBOSE(txt)
 
 
 class TextWrap(textwrap.TextWrapper):

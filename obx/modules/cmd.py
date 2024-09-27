@@ -4,9 +4,7 @@
 "commands."
 
 
-from .. import keys
-
-
+from ..        import keys
 from ..command import Commands
 
 
