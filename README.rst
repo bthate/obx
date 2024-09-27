@@ -54,30 +54,62 @@ presence in a IRC channel.
 **USAGE**
 
 
-without any argument the bot does nothing::
+without any argument the bot does nothing
+
+::
 
     $ obx
     $
 
-see list of commands::
+see list of commands
+
+::
 
     $ obx cmd
-    cmd,skl,srv
+    cfg,cmd,dne,dpl,err,exp,imp,log,mod,mre,nme,
+    pwd,rem,req,res,rss,srv,syn,tdo,thr,upt
 
-start a console::
+
+start a console
+
+::
 
     $ obxc
     >
 
-start daemon::
+
+use -v to enable verbose
+
+::
+
+    $ obxc -v
+    OBX since Tue Sep 17 04:10:08 2024
+    > 
+
+
+use -i to init modules
+
+::
+
+    $ obxc -i
+    >
+
+
+
+start daemon
+
+::
 
     $ obxd
-    $ 
+    $
 
 
-start a service::
+start service
 
-    $ obxs
+::
+
+   $ obxs
+   <runs until ctrl-c>
 
 
 **CONFIGURATION**
@@ -112,10 +144,24 @@ rss
 
 ::
 
+    here is a list of available commands
+
     cfg - irc configuration
     cmd - commands
-    mre - displays cached output
+    dpl - sets display items
+    err - show errors
+    exp - export opml (stdout)
+    imp - import opml
+    log - log text
+    mre - display cached output
     pwd - sasl nickserv name/pass
+    rem - removes a rss feed
+    res - restore deleted feeds
+    rss - add a feed
+    srv - create service file
+    syn - sync rss feeds
+    tdo - add todo item
+    thr - show running threads
 
 
 **FILES**
@@ -128,6 +174,13 @@ rss
     ~/.local/bin/obxd
     ~/.local/bin/obxs
     ~/.local/pipx/venvs/obx/*
+
+
+**SOURCE**
+
+::
+
+    source is at ``https://github.com/bthate/obx``
 
 
 **AUTHOR**

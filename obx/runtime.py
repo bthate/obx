@@ -13,6 +13,7 @@ import types
 import _thread
 
 
+NAME      = __file__.rsplit("/", maxsplit=2)[-2]
 STARTTIME = time.time()
 
 
