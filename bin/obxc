@@ -12,14 +12,16 @@ import termios
 import time
 
 
+from obx import Default
+
+
 from obx.command import command, parse
 from obx.modules import face
-from obx.object  import Default
 from obx.runtime import Client, Event, errors, forever, init, later
 
 
 MODS = None
-NAME = Default.__module__.split(".", maxsplit=2)[-2]
+NAME = Default.__module__.split(".", maxsplit=2)[-1]
 
 
 if os.path.exists('mods'):

@@ -13,7 +13,7 @@ import time
 import _thread
 
 
-from .object import Default, dump, fqn, load, match, search, update
+from . import Default, dump, fqn, load, match, search, update
 
 
 lock     = _thread.allocate_lock()
@@ -30,7 +30,7 @@ class Workdir:
     "Workdir"
 
     fqns = []
-    name = Default.__module__.split(".", maxsplit=2)[-2]
+    name = Default.__module__.split(".", maxsplit=2)[-1]
     wdr = os.path.expanduser(f"~/.{name}")
 
 

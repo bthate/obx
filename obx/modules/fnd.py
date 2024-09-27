@@ -7,8 +7,10 @@
 import time
 
 
+from .. import fmt
+
+
 from ..command import Commands
-from ..object  import fmt
 from ..persist import find, fntime, laps, long, skel, store, types
 
 

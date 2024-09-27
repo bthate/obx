@@ -5,7 +5,7 @@
 "command"
 
 
-from .object  import Default
+from . import Default
 
 
 class Commands:

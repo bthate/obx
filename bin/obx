@@ -10,13 +10,14 @@ import getpass
 import sys
 
 
+from obx import Default
+
 from obx.command import Commands, command, parse
 from obx.modules import face # pylint: disable=W0611
-from obx.object  import Default
 from obx.runtime import Client, Event, errors
 
 
-NAME = Default.__module__.split(".", maxsplit=2)[-2]
+NAME = Default.__module__.split(".", maxsplit=2)[-1]
 
 
 class CLI(Client):

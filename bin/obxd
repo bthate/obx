@@ -17,7 +17,7 @@ from obx.persist import Workdir
 from obx.runtime import forever, init
 
 
-from obx import NAME
+NAME = Workdir.__module__.rsplit(".", maxsplit=1)[-1]
 
 
 def daemon(verbose=False):
