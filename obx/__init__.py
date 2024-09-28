@@ -107,7 +107,7 @@ def items(obj):
     return obj.__dict__.items()
 
 
-def keys(obj, match=None):
+def keys(obj):
     "return keys of an object."
     if isinstance(obj, type({})):
         return obj.keys()
