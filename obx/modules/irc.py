@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,W0105,W0201,W0718,E1102
+# pylint: disable=R,W0105,W0201,w0622,W0718,E1102
 
 
 "internet relay chat"
@@ -16,7 +16,7 @@ import time
 import _thread
 
 
-from ..        import Object, edit, fmt, keys
+from ..        import Object, edit, format, keys
 from ..default import Default
 from ..command import Commands, Event, command
 from ..persist import last, sync
@@ -615,7 +615,7 @@ def cfg(event):
     last(config)
     if not event.sets:
         event.reply(
-                    fmt(
+                    format(
                         config,
                         keys(config),
                         skip='control,password,realname,sleep,username'.split(",")

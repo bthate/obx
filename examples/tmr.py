@@ -10,7 +10,7 @@ import re
 import time as ttime
 
 
-from obx         import fmt
+from obx         import format
 from obx.command import Commands
 from obx.persist import find, laps, sync
 from obx.runtime import Broker, Timer, debug, launch
@@ -28,7 +28,7 @@ def init():
         if diff > 0:
             timer = Timer(diff, announce, obj.rest)
             launch(timer.start)
-            debug(f'started tmr {fmt(timer, skip="func,state,args")}')
+            debug(f'started tmr {format(timer, skip="func,state,args")}')
 
 
 MONTHS = [

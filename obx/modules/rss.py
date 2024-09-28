@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R
+# pylint: disable=R,W0622
 
 
 "rich site syndicate"
@@ -20,7 +20,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, urlencode
 
 
-from ..        import Object, construct, fmt, update
+from ..        import Object, construct, format, update
 from ..default import Default
 from ..command import Commands
 from ..persist import find, fntime, laps, last, sync
@@ -370,7 +370,7 @@ def rss(event):
         for fnm, feed in find('rss'):
             nrs += 1
             elp = laps(time.time()-fntime(fnm))
-            txt = fmt(feed)
+            txt = format(feed)
             event.reply(f'{nrs} {txt} {elp}')
         if not nrs:
             event.reply('no rss feed found.')

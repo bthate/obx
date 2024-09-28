@@ -13,13 +13,14 @@ import time
 import _thread
 
 
-from .        import dump, fqn, load, search, update
+from .        import dump, load, search, update
 from .default import Default
 
 
 lock     = _thread.allocate_lock()
 disklock = _thread.allocate_lock()
 p        = os.path.join
+
 
 
 class ReadError(Exception):
@@ -125,6 +126,14 @@ def fntime(daystr):
     if rest:
         timed += float('.' + rest)
     return timed
+
+
+def fqn(obj):
+    "return full qualified name of an object."
+    kin = str(type(obj)).split()[-1][1:-2]
+    if kin == "type":
+        kin = f"{obj.__module__}.{obj.__name__}"
+    return kin
 
 
 def laps(seconds, short=True):

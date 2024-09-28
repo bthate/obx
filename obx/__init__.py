@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R
+# pylint: disable=R,W0621,W0622
 
 
 "OBX"
@@ -68,7 +68,7 @@ def edit(obj, setter, skip=False):
             setattr(obj, key, val)
 
 
-def fmt(obj, args=None, skip=None, plain=False):
+def format(obj, args=None, skip=None, plain=False):
     "format an object to a printable string."
     if args is None:
         args = keys(obj)
@@ -90,14 +90,6 @@ def fmt(obj, args=None, skip=None, plain=False):
         else:
             txt += f'{key}={value} '
     return txt.strip()
-
-
-def fqn(obj):
-    "return full qualified name of an object."
-    kin = str(type(obj)).split()[-1][1:-2]
-    if kin == "type":
-        kin = f"{obj.__module__}.{obj.__name__}"
-    return kin
 
 
 def items(obj):
@@ -248,8 +240,7 @@ def __dir__():
         'construct',
         'dumps',
         'edit',
-        'fmt',
-        'fqn',
+        'format',
         'loads',
         'items',
         'keysmatch',

@@ -1,6 +1,6 @@
 # This file is placed in the Public Domain.
 #
-# pylint: disable=C,R,W0105
+# pylint: disable=C,R,W0105,W0622
 
 
 "objects"
@@ -9,7 +9,7 @@
 import unittest
 
 
-from obx import Object, fmt, fqn, items, keys, update, values
+from obx import Object, format, items, keys, update, values
 
 
 VALIDJSON = '{"test": "bla"}'
@@ -31,6 +31,7 @@ attrs1 = (
     "update",
     "values",
 )
+
 
 attrs2 = (
     "__class__",
@@ -99,10 +100,10 @@ class TestObject(unittest.TestCase):
         obj = Object()
         self.assertEqual(obj.__dict__, {})
 
-    def test_format(self):
+    def test_fmt(self):
         "test __format__"
         obj = Object()
-        self.assertEqual(obj.__format__(""), "{}")
+        self.assertEqual(format(obj)(""), "{}")
 
     def test_getattribute(self):
         "test attributing."
@@ -141,10 +142,6 @@ class TestObject(unittest.TestCase):
         "test module name."
         self.assertEqual(Object().__module__, "obx")
 
-    def test_fqn(self):
-        "test full qualified domain name."
-        self.assertEqual(fqn(Object()), "obx.Object")
-
     def test_repr(self):
         "test representation."
         self.assertTrue(update(Object(), {"key": "value"}).__repr__(), {"key": "value"})
@@ -160,10 +157,10 @@ class TestObject(unittest.TestCase):
         obj = Object()
         self.assertEqual(str(obj), "{}")
 
-    def test_fmt(self):
+    def test_format(self):
         "test object format."
         obj = Object()
-        self.assertEqual(fmt(obj), "")
+        self.assertEqual(format(obj), "")
 
     def test_getattr(self):
         "test retrieving of attributes."

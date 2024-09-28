@@ -12,7 +12,7 @@ import threading
 import time
 
 
-from obx         import Object, fmt
+from obx         import Object, format
 from obx.command import Commands
 from obx.runtime import debug, launch
 
