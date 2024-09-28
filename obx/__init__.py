@@ -59,32 +59,6 @@ def keys(obj):
     return list(obj.__dict__.keys())
 
 
-def match(obj, txt):
-    "check if object has matching keys."
-    for key in keys(obj):
-        if txt in key:
-            yield key
-
-
-def search(obj, selector, match=None):
-    "check if object matches provided values."
-    res = False
-    if not selector:
-        return res
-    for key, value in items(selector):
-        val = getattr(obj, key, None)
-        if not val:
-            continue
-        if match and value == val:
-            res = True
-        elif str(value).lower() in str(val).lower():
-            res = True
-        else:
-            res = False
-            break
-    return res
-
-
 def update(obj, data, empty=True):
     "update an object."
     for key, value in items(data):
@@ -196,10 +170,7 @@ def __dir__():
         'format',
         'loads',
         'items',
-        'keysmatch',
         'keys',
-        'match',
-        'search',
         'update',
         'values',
     )

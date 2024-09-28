@@ -1,10 +1,11 @@
 # This file is placed in the Public Domain.
+# pylint: disable=W0622
 
 
-"method"
+"methods"
 
 
-from . import items, keys, values, update
+from . import items, keys
 
 
 def edit(obj, setter, skip=False):
@@ -69,7 +70,7 @@ def match(obj, txt):
             yield key
 
 
-def search(obj, selector, match=None):
+def search(obj, selector, matching=None):
     "check if object matches provided values."
     res = False
     if not selector:
@@ -78,7 +79,7 @@ def search(obj, selector, match=None):
         val = getattr(obj, key, None)
         if not val:
             continue
-        if match and value == val:
+        if matching and value == val:
             res = True
         elif str(value).lower() in str(val).lower():
             res = True

@@ -9,7 +9,7 @@
 import unittest
 
 
-from obx import Object, format, items, keys, update, values
+from obx import Object, items, keys, update, values
 
 
 VALIDJSON = '{"test": "bla"}'
@@ -66,6 +66,9 @@ attrs2 = (
 )
 
 
+attrs2 = dir({})
+
+
 class TestObject(unittest.TestCase):
 
 
@@ -103,13 +106,24 @@ class TestObject(unittest.TestCase):
     def test_fmt(self):
         "test __format__"
         obj = Object()
-        self.assertEqual(format(obj)(""), "{}")
+        self.assertEqual(format(obj), '{}')
+
+    def test_format(self):
+        "test object format."
+        obj = Object()
+        self.assertEqual(format(obj), '{}')
 
     def test_getattribute(self):
         "test attributing."
         obj = Object()
         obj.key = "value"
         self.assertEqual(obj.__getattribute__("key"), "value")
+
+    def test_getattr(self):
+        "test retrieving of attributes."
+        obj = Object()
+        obj.key = "value"
+        self.assertEqual(getattr(obj, "key"), "value")
 
     def test_hash(self):
         "test for hash being an integer."
@@ -142,6 +156,35 @@ class TestObject(unittest.TestCase):
         "test module name."
         self.assertEqual(Object().__module__, "obx")
 
+    def test_items(self):
+        "test items of object."
+        obj = Object()
+        obj.key = "value"
+        self.assertEqual(
+            list(items(obj)),
+            [
+                ("key", "value"),
+            ],
+        )
+
+    def test_keys(self):
+        "test returning of keys."
+        obj = Object()
+        obj.key = "value"
+        self.assertEqual(
+            list(keys(obj)),
+            [
+                "key",
+            ],
+        )
+
+    def test_register(self):
+        "test setting attribute."        
+        obj = Object()
+        setattr(obj, "key", "value")
+        self.assertEqual(obj.key, "value")
+
+
     def test_repr(self):
         "test representation."
         self.assertTrue(update(Object(), {"key": "value"}).__repr__(), {"key": "value"})
@@ -156,45 +199,6 @@ class TestObject(unittest.TestCase):
         "test stringify."
         obj = Object()
         self.assertEqual(str(obj), "{}")
-
-    def test_format(self):
-        "test object format."
-        obj = Object()
-        self.assertEqual(format(obj), "")
-
-    def test_getattr(self):
-        "test retrieving of attributes."
-        obj = Object()
-        obj.key = "value"
-        self.assertEqual(getattr(obj, "key"), "value")
-
-    def test_keys(self):
-        "test returning of keys."
-        obj = Object()
-        obj.key = "value"
-        self.assertEqual(
-            list(keys(obj)),
-            [
-                "key",
-            ],
-        )
-
-    def test_items(self):
-        "test items of object."
-        obj = Object()
-        obj.key = "value"
-        self.assertEqual(
-            list(items(obj)),
-            [
-                ("key", "value"),
-            ],
-        )
-
-    def test_register(self):
-        "test setting attribute."        
-        obj = Object()
-        setattr(obj, "key", "value")
-        self.assertEqual(obj.key, "value")
 
     def test_update(self):
         "test updating of object."
