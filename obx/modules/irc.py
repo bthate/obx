@@ -18,9 +18,9 @@ import _thread
 
 from ..        import Object, edit, fmt, keys
 from ..default import Default
-from ..command import Commands, command
+from ..command import Commands, Event, command
 from ..persist import last, sync
-from ..runtime import Broker, Client, Event, debug, later, launch
+from ..runtime import Broker, Client, debug, later, launch
 
 
 NAME = Client.__module__.split(".", maxsplit=2)[-2]

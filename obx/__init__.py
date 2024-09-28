@@ -6,6 +6,17 @@
 
 
 import json
+import pathlib
+import _thread
+
+
+lock = _thread.allocate_lock()
+
+
+def cdir(pth):
+    "create directory."
+    path = pathlib.Path(pth)
+    path.parent.mkdir(parents=True, exist_ok=True)
 
 
 class Object:
@@ -139,6 +150,16 @@ def match(obj, selector):
     return res
 
 
+def read(obj, pth):
+    "read an object from file path."
+    with lock:
+        with open(pth, 'r', encoding='utf-8') as ofile:
+            try:
+                update(obj, load(ofile))
+            except json.decoder.JSONDecodeError as ex:
+                raise ReadError(pth) from ex
+
+
 def search(obj, selector):
     "check if object matches provided values."
     res = False
@@ -167,6 +188,14 @@ def update(obj, data, empty=True):
 def values(obj):
     "return values of an object."
     return obj.__dict__.values()
+
+
+def write(obj, pth):
+    "write an object to disk."
+    with lock:
+        cdir(pth)
+        with open(pth, 'w', encoding='utf-8') as ofile:
+            dump(obj, ofile, indent=4)
 
 
 class ObjectDecoder(json.JSONDecoder):
@@ -274,7 +303,9 @@ def __dir__():
         'keys',
         'match',
         'matchkey',
+        'read',
         'search',
         'update',
-        'values'
+        'values',
+        'write'
     )

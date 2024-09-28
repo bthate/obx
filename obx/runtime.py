@@ -72,53 +72,25 @@ def later(exc, evt=None):
     fmt = fmat(excp)
     if fmt not in Errors.errors:
         Errors.errors.append(fmt)
-    if evt:
-        evt.ready()
 
 
-def laters(func):
+class Logging:
 
-    "later decorator."
+    "Logging"
 
-    def ltr(*args, **kwargs):
-        "wrap function."
-        try:
-            return func(*args, **kwargs)
-        except (KeyboardInterrupt, EOFError):
-            _thread.interrupt_main()
-        except Exception as ex:
-            later(ex)
-            ready(args)
-
-    return ltr
+    filter = []
 
 
-class Event:
+Logging.filter = ["PING", "PONG", "PRIVMSG"]
 
-    "Event"
 
-    def __init__(self):
-        self._ready = threading.Event()
-        self.channel = ""
-        self.orig   = ""
-        self.result = []
-        self.txt    = ""
-        self.type = "command"
-
-    def __getattr__(self, key):
-        return self.__dict__.get(key, "")
-
-    def ready(self):
-        "flag event as ready."
-        self._ready.set()
-
-    def reply(self, txt):
-        "add text to the result."
-        self.result.append(txt)
-
-    def wait(self):
-        "wait for results."
-        self._ready.wait()
+def debug(txt):
+    "print to console."
+    for skp in Logging.filter:
+        if skp in txt:
+            return
+    if VERBOSE:
+        VERBOSE(txt)
 
 
 class Reactor:
@@ -139,13 +111,8 @@ class Reactor:
     def loop(self):
         "proces events until interrupted."
         while not self.stopped.is_set():
-            try:
-                evt = self.poll()
-                self.callback(evt)
-            except( KeyboardInterrupt, EOFError):
-                return
-            except Exception as ex:
-                later(ex)
+            evt = self.poll()
+            self.callback(evt)
 
     def poll(self):
         "function to return event."
@@ -227,7 +194,6 @@ class Thread(threading.Thread):
         super().join(timeout)
         return self.result
 
-    @laters
     def run(self):
         "run this thread's payload."
         func, args = self.queue.get()
@@ -277,25 +243,6 @@ class Repeater(Timer):
     def run(self):
         launch(self.start)
         super().run()
-
-
-class Logging:
-
-    "Logging"
-
-    filter = []
-
-
-Logging.filter = ["PING", "PONG", "PRIVMSG"]
-
-
-def debug(txt):
-    "print to console."
-    for skp in Logging.filter:
-        if skp in txt:
-            return
-    if VERBOSE:
-        VERBOSE(txt)
 
 
 def forever():
@@ -352,13 +299,6 @@ def named(obj):
     if '__name__' in dir(obj):
         return f'{obj.__class__.__name__}.{obj.__name__}'
     return None
-
-
-def ready(*args):
-    "flag arguments as ready."
-    for arg in args:
-        if "ready" in dir(arg):
-            arg.ready()
 
 
 def wrap(func, outer):

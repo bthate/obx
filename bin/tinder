@@ -17,19 +17,16 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx import Object
-
-
-from obx.command import Commands, command, parse
+from obx         import Object, fmt
+from obx.command import Commands, Event, command, parse
 from obx.default import Default
 from obx.modules import face
 from obx.persist import Workdir, laps, skel
-from obx.runtime import STARTTIME, Client, Event, errors, later, launch
+from obx.runtime import NAME, STARTTIME, Client, errors, later, launch
 
 
 if os.path.exists('examples'):
     from examples import face as MODS  # pylint: disable=W0611,E0401
-
 
 
 cfg = Default()
@@ -79,7 +76,7 @@ class CLI(Client):
 
     def callback(self, evt):
         Client.callback(self, evt)
-        evt.wait()
+        #evt.wait()
 
     def raw(self, txt):
         if "v" in cfg.opts:
@@ -89,7 +86,7 @@ class CLI(Client):
 def banner():
     "show banner."
     tme = time.ctime(time.time()).replace("  ", " ")
-    print(f"{Workdir.name.upper()} since {tme}")
+    print(f"{NAME.upper()} since {tme}")
 
 
 def consume(evts):

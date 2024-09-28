@@ -12,7 +12,8 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
-from obx         import Default, Object, fmt
+from obx         import Object, fmt
+from obx.default import Default
 from obx.persist import Workdir, fns
 from obx.runtime import debug, later, launch
 

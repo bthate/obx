@@ -5,7 +5,11 @@
 "command"
 
 
+import threading
+
+
 from .default import Default
+from .runtime import later
 
 
 class Commands:
@@ -20,14 +24,45 @@ class Commands:
         Commands.cmds[func.__name__] = func
 
 
+class Event:
+
+    "Event"
+
+    def __init__(self):
+        self._ready = threading.Event()
+        self.channel = ""
+        self.orig   = ""
+        self.result = []
+        self.txt    = ""
+        self.type = "command"
+
+    def __getattr__(self, key):
+        return self.__dict__.get(key, "")
+
+    def ready(self):
+        "flag event as ready."
+        self._ready.set()
+
+    def reply(self, txt):
+        "add text to the result."
+        self.result.append(txt)
+
+    def wait(self):
+        "wait for results."
+        self._ready.wait()
+
+
 def command(bot, evt):
     "check for and run a command."
     parse(evt, evt.txt)
     evt.orig = repr(bot)
     func = Commands.cmds.get(evt.cmd, None)
     if func:
-        func(evt)
-        bot.display(evt)
+        try:
+            func(evt)
+            bot.display(evt)
+        except Exception as ex:
+            later(ex)
     evt.ready()
 
 
@@ -91,6 +126,7 @@ def parse(obj, txt=None):
 def __dir__():
     return (
         'Commands',
+        'Event',
         'command',
         'parse'
     )
