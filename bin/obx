@@ -10,10 +10,10 @@ import getpass
 import sys
 
 
-from obx.command import Commands, command, parse
+from obx.command import Commands, Event, command, parse
 from obx.default import Config
 from obx.modules import face
-from obx.runtime import NAME, Client, Event, errors
+from obx.runtime import NAME, Client, errors
 
 
 cfg = Config()

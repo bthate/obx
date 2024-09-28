@@ -13,7 +13,7 @@ import time
 import _thread
 
 
-from .        import dump, fqn, load, match, read, search, update, write
+from .        import dump, fqn, load, match, search, update
 from .default import Default
 
 
@@ -198,6 +198,16 @@ def last(obj, selector=None):
     return res
 
 
+def read(obj, pth):
+    "read an object from file path."
+    with lock:
+        with open(pth, 'r', encoding='utf-8') as ofile:
+            try:
+                update(obj, load(ofile))
+            except json.decoder.JSONDecodeError as ex:
+                raise ReadError(pth) from ex
+
+
 def sync(obj, pth=None):
     "sync object to disk."
     if pth is None:
@@ -206,6 +216,14 @@ def sync(obj, pth=None):
         pth2 = store(pth)
         write(obj, pth2)
         return pth
+
+
+def write(obj, pth):
+    "write an object to disk."
+    with lock:
+        cdir(pth)
+        with open(pth, 'w', encoding='utf-8') as ofile:
+            dump(obj, ofile, indent=4)
 
 
 def __dir__():
@@ -218,9 +236,11 @@ def __dir__():
         'last',
         'laps',
         'long',
+        'read',
         'skel',
         'store',
         'sync',
         'types',
-        'whitelist'
+        'whitelist',
+        'write'
     )

@@ -219,7 +219,7 @@ def tmr(event):
         return res
     diff = target - ttime.time()
     event.reply("ok " +  laps(diff))
-    timer = Timer(diff, announce, event.rest, thrname=event.cmd)
+    timer = Timer(diff, announce, event.rest)
     timer.time = target
     timer.rest = event.rest
     sync(timer)

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R
+# pylint: disable=R,W0718
 
 
 "command"
@@ -29,12 +29,13 @@ class Event:
     "Event"
 
     def __init__(self):
-        self._ready = threading.Event()
+        self._ready  = threading.Event()
+        self._thr    = None
         self.channel = ""
-        self.orig   = ""
-        self.result = []
-        self.txt    = ""
-        self.type = "command"
+        self.orig    = ""
+        self.result  = []
+        self.txt     = ""
+        self.type    = "command"
 
     def __getattr__(self, key):
         return self.__dict__.get(key, "")
@@ -50,6 +51,8 @@ class Event:
     def wait(self):
         "wait for results."
         self._ready.wait()
+        if self._thr:
+            self._thr.join()
 
 
 def command(bot, evt):

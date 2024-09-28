@@ -66,7 +66,7 @@ def errors(outer):
             outer(line.strip())
 
 
-def later(exc, evt=None):
+def later(exc):
     "add an exception"
     excp = exc.with_traceback(exc.__traceback__)
     fmt = fmat(excp)
@@ -172,7 +172,6 @@ class Thread(threading.Thread):
         self.name      = thrname
         self.queue     = queue.Queue()
         self.result    = None
-        self.sleep     = None
         self.starttime = time.time()
         self.queue.put_nowait((func, args))
 
@@ -204,11 +203,12 @@ class Timer:
 
     "Timer"
 
-    def __init__(self, sleep, func, *args, thrname=None):
+    def __init__(self, sleep, func, *args, **kwargs):
         self.args  = args
         self.func  = func
+        self.kwargs = kwargs
         self.sleep = sleep
-        self.name  = thrname or named(func)
+        self.name  = kwargs.get("name", named(func))
         self.state = {}
         self.timer = None
 
@@ -221,7 +221,6 @@ class Timer:
         "start timer."
         timer = threading.Timer(self.sleep, self.run)
         timer.name   = self.name
-        timer.daemon = True
         timer.sleep  = self.sleep
         timer.state  = self.state
         timer.func   = self.func

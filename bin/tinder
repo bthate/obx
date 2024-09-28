@@ -17,7 +17,7 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx         import Object, fmt
+from obx         import Object
 from obx.command import Commands, Event, command, parse
 from obx.default import Default
 from obx.modules import face
@@ -76,7 +76,7 @@ class CLI(Client):
 
     def callback(self, evt):
         Client.callback(self, evt)
-        #evt.wait()
+        evt.wait()
 
     def raw(self, txt):
         if "v" in cfg.opts:

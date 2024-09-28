@@ -13,10 +13,10 @@ import termios
 import time
 
 
-from obx.command import command, parse
+from obx.command import Event, command, parse
 from obx.default import Config
 from obx.modules import face
-from obx.runtime import NAME, Client, Event, errors, forever, init, later
+from obx.runtime import NAME, Client, errors, forever, init, later
 
 
 if os.path.exists('mods'):
