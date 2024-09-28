@@ -45,53 +45,6 @@ def construct(obj, *args, **kwargs):
         update(obj, kwargs)
 
 
-def edit(obj, setter, skip=False):
-    "edit an object from provided dict/dict-like."
-    for key, val in items(setter):
-        if skip and val == "":
-            continue
-        try:
-            setattr(obj, key, int(val))
-            continue
-        except ValueError:
-            pass
-        try:
-            setattr(obj, key, float(val))
-            continue
-        except ValueError:
-            pass
-        if val in ["True", "true"]:
-            setattr(obj, key, True)
-        elif val in ["False", "false"]:
-            setattr(obj, key, False)
-        else:
-            setattr(obj, key, val)
-
-
-def format(obj, args=None, skip=None, plain=False):
-    "format an object to a printable string."
-    if args is None:
-        args = keys(obj)
-    if skip is None:
-        skip = []
-    txt = ""
-    for key in args:
-        if key.startswith("__"):
-            continue
-        if key in skip:
-            continue
-        value = getattr(obj, key, None)
-        if value is None:
-            continue
-        if plain:
-            txt += f"{value} "
-        elif isinstance(value, str) and len(value.split()) >= 2:
-            txt += f'{key}="{value}" '
-        else:
-            txt += f'{key}={value} '
-    return txt.strip()
-
-
 def items(obj):
     "return the items of an object."
     if isinstance(obj, type({})):

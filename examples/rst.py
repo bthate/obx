@@ -12,8 +12,9 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
-from obx         import Object, format
+from obx         import Object
 from obx.default import Default
+from obx.method  import format
 from obx.persist import Workdir, fns
 from obx.runtime import debug, later, launch
 
@@ -22,7 +23,7 @@ def init():
     "start rest server."
     rest = REST((Config.hostname, int(Config.port)), RESTHandler)
     launch(rest.start)
-    debug(f"started rst {format(Config)}")
+    debug(f"RST {format(Config)}")
     return rest
 
 

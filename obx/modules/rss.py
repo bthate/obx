@@ -20,9 +20,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, urlencode
 
 
-from ..        import Object, construct, format, update
+from ..        import Object, construct, update
 from ..default import Default
 from ..command import Commands
+from ..method  import format
 from ..persist import find, fntime, laps, last, sync
 from ..runtime import Broker, Repeater, launch
 

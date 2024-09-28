@@ -8,8 +8,8 @@
 import time
 
 
-from ..        import format
 from ..command import Commands
+from ..method  import format
 from ..persist import find, fntime, laps, long, skel, store, types
 
 

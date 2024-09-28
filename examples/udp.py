@@ -12,8 +12,9 @@ import threading
 import time
 
 
-from obx         import Object, format
+from obx         import Object
 from obx.command import Commands
+from obx.method  import format 
 from obx.runtime import debug, launch
 
 
@@ -25,7 +26,7 @@ def announce(txt):
 def init():
     udpd = UDP()
     udpd.start()
-    debug(f"started udp {fmt(Cfg)}")
+    debug(f"UDP {format(Cfg)}")
     return udpd
 
 

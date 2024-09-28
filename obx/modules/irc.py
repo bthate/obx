@@ -16,9 +16,10 @@ import time
 import _thread
 
 
-from ..        import Object, edit, format, keys
+from ..        import Object, keys
 from ..default import Default
 from ..command import Commands, Event, command
+from ..method  import edit, format
 from ..persist import last, sync
 from ..runtime import Broker, Client, debug, later, launch
 
