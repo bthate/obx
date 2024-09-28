@@ -7,6 +7,7 @@
 
 
 import logging
+import inspect
 import sys
 import unittest
 
@@ -105,6 +106,7 @@ class TestInterface(unittest.TestCase): # pylint: disable=R0903
         "test methods interface."
         okd = True
         obj = Object()
+        print(inspect.get_annotations(obj))
         for meth in METHODS:
             func1 = getattr(obj, meth)
             if not func1:
@@ -112,6 +114,8 @@ class TestInterface(unittest.TestCase): # pylint: disable=R0903
             func2 = DICT.get(meth)
             if not func2:
                 continue
+            if inspect.get_annotations(func1) != inspect.get_annotations(func2):
+               print(f"annotations {func1} {func2}")
             if dir(func1) != dir(func2):
                 print(func1, func2)
                 okd = False

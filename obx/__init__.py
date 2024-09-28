@@ -12,11 +12,26 @@ class Object:
 
     "Object"
 
+    def __call__(self):
+        pass
+
+    def __class_getitem__(self, key):
+        pass
+
     def __contains__(self, key):
         return key in dir(self)
 
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+    def __getitem__(self, key):
+        return self.__dict__.get(key)
+
     def __getstate__(self):
-        "no pickle."
+        pass
+
+    def __ior__(self, other):
+        pass
 
     def __iter__(self):
         return iter(self.__dict__)
@@ -27,8 +42,25 @@ class Object:
     def __oid__(self):
         return 1
 
+    def __or__(self):
+        pass
+
+    def __reversed__(self):
+        pass
+
+    def __ror__(self):
+        pass
+
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
+
     def __str__(self):
         return str(self.__dict__)
+
+
+def clear(obj):
+    "reset object."
+    obj.__dict__.clear()
 
 
 def construct(obj, *args, **kwargs):
@@ -45,6 +77,21 @@ def construct(obj, *args, **kwargs):
         update(obj, kwargs)
 
 
+def copy(obj):
+    "shallow copy."
+    return obj.__dict__.copy()
+
+
+def fromkeys(obj, keys, value=None):
+    "return list if values from keys with default."
+    return obj.__dict__.fromkeys(keys, value)
+
+
+def get(obj, key, default=None):
+    "return key associated value."
+    return obj.__dict__.get(key, default)
+
+
 def items(obj):
     "return the items of an object."
     if isinstance(obj, type({})):
@@ -57,6 +104,21 @@ def keys(obj):
     if isinstance(obj, type({})):
         return obj.keys()
     return list(obj.__dict__.keys())
+
+
+def pop(obj, key, default=None):
+    "pop an element with default."
+    return self.__dict__.pop(key, default)
+
+
+def popitem(obj):
+    "pop a single item."
+    return self.__dict__.popitem()
+
+
+def setdefault(obj, key, default):
+    "set key with default."
+    return self.__dict__.setdefault(key, default)
 
 
 def update(obj, data, empty=True):
@@ -165,12 +227,17 @@ def __dir__():
     return (
         'Object',
         'construct',
+        'copy',
+        'fromkeys',
         'dumps',
         'edit',
         'format',
+        'get',
+        'keys',
         'loads',
         'items',
-        'keys',
+        'pop',
+        'popitem',
         'update',
         'values',
     )
