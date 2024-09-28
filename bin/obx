@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # This file is placed in the Public Domain.
-# pylint: disable=R,C0413
+# pylint: disable=R,C0413,W0611
 
 
 "cli"
@@ -10,14 +10,13 @@ import getpass
 import sys
 
 
-from obx import Default
-
 from obx.command import Commands, command, parse
-from obx.modules import face # pylint: disable=W0611
-from obx.runtime import Client, Event, errors
+from obx.default import Config
+from obx.modules import face
+from obx.runtime import NAME, Client, Event, errors
 
 
-NAME = Default.__module__.split(".", maxsplit=2)[-1]
+cfg = Config()
 
 
 class CLI(Client):
@@ -50,10 +49,11 @@ WantedBy=multi-user.target"""
     event.reply(txt % (NAME.upper(), name, name, name, NAME))
 
 
+Commands.add(srv)
+
+
 def main():
     "main"
-    Commands.add(srv)
-    cfg = Default()
     parse(cfg, " ".join(sys.argv[1:]))
     cli = CLI()
     evt = Event()

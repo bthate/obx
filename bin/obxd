@@ -2,6 +2,7 @@
 # This file is placed in the Public Domain.
 # pylint: disable=W0212
 
+
 "daemon"
 
 
@@ -14,10 +15,7 @@ import sys
 
 from obx.modules import face
 from obx.persist import Workdir
-from obx.runtime import forever, init
-
-
-NAME = Workdir.__module__.rsplit(".", maxsplit=1)[-1]
+from obx.runtime import NAME, forever, init
 
 
 def daemon(verbose=False):

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,W0718
+# pylint: disable=R,W0718,E1102
 
 
 "runtime"
@@ -315,7 +315,7 @@ def init(*pkgs):
             modi = getattr(pkg, modname)
             if "init" not in dir(modi):
                 continue
-            thr = launch(modi.init, name=f"{modi}.init")
+            thr = launch(modi.init)
             mods.append((modi, thr))
     return mods
 

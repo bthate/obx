@@ -31,14 +31,6 @@ class Object:
         return str(self.__dict__)
 
 
-class Default(Object):
-
-    "Default"
-
-    def __getattr__(self, key):
-        return self.__dict__.get(key, "")
-
-
 def construct(obj, *args, **kwargs):
     "construct an object from provided arguments."
     if args:
@@ -268,7 +260,6 @@ def dumps(*args, **kw):
 
 def __dir__():
     return (
-        'Default',
         'Object',
         'construct',
         'dump',
@@ -278,11 +269,9 @@ def __dir__():
         'fqn',
         'hook',
         'load',
-        'loads'
+        'loads',
         'items',
         'keys',
-        'load',
-        'loads',
         'match',
         'matchkey',
         'search',
