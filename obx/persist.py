@@ -13,7 +13,7 @@ import time
 import _thread
 
 
-from .        import dump, fqn, load, match, search, update
+from .        import dump, fqn, load, search, update
 from .default import Default
 
 
@@ -92,9 +92,7 @@ def find(mtc, selector=None, index=None, deleted=False, matching=False):
         fetch(obj, fnm)
         if not deleted and '__deleted__' in obj and obj.__deleted__:
             continue
-        if matching and not match(obj, selector):
-            continue
-        if selector and not search(obj, selector):
+        if selector and not search(obj, selector, matching):
             continue
         nrs += 1
         if index is not None and nrs != int(index):

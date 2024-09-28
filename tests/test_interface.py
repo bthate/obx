@@ -11,10 +11,10 @@ import sys
 import unittest
 
 
-from obx.face import *
-
-
 import obx
+
+
+from obx import *
 
 
 PACKAGE = [
@@ -28,7 +28,6 @@ PACKAGE = [
     '__path__',
     '__spec__',
     'command',
-    'face',
     'persist',
     'runtime'
 ]

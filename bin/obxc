@@ -19,6 +19,9 @@ from obx.modules import face
 from obx.runtime import NAME, Client, errors, forever, init, later
 
 
+import obx
+
+
 if os.path.exists('mods'):
     from mods import face as MODS
 else:
@@ -82,6 +85,7 @@ def main():
     parse(cfg, " ".join(sys.argv[1:]))
     if "v" in cfg.opts:
         banner()
+        obx.runtime.VERBOSE = print
     if "i" in cfg.opts:
         for mod, thr in init(face, MODS):
             if "v" in cfg.opts:

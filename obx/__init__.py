@@ -107,39 +107,21 @@ def items(obj):
     return obj.__dict__.items()
 
 
-def keys(obj):
+def keys(obj, match=None):
     "return keys of an object."
     if isinstance(obj, type({})):
         return obj.keys()
     return list(obj.__dict__.keys())
 
 
-def matchkey(obj, txt):
+def match(obj, txt):
     "check if object has matching keys."
     for key in keys(obj):
         if txt in key:
             yield key
 
 
-def match(obj, selector):
-    "do an exact match on the selector's values."
-    res = False
-    if not selector:
-        return res
-    for key, value in items(selector):
-        val = getattr(obj, key, None)
-        if not val:
-            res = False
-            break
-        if value == val:
-            res = True
-        else:
-            res = False
-            break
-    return res
-
-
-def search(obj, selector):
+def search(obj, selector, match=None):
     "check if object matches provided values."
     res = False
     if not selector:
@@ -148,7 +130,9 @@ def search(obj, selector):
         val = getattr(obj, key, None)
         if not val:
             continue
-        if str(value).lower() in str(val).lower():
+        if match and value == val:
+            res = True
+        elif str(value).lower() in str(val).lower():
             res = True
         else:
             res = False
@@ -262,21 +246,16 @@ def __dir__():
     return (
         'Object',
         'construct',
-        'dump',
         'dumps',
         'edit',
         'fmt',
         'fqn',
-        'hook',
-        'load',
         'loads',
         'items',
+        'keysmatch',
         'keys',
         'match',
-        'matchkey',
-        'read',
         'search',
         'update',
         'values',
-        'write'
     )
