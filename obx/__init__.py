@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,W0621,W0622
+# pylint: disable=R,W0105,W0621,W0622
 
 
 "OBX"
@@ -11,11 +11,15 @@ import json
 class Object:
 
     "Object"
-    def __init__(self, *args, **kwargs):
-        object.__init__(self, *args, **kwargs)
 
     def __contains__(self, key):
         return key in dir(self)
+
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+    def __getitem__(self, key):
+        return self.__dict__.__getitem__(key)
 
     def __getstate__(self):
         pass
@@ -26,11 +30,14 @@ class Object:
     def __len__(self):
         return len(self.__dict__)
 
-    def __oid__(self):
-        return 1
+    def __setitem__(self, key, value):
+        self.__dict__.__setitem__(key, value)
 
     def __str__(self):
         return str(self.__dict__)
+
+
+"methods"
 
 
 def clear(obj):
@@ -109,6 +116,9 @@ def values(obj):
     return obj.__dict__.values()
 
 
+"decoder"
+
+
 class ObjectDecoder(json.JSONDecoder):
 
     "ObjectDecoder"
@@ -150,6 +160,9 @@ def loads(string, *args, **kw):
     kw["cls"] = ObjectDecoder
     kw["object_hook"] = hook
     return json.loads(string, *args, **kw)
+
+
+"encoder"
 
 
 class ObjectEncoder(json.JSONEncoder):
@@ -196,6 +209,9 @@ def dumps(*args, **kw):
     "dump object to string."
     kw["cls"] = ObjectEncoder
     return json.dumps(*args, **kw)
+
+
+"interface"
 
 
 def __dir__():

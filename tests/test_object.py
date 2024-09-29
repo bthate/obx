@@ -98,6 +98,19 @@ class TestObject(unittest.TestCase):
         del obj.key
         self.assertTrue("key" not in obj)
 
+    def test_delitem(self):
+        "test deleting of items."
+        obj = Object()
+        obj["a"] = "b"
+        self.assertTrue(getattr(obj, "a") == "b")
+
+
+    def test_getitem(self):
+        "test deleting of items."
+        obj = Object()
+        obj["a"] = "b"
+        self.assertTrue(obj["a"] == "b")
+
     def test_dict(self):
         "test __dict__"
         obj = Object()
@@ -136,26 +149,6 @@ class TestObject(unittest.TestCase):
         obj = Object()
         self.assertTrue(type(Object.__init__(obj)), Object)
 
-    def test_iter(self):
-        "test iteration."
-        obj = Object()
-        obj.key = "value"
-        self.assertTrue(
-            list(obj.__iter__()),
-            [
-                "key",
-            ],
-        )
-
-    def test_len(self):
-        "test length calcualtion."
-        obj = Object()
-        self.assertEqual(len(obj), 0)
-
-    def test_module(self):
-        "test module name."
-        self.assertEqual(Object().__module__, "obx")
-
     def test_items(self):
         "test items of object."
         obj = Object()
@@ -164,6 +157,17 @@ class TestObject(unittest.TestCase):
             list(items(obj)),
             [
                 ("key", "value"),
+            ],
+        )
+
+    def test_iter(self):
+        "test iteration."
+        obj = Object()
+        obj.key = "value"
+        self.assertTrue(
+            list(obj.__iter__()),
+            [
+                "key",
             ],
         )
 
@@ -177,6 +181,15 @@ class TestObject(unittest.TestCase):
                 "key",
             ],
         )
+
+    def test_len(self):
+        "test length calcualtion."
+        obj = Object()
+        self.assertEqual(len(obj), 0)
+
+    def test_module(self):
+        "test module name."
+        self.assertEqual(Object().__module__, "obx")
 
     def test_register(self):
         "test setting attribute."        
@@ -194,6 +207,12 @@ class TestObject(unittest.TestCase):
         obj = Object()
         obj.__setattr__("key", "value")
         self.assertTrue(obj.key, "value")
+
+    def test_setitem(self):
+        "test setting an item."
+        obj = Object()
+        obj["a"] = "b"
+        self.assertTrue(obj["a"], "b")
 
     def test_str(self):
         "test stringify."
