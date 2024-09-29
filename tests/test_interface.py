@@ -38,7 +38,6 @@ METHODS = [
     '__class__',
     '__contains__',
     '__delattr__',
-    '__dict__',
     '__dir__',
     '__doc__',
     '__eq__',
@@ -64,11 +63,7 @@ METHODS = [
     '__sizeof__',
     '__str__',
     '__subclasshook__',
-    '__weakref__'
 ]
-
-
-DICT = {}
 
 
 DIFF = [
@@ -76,9 +71,6 @@ DIFF = [
     "__module__",
     "__slots__",
 ]
-
-
-OBJECT = obx
 
 
 class TestInterface(unittest.TestCase): # pylint: disable=R0903
@@ -89,16 +81,11 @@ class TestInterface(unittest.TestCase): # pylint: disable=R0903
         "test methods interface."
         okd = True
         for meth in PACKAGE:
-            func1 = getattr(OBJECT, meth)
+            func1 = getattr(obx, meth, None)
             if not func1:
-                continue
-            func2 = DICT.get(meth)
-            if not func2:
-                continue
-            if dir(func1) != dir(func2):
-                print(func1, func2)
+                print(f"missing {meth}")
                 okd = False
-            sys.stdout.flush()
+                break
         self.assertTrue(okd)
 
 
@@ -106,20 +93,12 @@ class TestInterface(unittest.TestCase): # pylint: disable=R0903
         "test methods interface."
         okd = True
         obj = Object()
-        print(inspect.get_annotations(obj))
+        print(dir(obj))
         for meth in METHODS:
-            func1 = getattr(obj, meth)
+            func1 = getattr(obj, meth, None)
             if not func1:
-                continue
-            func2 = DICT.get(meth)
-            if not func2:
-                continue
-            if inspect.get_annotations(func1) != inspect.get_annotations(func2):
-               print(f"annotations {func1} {func2}")
-            if dir(func1) != dir(func2):
-                print(func1, func2)
+                print(f"missing method {meth}")
                 okd = False
-            sys.stdout.flush()
         self.assertTrue(okd)
 
 

@@ -11,26 +11,13 @@ import json
 class Object:
 
     "Object"
-
-    def __call__(self):
-        pass
-
-    def __class_getitem__(self, key):
-        pass
+    def __init__(self, *args, **kwargs):
+        object.__init__(self, *args, **kwargs)
 
     def __contains__(self, key):
         return key in dir(self)
 
-    def __delitem__(self, key):
-        del self.__dict__[key]
-
-    def __getitem__(self, key):
-        return self.__dict__.get(key)
-
     def __getstate__(self):
-        pass
-
-    def __ior__(self, other):
         pass
 
     def __iter__(self):
@@ -41,18 +28,6 @@ class Object:
 
     def __oid__(self):
         return 1
-
-    def __or__(self):
-        pass
-
-    def __reversed__(self):
-        pass
-
-    def __ror__(self):
-        pass
-
-    def __setitem__(self, key, value):
-        self.__dict__[key] = value
 
     def __str__(self):
         return str(self.__dict__)
@@ -108,17 +83,17 @@ def keys(obj):
 
 def pop(obj, key, default=None):
     "pop an element with default."
-    return self.__dict__.pop(key, default)
+    return obj.__dict__.pop(key, default)
 
 
 def popitem(obj):
     "pop a single item."
-    return self.__dict__.popitem()
+    return obj.__dict__.popitem()
 
 
 def setdefault(obj, key, default):
     "set key with default."
-    return self.__dict__.setdefault(key, default)
+    return obj.__dict__.setdefault(key, default)
 
 
 def update(obj, data, empty=True):
@@ -138,19 +113,19 @@ class ObjectDecoder(json.JSONDecoder):
 
     "ObjectDecoder"
 
-    def __init__(self, *args, **kwargs):
-        json.JSONDecoder.__init__(self, *args, **kwargs)
+    def __init__(obj, *args, **kwargs):
+        json.JSONDecoder.__init__(obj, *args, **kwargs)
 
-    def decode(self, s, _w=None):
+    def decode(obj, s, _w=None):
         "decoding string to object."
-        val = json.JSONDecoder.decode(self, s)
+        val = json.JSONDecoder.decode(obj, s)
         if not val:
             val = {}
         return hook(val)
 
-    def raw_decode(self, s, idx=0):
+    def raw_decode(obj, s, idx=0):
         "decode partial string to object."
-        return json.JSONDecoder.raw_decode(self, s, idx)
+        return json.JSONDecoder.raw_decode(obj, s, idx)
 
 
 def hook(objdict, typ=None):
