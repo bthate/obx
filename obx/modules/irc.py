@@ -21,11 +21,16 @@ from ..default import Default
 from ..command import Commands, Event, command
 from ..method  import edit, format
 from ..persist import last, sync
-from ..runtime import Broker, Client, debug, later, launch
+from ..runtime import Broker, Client, Logging, debug, later, launch
 
 
 NAME = Client.__module__.split(".", maxsplit=2)[-2]
 VERBOSE = False
+
+
+Logging.filter = ["PING", "PONG", "PRIVMSG"]
+
+
 saylock = _thread.allocate_lock()
 
 
@@ -34,6 +39,7 @@ def init():
     irc = IRC()
     irc.start()
     irc.events.ready.wait()
+    debug(f'IRC {format(Config, skip="password")}')
     return irc
 
 

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=W0622
+# pylint: disable=W0105,W0622
 
 
 "methods"
@@ -87,6 +87,9 @@ def search(obj, selector, matching=None):
             res = False
             break
     return res
+
+
+"interface"
 
 
 def __dir__():

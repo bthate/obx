@@ -23,7 +23,7 @@ def init():
     "start rest server."
     rest = REST((Config.hostname, int(Config.port)), RESTHandler)
     launch(rest.start)
-    debug(f"RST {format(Config)}")
+    debug(f"RST http://{Config.hostname}:{Config.port}")
     return rest
 
 

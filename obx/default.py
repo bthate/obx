@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R
+# pylint: disable=R,W0105
 
 
 "default values"
@@ -19,6 +19,9 @@ class Default(Object):
 class Config(Default):
 
     "Config"
+
+
+"interface"
 
 
 def __dir__():

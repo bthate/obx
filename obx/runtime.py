@@ -27,15 +27,29 @@ class Broker:
     @staticmethod
     def add(obj):
         "add object."
+        print(f"BRK {obj}")
         Broker.objs[repr(obj)] = obj
+
+    @staticmethod
+    def announce(txt, kind=None):
+        print(Broker.objs)
+        for obj in Broker.all(kind):
+            print(dir(obj))
+            if "announce" in dir(obj):
+                obj.announce(txt)
 
     @staticmethod
     def all(kind=None):
         "return all objects."
+        result = []
+        print(f"all {kind}")
         if kind is not None:
             for key in [x for x in Broker.objs if kind in x]:
-                yield Broker.get(key)
-        return Broker.objs.values()
+                result.append(Broker.get(key))
+        else:
+            result.extend(list(Broker.objs.values()))
+        print(result)
+        return result
 
     @staticmethod
     def get(orig):
@@ -43,54 +57,7 @@ class Broker:
         return Broker.objs.get(orig)
 
 
-class Errors:
-
-    "Errors"
-
-    errors = []
-
-
-def fmat(exc):
-    "format an exception"
-    return traceback.format_exception(
-                               type(exc),
-                               exc,
-                               exc.__traceback__
-                              )
-
-
-def errors(outer):
-    "display errors."
-    for exc in Errors.errors:
-        for line in exc:
-            outer(line.strip())
-
-
-def later(exc):
-    "add an exception"
-    excp = exc.with_traceback(exc.__traceback__)
-    fmt = fmat(excp)
-    if fmt not in Errors.errors:
-        Errors.errors.append(fmt)
-
-
-class Logging:
-
-    "Logging"
-
-    filter = []
-
-
-Logging.filter = ["PING", "PONG", "PRIVMSG"]
-
-
-def debug(txt):
-    "print to console."
-    for skp in Logging.filter:
-        if skp in txt:
-            return
-    if VERBOSE:
-        VERBOSE(txt)
+"reactor"
 
 
 class Reactor:
@@ -166,6 +133,9 @@ class Client(Reactor):
         raise NotImplementedError
 
 
+"threads"
+
+
 class Thread(threading.Thread):
 
     "Thread"
@@ -198,20 +168,25 @@ class Thread(threading.Thread):
 
     def run(self):
         "run this thread's payload."
-        func, args = self.queue.get()
-        self.result = func(*args)
+        try:
+            func, args = self.queue.get()
+            self.result = func(*args)
+        except (KeyboardInterrupt, EOFError):
+            _thread.interrupt_main()
+        except Exception as ex:
+            later(ex)
 
 
 class Timer:
 
     "Timer"
 
-    def __init__(self, sleep, func, *args, **kwargs):
+    def __init__(self, sleep, func, *args, thrname=None, **kwargs):
         self.args  = args
         self.func  = func
         self.kwargs = kwargs
         self.sleep = sleep
-        self.name  = kwargs.get("name", named(func))
+        self.name  = thrname or kwargs.get("name", named(func))
         self.state = {}
         self.timer = None
 
@@ -245,6 +220,62 @@ class Repeater(Timer):
     def run(self):
         launch(self.start)
         super().run()
+
+
+"errors"
+
+
+class Errors:
+
+    "Errors"
+
+    errors = []
+
+
+def fmat(exc):
+    "format an exception"
+    return traceback.format_exception(
+                               type(exc),
+                               exc,
+                               exc.__traceback__
+                              )
+
+
+def errors(outer):
+    "display errors."
+    for exc in Errors.errors:
+        for line in exc:
+            outer(line.strip())
+
+
+def later(exc):
+    "add an exception"
+    excp = exc.with_traceback(exc.__traceback__)
+    fmt = fmat(excp)
+    if fmt not in Errors.errors:
+        Errors.errors.append(fmt)
+
+
+"logging"
+
+
+class Logging:
+
+    "Logging"
+
+    filter = []
+
+
+def debug(txt):
+    "print to console."
+    for skp in Logging.filter:
+        if skp in txt:
+            return
+    if VERBOSE:
+        VERBOSE(txt)
+
+
+"utilities"
 
 
 def forever():
@@ -311,6 +342,9 @@ def wrap(func, outer):
         outer("")
     except Exception as ex:
         later(ex)
+
+
+"interface"
 
 
 def __dir__():

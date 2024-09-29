@@ -23,12 +23,14 @@ def announce(txt):
 
 def init():
     "initialaze modules."
+    nrs = 0
     for _fnm, obj in find("timer"):
         diff = float(obj.time) - ttime.time()
         if diff > 0:
             timer = Timer(diff, announce, obj.rest)
             launch(timer.start)
-            debug(f'TMR {format(timer, skip="func,state,args")}')
+            nrs += 1
+    debug(f'TMR {nrs}')
 
 
 MONTHS = [

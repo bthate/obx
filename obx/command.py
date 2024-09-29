@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,W0718
+# pylint: disable=R,W0105,W0718
 
 
 "command"
@@ -22,6 +22,23 @@ class Commands:
     def add(func):
         "add command."
         Commands.cmds[func.__name__] = func
+
+
+def command(bot, evt):
+    "check for and run a command."
+    parse(evt, evt.txt)
+    evt.orig = repr(bot)
+    func = Commands.cmds.get(evt.cmd, None)
+    if func:
+        try:
+            func(evt)
+            bot.display(evt)
+        except Exception as ex:
+            later(ex)
+    evt.ready()
+
+
+"event"
 
 
 class Event:
@@ -54,19 +71,6 @@ class Event:
         if self._thr:
             self._thr.join()
 
-
-def command(bot, evt):
-    "check for and run a command."
-    parse(evt, evt.txt)
-    evt.orig = repr(bot)
-    func = Commands.cmds.get(evt.cmd, None)
-    if func:
-        try:
-            func(evt)
-            bot.display(evt)
-        except Exception as ex:
-            later(ex)
-    evt.ready()
 
 
 def parse(obj, txt=None):
@@ -124,6 +128,9 @@ def parse(obj, txt=None):
     else:
         obj.txt = obj.cmd or ""
     return obj
+
+
+"interface"
 
 
 def __dir__():

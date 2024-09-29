@@ -26,7 +26,7 @@ def announce(txt):
 def init():
     udpd = UDP()
     udpd.start()
-    debug(f"UDP {format(Cfg)}")
+    debug(f"UDP http://{Cfg.host}:{Cfg.port}")
     return udpd
 
 
