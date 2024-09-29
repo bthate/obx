@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=W0401,W0614,W0622
+# pylint: disable=R,W0401,W0614,W0622
 # ruff: noqa: F403,F405
 
 
@@ -38,12 +38,15 @@ METHODS = [
     '__class__',
     '__contains__',
     '__delattr__',
+    '__delitem__',
+    '__dict__',
     '__dir__',
     '__doc__',
     '__eq__',
     '__format__',
     '__ge__',
     '__getattribute__',
+    '__getitem__',
     '__getstate__',
     '__gt__',
     '__hash__',
@@ -60,9 +63,11 @@ METHODS = [
     '__reduce_ex__',
     '__repr__',
     '__setattr__',
+    '__setitem__',
     '__sizeof__',
     '__str__',
     '__subclasshook__',
+    '__weakref__'
 ]
 
 
@@ -73,7 +78,7 @@ DIFF = [
 ]
 
 
-class TestInterface(unittest.TestCase): # pylint: disable=R0903
+class TestInterface(unittest.TestCase):
 
     "TestInterface"
 
@@ -93,10 +98,8 @@ class TestInterface(unittest.TestCase): # pylint: disable=R0903
         "test methods interface."
         okd = True
         obj = Object()
-        print(dir(obj))
-        for meth in METHODS:
-            func1 = getattr(obj, meth, None)
-            if not func1:
+        for meth in dir(obj):
+            if meth not in METHODS:
                 print(f"missing method {meth}")
                 okd = False
         self.assertTrue(okd)
