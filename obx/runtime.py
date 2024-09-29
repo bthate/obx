@@ -32,9 +32,7 @@ class Broker:
 
     @staticmethod
     def announce(txt, kind=None):
-        print(Broker.objs)
         for obj in Broker.all(kind):
-            print(dir(obj))
             if "announce" in dir(obj):
                 obj.announce(txt)
 
@@ -42,13 +40,11 @@ class Broker:
     def all(kind=None):
         "return all objects."
         result = []
-        print(f"all {kind}")
         if kind is not None:
             for key in [x for x in Broker.objs if kind in x]:
                 result.append(Broker.get(key))
         else:
             result.extend(list(Broker.objs.values()))
-        print(result)
         return result
 
     @staticmethod
