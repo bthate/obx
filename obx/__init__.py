@@ -123,19 +123,19 @@ class ObjectDecoder(json.JSONDecoder):
 
     "ObjectDecoder"
 
-    def __init__(obj, *args, **kwargs):
-        json.JSONDecoder.__init__(obj, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        json.JSONDecoder.__init__(self, *args, **kwargs)
 
-    def decode(obj, s, _w=None):
+    def decode(self, s, _w=None):
         "decoding string to object."
-        val = json.JSONDecoder.decode(obj, s)
+        val = json.JSONDecoder.decode(self, s)
         if not val:
             val = {}
         return hook(val)
 
-    def raw_decode(obj, s, idx=0):
+    def raw_decode(self, s, idx=0):
         "decode partial string to object."
-        return json.JSONDecoder.raw_decode(obj, s, idx)
+        return json.JSONDecoder.raw_decode(self, s, idx)
 
 
 def hook(objdict, typ=None):

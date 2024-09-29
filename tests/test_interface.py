@@ -7,7 +7,6 @@
 
 
 import logging
-import inspect
 import sys
 import unittest
 

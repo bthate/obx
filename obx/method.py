@@ -87,3 +87,13 @@ def search(obj, selector, matching=None):
             res = False
             break
     return res
+
+
+def __dir__():
+    return (
+        'edit',
+        'format',
+        'fqn',
+        'match',
+        'search'
+    )

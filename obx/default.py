@@ -24,5 +24,5 @@ class Config(Default):
 def __dir__():
     return (
         'Config',
-        'Default',
+        'Default'
     )
