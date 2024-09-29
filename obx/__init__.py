@@ -221,8 +221,6 @@ def __dir__():
         'copy',
         'fromkeys',
         'dumps',
-        'edit',
-        'format',
         'get',
         'keys',
         'loads',
@@ -230,5 +228,5 @@ def __dir__():
         'pop',
         'popitem',
         'update',
-        'values',
+        'values'
     )
