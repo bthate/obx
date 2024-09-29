@@ -111,8 +111,11 @@ class Reactor:
     def loop(self):
         "proces events until interrupted."
         while not self.stopped.is_set():
-            evt = self.poll()
-            self.callback(evt)
+            try:
+                evt = self.poll()
+                self.callback(evt)
+            except (KeyboardInterrupt, EOFError):
+                _thread.interrupt_main()
 
     def poll(self):
         "function to return event."
