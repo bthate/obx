@@ -22,8 +22,8 @@ from obx.runtime import NAME, Client, errors, forever, init, later
 import obx
 
 
-if os.path.exists('examples'):
-    from examples import face as MODS
+if os.path.exists('mods'):
+    from mods import face as MODS
 else:
     MODS = None
 
