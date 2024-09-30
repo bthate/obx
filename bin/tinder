@@ -26,7 +26,7 @@ from obx.runtime import NAME, STARTTIME, Client, errors, later, launch
 
 
 if os.path.exists('mods'):
-    from mods import face as MODS 
+    from mods import face as MODS
 
 
 cfg = Default()

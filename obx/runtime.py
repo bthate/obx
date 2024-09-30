@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,W0718,E1102
+# pylint: disable=R,W0105,W0718,E1102
 
 
 "runtime"
@@ -32,6 +32,7 @@ class Broker:
 
     @staticmethod
     def announce(txt, kind=None):
+        "announce text on brokered objects."
         for obj in Broker.all(kind):
             if "announce" in dir(obj):
                 obj.announce(txt)
