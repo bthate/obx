@@ -27,7 +27,6 @@ class Broker:
     @staticmethod
     def add(obj):
         "add object."
-        print(f"BRK {obj}")
         Broker.objs[repr(obj)] = obj
 
     @staticmethod
