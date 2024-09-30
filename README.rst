@@ -42,11 +42,47 @@ presence in a IRC channel.
     $ pipx install obx
     $ pipx ensurepath
 
-    <new terminal>
+
+**CONFIGURATION**
+
+
+irc
+
+::
+
+    $ obx cfg server=<server>
+    $ obx cfg channel=<channel>
+    $ obx cfg nick=<nick>
+
+sasl
+
+::
+
+    $ obx pwd <nsvnick> <nspass>
+    $ obx cfg password=<frompwd>
+
+rss
+
+::
+
+    $ obx rss <url>
+    $ obx dpl <url> <item1,item2>
+    $ obx rem <url>
+    $ obx nme <url> <name>
+
+opml
+
+::
+
+    $ obx exp
+    $ obx imp <filename>
+
+
+**SYSTEMD**
 
     $ obx srv > obx.service
-    # mv *.service /etc/systemd/system/
-    # systemctl enable obx --now
+    $ sudo mv obx.service /etc/systemd/system/
+    $ sudo systemctl enable obx --now
 
     joins #obx on localhost
 
@@ -112,34 +148,6 @@ start service
    <runs until ctrl-c>
 
 
-**CONFIGURATION**
-
-
-irc
-
-::
-
-    $ obx cfg server=<server>
-    $ obx cfg channel=<channel>
-    $ obx cfg nick=<nick>
-
-sasl
-
-::
-
-    $ obx pwd <nsvnick> <nspass>
-    $ obx cfg password=<frompwd>
-
-rss
-
-::
-
-    $ obx rss <url>
-    $ obx dpl <url> <item1,item2>
-    $ obx rem <url>
-    $ obx nme <url> <name>
-
-
 **COMMANDS**
 
 ::
@@ -164,6 +172,14 @@ rss
     thr - show running threads
 
 
+**SOURCE**
+
+::
+
+    source is at https://github.com/bthate/obx
+
+
+
 **FILES**
 
 ::
@@ -174,13 +190,6 @@ rss
     ~/.local/bin/obxd
     ~/.local/bin/obxs
     ~/.local/pipx/venvs/obx/*
-
-
-**SOURCE**
-
-::
-
-    source is at ``https://github.com/bthate/obx``
 
 
 **AUTHOR**
