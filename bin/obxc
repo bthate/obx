@@ -10,17 +10,13 @@ import os
 import readline
 import sys
 import termios
-import time
 
 
 from obx.command import Event, command, parse
 from obx.default import Config
 from obx.modules import face
-from obx.runtime import NAME, Client, Logging
+from obx.runtime import Client, Logging
 from obx.runtime import banner, errors, forever, init, later
-
-
-import obx
 
 
 if os.path.exists('mods'):
@@ -82,7 +78,7 @@ def main():
         Logging.out = print
         banner()
     if "i" in cfg.opts:
-        for mod, thr in init(face, MODS):
+        for _mod, thr in init(face, MODS):
             if "w" in cfg.opts:
                 thr.join()
     csl = Console()

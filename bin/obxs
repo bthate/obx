@@ -9,17 +9,15 @@ import getpass
 
 
 from obx.modules import face
-from obx.persist import Workdir, pidname
-from obx.runtime import NAME, errors, forever, init, pidfile, privileges, wrap
-
-
-PROGNAME = NAME
+from obx.persist import pidname
+from obx.runtime import errors, forever, init, pidfile, privileges, wrap
 
 
 def main():
     "main"
     privileges(getpass.getuser())
-    pidfile(pidname())
+    name = pidname()
+    pidfile(name)
     init(face)
     forever()
 

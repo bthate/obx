@@ -51,6 +51,7 @@ def long(name):
 
 
 def pidname():
+    "return pidfile path."
     return os.path.join(Workdir.wdr, f"{Workdir.name}.pid")
 
 

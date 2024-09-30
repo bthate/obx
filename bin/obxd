@@ -12,8 +12,8 @@ import sys
 
 
 from obx.modules import face
-from obx.persist import Workdir, pidname
-from obx.runtime import NAME, forever, init, pidfile, privileges
+from obx.persist import pidname
+from obx.runtime import forever, init, pidfile, privileges
 
 
 def daemon(verbose=False):
