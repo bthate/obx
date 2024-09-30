@@ -16,7 +16,8 @@ import time
 from obx.command import Event, command, parse
 from obx.default import Config
 from obx.modules import face
-from obx.runtime import NAME, Client, errors, forever, init, later
+from obx.runtime import NAME, Client, Logging
+from obx.runtime import banner, errors, forever, init, later
 
 
 import obx
@@ -55,12 +56,6 @@ class Console(Client):
         print(txt)
 
 
-def banner():
-    "show banner."
-    tme = time.ctime(time.time()).replace("  ", " ")
-    print(f"{NAME.upper()} since {tme}")
-
-
 def wrap(func, outer):
     "reset console."
     old2 = None
@@ -84,12 +79,10 @@ def main():
     readline.redisplay()
     parse(cfg, " ".join(sys.argv[1:]))
     if "v" in cfg.opts:
+        Logging.out = print
         banner()
-        obx.runtime.VERBOSE = print
     if "i" in cfg.opts:
         for mod, thr in init(face, MODS):
-            if "v" in cfg.opts:
-                mod.VERBOSE = print
             if "w" in cfg.opts:
                 thr.join()
     csl = Console()

@@ -5,6 +5,9 @@
 "runtime"
 
 
+import os
+import pathlib
+import pwd
 import queue
 import threading
 import time
@@ -15,7 +18,6 @@ import _thread
 
 NAME      = __file__.rsplit("/", maxsplit=2)[-2]
 STARTTIME = time.time()
-VERBOSE   = None
 
 
 class Broker:
@@ -260,6 +262,7 @@ class Logging:
     "Logging"
 
     filter = []
+    out = None
 
 
 def debug(txt):
@@ -267,11 +270,17 @@ def debug(txt):
     for skp in Logging.filter:
         if skp in txt:
             return
-    if VERBOSE:
-        VERBOSE(txt)
+    if Logging.out:
+        Logging.out(txt)
 
 
 "utilities"
+
+
+def banner():
+    "show banner."
+    tme = time.ctime(time.time()).replace("  ", " ")
+    debug(f"{NAME.upper()} since {tme}")
 
 
 def forever():
@@ -330,6 +339,23 @@ def named(obj):
     return None
 
 
+def pidfile(filename):
+    "write the pid to a file."
+    if os.path.exists(filename):
+        os.unlink(filename)
+    path = pathlib.Path(filename)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(filename, "w", encoding="utf-8") as fds:
+        fds.write(str(os.getpid()))
+
+
+def privileges(username):
+    "privileges."
+    pwnam = pwd.getpwnam(username)
+    os.setgid(pwnam.pw_gid)
+    os.setuid(pwnam.pw_uid)
+
+
 def wrap(func, outer):
     "reset console."
     try:
@@ -360,5 +386,7 @@ def __dir__():
         'launch',
         'modnames',
         'named',
+        'pidfile',
+        'privileges',
         'wait'
     )

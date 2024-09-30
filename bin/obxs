@@ -6,41 +6,20 @@
 
 
 import getpass
-import os
-import pathlib
-import pwd
 
 
 from obx.modules import face
-from obx.persist import Workdir
-from obx.runtime import NAME, errors, forever, init, wrap
+from obx.persist import Workdir, pidname
+from obx.runtime import NAME, errors, forever, init, pidfile, privileges, wrap
 
 
 PROGNAME = NAME
 
 
-def pidfile(name):
-    "write the pid to a file."
-    filename = os.path.join(Workdir.wdr, f"{name}.pid")
-    if os.path.exists(filename):
-        os.unlink(filename)
-    path = pathlib.Path(filename)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as fds:
-        fds.write(str(os.getpid()))
-
-
-def privileges(username):
-    "privileges."
-    pwnam = pwd.getpwnam(username)
-    os.setgid(pwnam.pw_gid)
-    os.setuid(pwnam.pw_uid)
-
-
 def main():
     "main"
     privileges(getpass.getuser())
-    pidfile(PROGNAME)
+    pidfile(pidname())
     init(face)
     forever()
 

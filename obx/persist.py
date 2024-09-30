@@ -23,7 +23,6 @@ disklock = _thread.allocate_lock()
 p        = os.path.join
 
 
-
 class ReadError(Exception):
     "error reading json file."
 
@@ -49,6 +48,10 @@ def long(name):
             res = names
             break
     return res
+
+
+def pidname():
+    return os.path.join(Workdir.wdr, f"{Workdir.name}.pid")
 
 
 def skel():
@@ -256,6 +259,7 @@ def __dir__():
         'last',
         'laps',
         'long',
+        'pidname',
         'read',
         'skel',
         'store',

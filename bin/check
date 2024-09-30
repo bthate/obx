@@ -4,4 +4,7 @@ grep -R "print(" obx
 grep -R __import__ obx
 grep -R importlib obx
 grep -R "import sys" obx
+grep -R "import termios" obx
+grep -R "import inspect" obx
+#grep -R "import traceback" obx
 #grep -R "import os" obx

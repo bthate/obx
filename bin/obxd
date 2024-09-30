@@ -8,14 +8,12 @@
 
 import getpass
 import os
-import pathlib
-import pwd
 import sys
 
 
 from obx.modules import face
-from obx.persist import Workdir
-from obx.runtime import NAME, forever, init
+from obx.persist import Workdir, pidname
+from obx.runtime import NAME, forever, init, pidfile, privileges
 
 
 def daemon(verbose=False):
@@ -39,29 +37,11 @@ def daemon(verbose=False):
     os.nice(10)
 
 
-def pidfile(name):
-    "write the pid to a file."
-    fname = os.path.join(Workdir.wdr, f"{name}.pid")
-    if os.path.exists(fname):
-        os.unlink(fname)
-    path = pathlib.Path(fname)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(fname, "w", encoding="utf-8") as fds:
-        fds.write(str(os.getpid()))
-
-
-def privileges(username):
-    "drop privileges."
-    pwnam = pwd.getpwnam(username)
-    os.setgid(pwnam.pw_gid)
-    os.setuid(pwnam.pw_uid)
-
-
 def main():
     "main"
     daemon()
     privileges(getpass.getuser())
-    pidfile(NAME)
+    pidfile(pidname())
     init(face)
     forever()
 
