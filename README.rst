@@ -18,9 +18,8 @@
 
 ``OBX`` has all the python3 code to program a unix cli program, such as
 disk perisistence for configuration files, event handler to
-handle the client/server connection, code to introspect modules
-for commands, deferred exception handling to not crash on an
-error, a parser to parse commandline options and values, etc.
+handle the client/server connection, deferred exception handling to not
+crash on an error, a parser to parse commandline options and values, etc.
 
 ``OBX`` uses object programming (OP) that allows for easy json save//load
 to/from disk of objects. It provides an "clean namespace" Object class
@@ -79,6 +78,8 @@ opml
 
 
 **SYSTEMD**
+
+::
 
     $ obx srv > obx.service
     $ sudo mv obx.service /etc/systemd/system/
