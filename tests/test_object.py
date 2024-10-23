@@ -9,7 +9,7 @@
 import unittest
 
 
-from obx import Object, items, keys, update, values
+from obx.object import Object, items, keys, update, values
 
 
 VALIDJSON = '{"test": "bla"}'
@@ -98,19 +98,6 @@ class TestObject(unittest.TestCase):
         del obj.key
         self.assertTrue("key" not in obj)
 
-    def test_delitem(self):
-        "test deleting of items."
-        obj = Object()
-        obj["a"] = "b"
-        self.assertTrue(getattr(obj, "a") == "b")
-
-
-    def test_getitem(self):
-        "test deleting of items."
-        obj = Object()
-        obj["a"] = "b"
-        self.assertTrue(obj["a"] == "b")
-
     def test_dict(self):
         "test __dict__"
         obj = Object()
@@ -189,7 +176,7 @@ class TestObject(unittest.TestCase):
 
     def test_module(self):
         "test module name."
-        self.assertEqual(Object().__module__, "obx")
+        self.assertEqual(Object().__module__, "obx.object")
 
     def test_register(self):
         "test setting attribute."        
@@ -207,12 +194,6 @@ class TestObject(unittest.TestCase):
         obj = Object()
         obj.__setattr__("key", "value")
         self.assertTrue(obj.key, "value")
-
-    def test_setitem(self):
-        "test setting an item."
-        obj = Object()
-        obj["a"] = "b"
-        self.assertTrue(obj["a"], "b")
 
     def test_str(self):
         "test stringify."

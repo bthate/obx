@@ -14,7 +14,7 @@ import unittest
 import obx
 
 
-from obx import *
+from obx.object import *
 
 
 PACKAGE = [
@@ -27,7 +27,8 @@ PACKAGE = [
     '__package__',
     '__path__',
     '__spec__',
-    'command',
+    'main',
+    'object',
     'persist',
     'runtime'
 ]
