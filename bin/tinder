@@ -131,7 +131,7 @@ def main():
     consume(events)
     for thr in thrs:
         thr.join()
-    clt.wait()
+    #clt.wait()
     if "v" in cfg.opts:
         endtime = time.time()
         lap = laps(endtime-STARTTIME)
