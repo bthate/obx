@@ -24,10 +24,10 @@ classifiers = [
 
 
 [project.scripts]
-"obx"  = "obx.cli:wrapped"
-"obxc" = "obx.console:wrapped"
-"obxd" = "obx.daemon:main"
-"obxs" = "obx.service:wrapped"
+"obx"    = "obx.cli:wrapped"
+"obxbot" = "obx.console:wrapped"
+"obxd"   = "obx.daemon:main"
+"obxs"   = "obx.service:wrapped"
 
 
 [project.urls]
