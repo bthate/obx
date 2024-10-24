@@ -12,7 +12,7 @@ import time
 import _thread
 
 
-from .object  import Object, keys
+from .        import Object, keys
 from .persist import NAME, Workdir
 from .runtime import Reactor, later, launch
 
