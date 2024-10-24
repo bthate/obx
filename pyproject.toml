@@ -7,8 +7,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "obx"
-description = "program your own commands."
-version = "14"
+description = "OBX"
+version = "20"
 authors = [
     {name = "Bart Thate",email = "bthate@dds.nl"},
 ]
@@ -22,18 +22,20 @@ classifiers = [
     'Topic :: Utilities'
 ]
 
+
+[project.scripts]
+"obx"  = "obx.cli:wrapped"
+"obxc" = "obx.console:wrapped"
+"obxd" = "obx.daemon:main"
+"obxs" = "obx.service:wrapped"
+
+
 [project.urls]
 "home" = "https://pypi.org/project/obx"
 "bugs" = "https://github.com/bthate/obx/issues"
 "source" = "https://github.com/bthate/obx"
 
 [tool.setuptools]
-script-files = [
-    "bin/obx",
-    "bin/obxc",
-    "bin/obxd",
-    "bin/obxs"
-]
 packages = [
     "obx",
     "obx.modules"

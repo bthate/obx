@@ -1,1 +1,1 @@
-pylint obx bin/obx bin/obxc bin/obxd bin/obxs bin/tinder tests
+pylint obx bin/tinder tests
