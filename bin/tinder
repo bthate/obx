@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # This file is placed in the Public Domain.
-# pylint: disable=C0413,W0212,W0401,W0611,W0614,W0622,W0718,E0401
+# pylint: disable=C,W0105,W0201,W0212,W0718
 
 
 "tinder"
@@ -17,22 +17,16 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx         import Object
-from obx.command import Commands, Event, command, parse
-from obx.default import Default
+from obx.main    import Client, Commands, Config, Event
+from obx.main    import parse, scanner
 from obx.modules import face
-from obx.persist import Workdir, laps, skel
-from obx.runtime import NAME, STARTTIME, Client, errors, later, launch
+from obx.object  import Object
+from obx.persist import NAME, Workdir, laps, skel
+from obx.runtime import Errors, later, launch
 
 
-if os.path.exists('mods'):
-    from mods import face as MODS
-
-
-cfg = Default()
-
-
-face.rss.DEBUG = True
+cfg = Config()
+cfg.index = 0
 
 
 LAP = 1
@@ -43,13 +37,14 @@ STARTTIME = time.time()
 
 
 events = []
+face.rss.DEBUG = True
 paylock = _thread.allocate_lock()
 
 
 param = Object()
 param.cmd = [""]
 param.dpl = ["hnrss title,url"]
-param.fnd = ["log", "todo", "rss", "config"]
+param.fnd = ["log", "todo", "rss", "config", "urls"]
 param.imp = ["tests/feeds.opml"]
 param.log = ["bla"]
 param.mod = [""]
@@ -57,26 +52,13 @@ param.mre = [""]
 param.nme = ["hnrss hackernews"]
 param.pwd = ["bla mekker"]
 param.rem = ["hnrss"]
-param.req = [""]
 param.res = [""]
-param.rss = ["http://hnrss.org/newest",]
-param.tdo = ["mekker"]
-param.tmr = ["13:00 bla", "23:59 mekker"]
-param.udp = ["mekker"]
+param.rss = ["http://hnrss.org/newest", ""]
+param.tdo = ["mekker", ""]
 param.ver = [""]
 
 
 class CLI(Client):
-
-    "command line interface."
-
-    def __init__(self):
-        Client.__init__(self)
-        self.register("command", command)
-
-    def callback(self, evt):
-        Client.callback(self, evt)
-        evt.wait()
 
     def raw(self, txt):
         if "v" in cfg.opts:
@@ -84,19 +66,22 @@ class CLI(Client):
 
 
 def banner():
-    "show banner."
     tme = time.ctime(time.time()).replace("  ", " ")
     print(f"{NAME.upper()} since {tme}")
 
 
 def consume(evts):
-    "wait for all events to finish."
     for evt in evts:
         evt.wait()
 
 
+def errors():
+    for erring in Errors.errors:
+        for line in erring:
+            print(line)
+
+
 def payload(clt):
-    "do payload."
     with paylock:
         nmr = 0
         for cmdd in sorted(Commands.cmds):
@@ -110,7 +95,6 @@ def payload(clt):
 
 
 def wrap(function):
-    "reset console."
     old3 = None
     try:
         old3 = termios.tcgetattr(sys.stdin.fileno())
@@ -119,7 +103,7 @@ def wrap(function):
     try:
         function()
     except (KeyboardInterrupt, EOFError):
-        print("")
+        pass
     except Exception as ex:
         later(ex)
     finally:
@@ -128,22 +112,25 @@ def wrap(function):
 
 
 def main():
-    "main"
     Workdir.wdr = ".test"
     parse(cfg, " ".join(sys.argv[1:]))
+    scanner(face)
     nrcommands = len(Commands.cmds) or 1
     if "v" in cfg.opts:
         banner()
-    if "f" in cfg.opts:
+    if "f" not in cfg.opts:
         if os.path.exists(Workdir.wdr):
             shutil.rmtree(Workdir.wdr)
     skel()
     clt = CLI()
     clt.start()
     nrs = cfg.index or 1
+    thrs = []
     for _nr in range(nrs):
-        launch(payload, clt)
+        thrs.append(launch(payload, clt))
     consume(events)
+    for thr in thrs:
+        thr.join()
     clt.wait()
     if "v" in cfg.opts:
         endtime = time.time()
@@ -151,8 +138,11 @@ def main():
         percall = (endtime-STARTTIME)/(nrs*nrcommands)
         print(",".join(Commands.cmds))
         print(f"{lap} {nrs} {nrcommands} {percall}")
+        if not Errors.errors:
+            print("no errors")
 
 
 if __name__ == "__main__":
     wrap(main)
-    errors(print)
+    errors()
+    sys.exit(0)
