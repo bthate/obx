@@ -1,7 +1,7 @@
 **NAME**
 
 
-``obx`` - program your own commands.
+*OBX* - program your own commands.
 
 
 **SYNOPSIS**
