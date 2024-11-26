@@ -67,12 +67,6 @@ def modloop(*pkgs, disable=""):
             yield getattr(pkg, modname)
 
 
-def privileges():
-    import pwd
-    import getpass
-    pwnam2 = pwd.getpwnam(getpass.getuser())
-    os.setgid(pwnam2.pw_gid)
-    os.setuid(pwnam2.pw_uid)
 
 
 def scan(*pkgs, init=False, disable=""):
@@ -331,6 +325,14 @@ def forever():
             time.sleep(0.1)
         except (KeyboardInterrupt, EOFError):
             _thread.interrupt_main()
+
+
+def privileges():
+    import pwd
+    import getpass
+    pwnam2 = pwd.getpwnam(getpass.getuser())
+    os.setgid(pwnam2.pw_gid)
+    os.setuid(pwnam2.pw_uid)
 
 
 def spl(txt):

@@ -5,25 +5,14 @@
 "service"
 
 
-import os
-
-
-from .modules import face
 from .persist import NAME, pidfile, pidname
-from .runtime import errors, forever, scan, wrap
-
-
-def privileges():
-    import getpass
-    import pwd
-    pwnam2 = pwd.getpwnam(getpass.getuser())
-    os.setgid(pwnam2.pw_gid)
-    os.setuid(pwnam2.pw_uid)
+from .runtime import errors, forever, privileges, scan, wrap
 
 
 def service():
     privileges()
     pidfile(pidname(NAME))
+    from .modules import face
     scan(face, init=True)
     forever()
 

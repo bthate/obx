@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # This file is placed in the Public Domain.
-# pylint: disable=C,W0105,W0611,W0718
+# pylint: disable=C,W0105,W0611,W0718,E0401
 
 
 "console"
@@ -23,13 +23,7 @@ from obx.modules  import face
 from obx.runtime  import Client, Errors, Event, errors, forever, later
 
 
-"defines"
-
-
 cfg  = Config()
-
-
-"classes"
 
 
 class Console(Client):
@@ -52,9 +46,6 @@ class Console(Client):
         print(txt)
 
 
-"utilities"
-
-
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
     print(f"{NAME.upper()} since {tme}")
@@ -75,11 +66,6 @@ def wrap(func):
     finally:
         if old:
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old)
-    for txt in errors():
-        print(txt)
-
-
-"runtime"
 
 
 def main():
@@ -106,7 +92,9 @@ def main():
 
 def wrapped():
     wrap(main)
-    
+    for line in errors():
+        print(line)    
+
 
 if __name__ == "__main__":
     wrapped()

@@ -31,7 +31,6 @@ provides an "clean namespace" Object class that only has dunder
 methods, so the namespace is not cluttered with method names. This
 makes storing and reading to/from json possible.
 
-
 *OBX* has a demo bot, it can connect to IRC, fetch and display RSS
 feeds, take todo notes, keep a shopping list and log text. You can
 also copy/paste the service file and run it under systemd for 24/7
@@ -138,12 +137,41 @@ opml
 | ``$ obx imp <filename>``
 |
 
+**WRITE YOUR OWN COMMAND**
+
+``obx`` runs it's modules in the package, so you have to clone from git
+
+| ``$ git clone ssh://git@github.com/bthate/obx``
+|
+
+edit a file in obx/modules/<name>.py and add the following for ``hello world``
+
+::
+
+    def hello(event):
+        event.reply("hello world !!")
+
+
+save this and edit ``obx/modules/face.py`` and import your filename in
+there. install that with ``pipx install . --force``
+
+| ``$ obx hello
+| ``hello world !!``
+
+
+commands run in their own thread, errors are deferred to not have loops
+blocking/breaking on exception and can contain your own written python3
+code, see the obx/modules directory for examples.
+
+
 **SOURCE**
+
 
 source is at `https://github.com/bthate/obx  <https://github.com/bthate/obx>`_
 
 
 **FILES**
+
 
 | ``~/.obx``
 | ``~/.local/bin/obx``

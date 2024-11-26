@@ -9,12 +9,8 @@ import os
 import sys
 
 
-from .modules import face
-from .persist import NAME, Workdir, pidfile, pidname
-from .runtime import errors, forever, scan, wrap
-
-
-Workdir.wdr = os.path.expanduser(f"~/.{NAME}")
+from .persist import NAME, pidfile, pidname
+from .runtime import errors, forever, privileges, scan, wrap
 
 
 def daemon(verbose=False):
@@ -37,14 +33,6 @@ def daemon(verbose=False):
     os.nice(10)
 
 
-def privileges():
-    import pwd
-    import getpass
-    pwnam2 = pwd.getpwnam(getpass.getuser())
-    os.setgid(pwnam2.pw_gid)
-    os.setuid(pwnam2.pw_uid)
-
-
 def wrapped():
     wrap(main)
     for line in errors():
@@ -55,6 +43,7 @@ def main():
     daemon(True)
     privileges()
     pidfile(pidname(NAME))
+    from .modules import face
     scan(face, init=True)
     forever()
 
