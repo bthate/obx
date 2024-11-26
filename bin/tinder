@@ -17,12 +17,12 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.main    import Client, Commands, Config, Event
-from obx.main    import parse, scanner
+from obx.__main__ import NAME, Config, command, parse, scan
 from obx.modules import face
 from obx.object  import Object
-from obx.persist import NAME, Workdir, laps, skel
-from obx.runtime import Errors, later, launch
+from obx.persist import Workdir, laps, skel
+from obx.runtime import BufferedClient, Commands, Errors, Event
+from obx.runtime import  errors, later, launch
 
 
 cfg = Config()
@@ -36,33 +36,43 @@ PERCALL   = 1
 STARTTIME = time.time()
 
 
-events = []
 face.rss.DEBUG = True
+
+
+events = []
 paylock = _thread.allocate_lock()
 
 
 param = Object()
 param.cmd = [""]
-param.dpl = ["hnrss title,url"]
-param.fnd = ["log", "todo", "rss", "config", "urls"]
-param.imp = ["tests/feeds.opml"]
-param.log = ["bla"]
+param.dne = ["mekker", ""]
+param.dpl = ["hnrss title,url", ""]
+param.exp = ['']
+param.fnd = ["log", "todo", "rss", "config", "urls", ""]
+param.imp = ["tests/feeds.opml", ""]
+param.log = ["bla", ""]
 param.mod = [""]
 param.mre = [""]
-param.nme = ["hnrss hackernews"]
-param.pwd = ["bla mekker"]
-param.rem = ["hnrss"]
+param.nme = ["hnrss hackernews", ""]
+param.pwd = ["bla mekker", ""]
+param.rem = ["hnrss", ""]
 param.res = [""]
 param.rss = ["http://hnrss.org/newest", ""]
+param.srv = [""]
 param.tdo = ["mekker", ""]
 param.ver = [""]
 
 
-class CLI(Client):
+class CLI(BufferedClient):
+
+    def __init__(self):
+        BufferedClient.__init__(self)
+        self.register("command", command)
 
     def raw(self, txt):
         if "v" in cfg.opts:
             print(txt)
+            sys.stdout.flush()
 
 
 def banner():
@@ -71,27 +81,26 @@ def banner():
 
 
 def consume(evts):
+    done = []
     for evt in evts:
         evt.wait()
-
-
-def errors():
-    for erring in Errors.errors:
-        for line in erring:
-            print(line)
+        done.append(evt)
+    for todo in done:
+        events.remove(todo)
+    return done
 
 
 def payload(clt):
-    with paylock:
-        nmr = 0
-        for cmdd in sorted(Commands.cmds):
-            for ex in getattr(param, cmdd, [""]):
-                evt = Event()
-                evt.txt = cmdd + " " + ex
-                clt.put(evt)
-                events.append(evt)
-                nmr += 1
-        return nmr
+    nmr = 0
+    for cmdd in sorted(Commands.cmds):
+        for ex in getattr(param, cmdd, [""]):
+            evt = Event()
+            evt.txt = cmdd + " " + ex
+            evt.type = "command"
+            events.append(evt)
+            clt.put(evt)
+            nmr += 1
+    return nmr
 
 
 def wrap(function):
@@ -114,7 +123,7 @@ def wrap(function):
 def main():
     Workdir.wdr = ".test"
     parse(cfg, " ".join(sys.argv[1:]))
-    scanner(face)
+    scan(face)
     nrcommands = len(Commands.cmds) or 1
     if "v" in cfg.opts:
         banner()
@@ -128,21 +137,21 @@ def main():
     thrs = []
     for _nr in range(nrs):
         thrs.append(launch(payload, clt))
-    consume(events)
     for thr in thrs:
         thr.join()
-    #clt.wait()
-    if "v" in cfg.opts:
-        endtime = time.time()
-        lap = laps(endtime-STARTTIME)
-        percall = (endtime-STARTTIME)/(nrs*nrcommands)
-        print(",".join(Commands.cmds))
-        print(f"{lap} {nrs} {nrcommands} {percall}")
-        if not Errors.errors:
-            print("no errors")
-
+    consume(events)
+    clt.wait()
+    clt.stop()
+    endtime = time.time()
+    lap = laps(endtime-STARTTIME)
+    percall = (endtime-STARTTIME)/(nrs*nrcommands)
+    print(f"{lap} {nrs} {nrcommands} {percall}")
+    if not Errors.errors:
+        print("no errors")
 
 if __name__ == "__main__":
     wrap(main)
-    errors()
-    sys.exit(0)
+    for line in errors():
+        print(line)
+    print(f"{len(events)} events remained")
+    sys.stdout.flush()

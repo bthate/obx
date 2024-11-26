@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R,W0105,W0201,W0613,w0622,W0718,E1102
+# pylint: disable=C,R,W0012,W0105,W0201,W0613,w0622,W0718,E1102,E0402
 
 
 "internet relay chat"
@@ -16,24 +16,33 @@ import time
 import _thread
 
 
-from ..object  import Object, edit, keys
-from ..main    import NAME, command, fmt
-from ..persist import Cache, ident, last, sync
-from ..runtime import Reactor, later, launch
+from ..object  import Object, edit, format, keys, parse
+from ..persist import Cache, ident, last, write
+
+from ..runtime import Commands, Event, Reactor, later, launch
 
 
 IGNORE = ["PING", "PONG", "PRIVMSG"]
+NAME = Object.__module__.rsplit(".", maxsplit=2)[-2]
 
 
 output = None
 saylock = _thread.allocate_lock()
 
 
+def debug(txt):
+    for ign in IGNORE:
+        if ign in txt:
+            return
+    if output:
+        output(txt)
+
+
 def init():
     irc = IRC()
     irc.start()
     irc.events.ready.wait()
-    debug(f'{fmt(Config, skip="edited,password")}')
+    debug(f'{format(Config, skip="edited,password")}')
     return irc
 
 
@@ -63,34 +72,6 @@ class Config(Object):
         self.realname = Config.realname
         self.server = Config.server
         self.username = Config.username
-
-
-class Event:
-
-    def __init__(self):
-        self._ready  = threading.Event()
-        self._thr    = None
-        self.orig    = ""
-        self.result  = []
-        self.type    = "event"
-
-    def __getattr__(self, key):
-        return self.__dict__.get(key, "")
-
-    def __str__(self):
-        return str(self.__dict__)
-
-    def ready(self):
-        self._ready.set()
-
-    def reply(self, txt):
-        self.result.append(txt)
-
-    def wait(self):
-        self._ready.wait()
-        if self._thr:
-            self._thr.join()
-
 
 
 class TextWrap(textwrap.TextWrapper):
@@ -518,6 +499,20 @@ class IRC(Reactor, Output):
         self.events.ready.wait()
 
 
+def command(bot, evt):
+    parse(evt, evt.txt)
+    if "ident" in dir(bot):
+        evt.orig = bot.ident
+    func = Commands.cmds.get(evt.cmd, None)
+    if func:
+        try:
+            func(evt)
+            bot.display(evt)
+        except Exception as ex:
+            later(ex)
+    evt.ready()
+
+
 def cb_auth(bot, evt):
     bot.docommand(f'AUTHENTICATE {bot.cfg.password}')
 
@@ -589,14 +584,6 @@ def cb_quit(bot, evt):
         bot.stop()
 
 
-def debug(txt):
-    for ign in IGNORE:
-        if ign in txt:
-            return
-    if output:
-        output(txt)
-
-
 "commands"
 
 
@@ -605,7 +592,7 @@ def cfg(event):
     last(config)
     if not event.sets:
         event.reply(
-                    fmt(
+                    format(
                         config,
                         keys(config),
                         skip='control,password,realname,sleep,username'.split(",")
@@ -613,7 +600,7 @@ def cfg(event):
                    )
     else:
         edit(config, event.sets)
-        sync(config)
+        write(config)
         event.reply('ok')
 
 

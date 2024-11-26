@@ -1,13 +1,12 @@
 # This file is placed in the Public Domain.
-# pylint: disable=W0611
+# pylint: disable=W0611,E0402
 # ruff: noqa: F401
 
 
 "interface"
 
 
-from . import cmd, err, fnd, irc, log, mdl, mod, opm, req
-from . import rss, srv, tdo, thr, upt
+from . import cmd, err, fnd, irc, log, mod, opm, rss, tdo, thr, upt
 
 
 def __dir__():
@@ -17,13 +16,13 @@ def __dir__():
         'fnd',
         'irc',
         'log',
-        'mdl',
         'mod',
         'opm',
-        'req',
         'rss',
-        'srv',
         'tdo',
         'thr',
         'upt'
     )
+
+
+__all__ = __dir__()

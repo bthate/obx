@@ -1,12 +1,12 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,W0105
+# pylint: disable=C,W0105,E0402
 
 
-"list of commands"
+"commands"
 
 
-from ..main   import Commands
-from ..object import keys
+from ..object  import keys
+from ..runtime import Commands
 
 
 def cmd(event):

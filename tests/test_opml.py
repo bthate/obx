@@ -7,7 +7,7 @@
 import unittest
 
 
-from obx.modules.opm import OPMLParser
+from opd.modules.opm import OPMLParser
 
 
 class TestOPML(unittest.TestCase):

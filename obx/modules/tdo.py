@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R
+# pylint: disable=C,R,W0105,E0402
 
 
 "todo list"
@@ -9,7 +9,7 @@ import time
 
 
 from ..object  import Object
-from ..persist import find, fntime, laps, sync
+from ..persist import find, fntime, ident, laps, write
 
 
 class Todo(Object):
@@ -28,7 +28,7 @@ def dne(event):
     for fnm, obj in find('todo', selector):
         nmr += 1
         obj.__deleted__ = True
-        sync(obj, fnm)
+        write(obj, fnm)
         event.reply('ok')
         break
     if not nmr:
@@ -47,5 +47,5 @@ def tdo(event):
         return
     obj = Todo()
     obj.txt = event.rest
-    sync(obj)
+    write(obj, ident(obj))
     event.reply('ok')

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.[B
-# pylint: disable=C,W0622
+# pylint: disable=C,W0105,W0622,E0402
 
 
 "find"
@@ -8,7 +8,7 @@
 import time
 
 
-from ..main    import fmt
+from ..object  import format
 from ..persist import find, fntime, laps, long, skel, types
 
 
@@ -23,7 +23,7 @@ def fnd(event):
     clz = long(otype)
     nmr = 0
     for fnm, obj in find(clz, event.gets):
-        event.reply(f"{nmr} {fmt(obj)} {laps(time.time()-fntime(fnm))}")
+        event.reply(f"{nmr} {format(obj)} {laps(time.time()-fntime(fnm))}")
         nmr += 1
     if not nmr:
         event.reply("no result")

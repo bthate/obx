@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R,W0105
+# pylint: disable=C,R,W0105,W0622
 
 
 "a clean namespace"
@@ -24,6 +24,17 @@ class Object:
 
     def __str__(self):
         return str(self.__dict__)
+
+
+class Obj(Object):
+
+    def __getattr__(self, key):
+        return self.__dict__.get(key, "")
+
+
+class Config(Obj):
+
+    pass
 
 
 def construct(obj, *args, **kwargs):
@@ -61,6 +72,29 @@ def edit(obj, setter, skip=False):
             setattr(obj, key, val)
 
 
+def format(obj, args=None, skip=None, plain=False):
+    if args is None:
+        args = keys(obj)
+    if skip is None:
+        skip = []
+    txt = ""
+    for key in args:
+        if key.startswith("__"):
+            continue
+        if key in skip:
+            continue
+        value = getattr(obj, key, None)
+        if value is None:
+            continue
+        if plain:
+            txt += f"{value} "
+        elif isinstance(value, str) and len(value.split()) >= 2:
+            txt += f'{key}="{value}" '
+        else:
+            txt += f'{key}={value} '
+    return txt.strip()
+
+
 def items(obj):
     if isinstance(obj,type({})):
         return obj.items()
@@ -78,6 +112,62 @@ def match(obj, txt):
     for key in keys(obj):
         if txt in key:
             yield key
+
+
+def parse(obj, txt=None):
+    if txt is None:
+        txt = ""
+    args = []
+    obj.args    = []
+    obj.cmd     = ""
+    obj.gets    = Obj()
+    obj.hasmods = False
+    obj.index   = None
+    obj.mod     = ""
+    obj.opts    = ""
+    obj.result  = []
+    obj.sets    = Obj()
+    obj.txt     = txt or ""
+    obj.otxt    = obj.txt
+    _nr = -1
+    for spli in obj.otxt.split():
+        if spli.startswith("-"):
+            try:
+                obj.index = int(spli[1:])
+            except ValueError:
+                obj.opts += spli[1:]
+            continue
+        if "==" in spli:
+            key, value = spli.split("==", maxsplit=1)
+            val = getattr(obj.gets, key, None)
+            if val:
+                value = val + "," + value
+                setattr(obj.gets, key, value)
+            continue
+        if "=" in spli:
+            key, value = spli.split("=", maxsplit=1)
+            if key == "mod":
+                obj.hasmods = True
+                if obj.mod:
+                    obj.mod += f",{value}"
+                else:
+                    obj.mod = value
+                continue
+            setattr(obj.sets, key, value)
+            continue
+        _nr += 1
+        if _nr == 0:
+            obj.cmd = spli
+            continue
+        args.append(spli)
+    if args:
+        obj.args = args
+        obj.txt  = obj.cmd or ""
+        obj.rest = " ".join(obj.args)
+        obj.txt  = obj.cmd + " " + obj.rest
+    else:
+        obj.txt = obj.cmd or ""
+    return obj
 
 
 def search(obj, selector, matching=None):
@@ -183,16 +273,17 @@ def dumps(*args, **kw):
 
 def __dir__():
     return (
+        'Config',
         'Object',
+        'Obj',
         'construct',
         'dumps',
         'edit',
-        'fmt',
-        'fqn',
         'keys',
         'loads',
         'items',
         'match',
+        'parse',
         'search',
         'update',
         'values'

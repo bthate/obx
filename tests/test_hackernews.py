@@ -7,7 +7,7 @@
 import unittest
 
 
-from obx.modules.rss import Parser
+from opd.modules.rss import Parser
 
 
 class TestParse(unittest.TestCase):

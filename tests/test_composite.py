@@ -1,4 +1,5 @@
 # This file is placed in the Public Domain.
+# pylint: disable=C
 
 
 "composite"
@@ -7,15 +8,12 @@
 import unittest
 
 
-from obx.object import Object
+from opd.object import Object
 
 
 class TestComposite(unittest.TestCase):
 
-    "TestComposite"
-
     def testcomposite(self):
-        "test composition."
         obj = Object()
         obj.obj = Object()
         obj.obj.abc = "test"
