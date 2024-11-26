@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "obx"
-description = "OBX"
+description = "program your own commands."
 version = "30"
 authors = [
     {name = "Bart Thate",email = "bthate@dds.nl"},

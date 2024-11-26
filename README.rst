@@ -1,45 +1,47 @@
 **NAME**
 
 
-``obx`` - program your own commands
+``obx`` - program your own commands.
 
 
 **SYNOPSIS**
 
 | ``obx <cmd> [key=val] [key==val]``
 | ``obxc [-cviw]``
-| ``obx`` 
+| ``obxd`` 
 | ``obxs``
 |
 
 **DESCRIPTION**
 
 
-``obx`` is a python3 bot, it can connect to IRC, fetch and display RSS
-feeds, take todo notes, keep a shopping list and log text. You can
-also copy/paste the service file and run it under systemd for 24/7
-presence in a IRC channel.
-
-``obx`` has all you need to program a unix cli program, such as disk
+*OBX* has all you need to program a unix cli program, such as disk
 perisistence for configuration files, event handler to handle the
 client/server connection, deferred exception handling to not crash
 on an error, etc.
 
-``obx`` contains all the python3 code to program objects in a functional
+*OBX* contains all the python3 code to program objects in a functional
 way. It provides a base Object class that has only dunder methods, all
 methods are factored out into functions with the objects as the first
 argument. It is called Object Programming (OP), OOP without the
 oriented.
 
-``obx`` allows for easy json save//load to/from disk of objects. It
+*OBX* allows for easy json save//load to/from disk of objects. It
 provides an "clean namespace" Object class that only has dunder
 methods, so the namespace is not cluttered with method names. This
 makes storing and reading to/from json possible.
 
-``obx`` is Public Domain.
+
+*OBX* has a demo bot, it can connect to IRC, fetch and display RSS
+feeds, take todo notes, keep a shopping list and log text. You can
+also copy/paste the service file and run it under systemd for 24/7
+presence in a IRC channel.
+
+*OBX* is Public Domain.
 
 
 **INSTALL**
+
 
 installation is done with pipx
 
@@ -158,5 +160,5 @@ source is at `https://github.com/bthate/obx  <https://github.com/bthate/obx>`_
 
 **COPYRIGHT**
 
-| ``obx`` is Public Domain.
+| *OBX* is Public Domain.
 |
