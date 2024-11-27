@@ -1,1 +1,1 @@
-python3 -m opx $* ;
+python3 -m obx $* ;

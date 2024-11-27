@@ -30,7 +30,7 @@ p         = os.path.join
 class Workdir:
 
     fqns = []
-    wdr = os.path.expanduser(f"~/.{NAME}")
+    wdr  = os.path.expanduser(f"~/.{NAME}")
 
 
 def long(name):
@@ -56,10 +56,6 @@ def store(pth=""):
     if not os.path.exists(stor):
         skel()
     return p(Workdir.wdr, "store", pth)
-
-
-def whitelist(clz):
-    Workdir.fqns.append(fqn(clz))
 
 
 class Cache:

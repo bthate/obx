@@ -68,6 +68,12 @@ def wrap(func):
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old)
 
 
+def wrapped():
+    wrap(main)
+    for line in errors():
+        print(line)    
+
+
 def main():
     parse(cfg, " ".join(sys.argv[1:]))
     if "v" in cfg.opts:
@@ -77,23 +83,9 @@ def main():
             mod.output = print
         if thr and "w" in cfg.opts:
             thr.join()
-    if "c" in cfg.opts:
-        csl = Console()
-        csl.start()
-        forever()
-    elif cfg.txt:
-        evt = Event()
-        evt.txt = cfg.txt
-        evt.type = "command"
-        csl = Console()
-        command(csl, evt)
-        evt.wait()
-
-
-def wrapped():
-    wrap(main)
-    for line in errors():
-        print(line)    
+    csl = Console()
+    csl.start()
+    forever()
 
 
 if __name__ == "__main__":
