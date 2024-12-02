@@ -12,8 +12,10 @@ import uuid
 import _thread
 
 
-from obx.object  import Object, update
-from obz.persist import find, ident, spl, write
+from obx import Object, update
+
+
+from ..persist import find, ident, spl, write
 
 
 from .rss import Rss

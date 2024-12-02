@@ -5,8 +5,8 @@
 "service"
 
 
-from obx.runtime import errors, forever, privileges, scan, wrap
-from obz.persist import Config, pidfile, pidname
+from .persist import Config, pidfile, pidname
+from .runtime import errors, forever, privileges, scan, wrap
 
 
 def service():

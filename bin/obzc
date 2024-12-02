@@ -16,11 +16,11 @@ import time
 sys.path.insert(0, os.getcwd())
 
 
-from obx.object  import Config, parse
-from obx.runtime import Client, Errors, Event, errors, forever, later
 from obz.control import command, scan
 from obz.modules import face
+from obz.parse   import parse
 from obz.persist import Config
+from obz.runtime import Client, Errors, Event, errors, forever, later
 
 
 cfg  = Config()

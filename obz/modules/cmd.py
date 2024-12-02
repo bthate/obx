@@ -5,8 +5,10 @@
 "commands"
 
 
-from obx.object  import keys
-from obx.runtime import Commands
+from obx import keys
+
+
+from ..runtime import Commands
 
 
 def cmd(event):

@@ -14,7 +14,7 @@ import uuid
 import _thread
 
 
-from obx.object import Object, dump, load, search, update
+from obx import Object, dump, load, search, update
 
 
 cachelock = _thread.allocate_lock()
@@ -24,7 +24,13 @@ lock      = _thread.allocate_lock()
 p         = os.path.join
 
 
-class Config:
+class Obj(Object):
+
+    def __getattr__(self, key):
+        return self.__dict__.get(key, "")
+
+
+class Config(Obj):
 
     fqns = []
     name = "obz"
@@ -277,6 +283,7 @@ def sync(obj, pth):
 def __dir__():
     return (
         'Config',
+        'Obj',
         'find',
         'fetch',
         'last',

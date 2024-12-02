@@ -16,9 +16,12 @@ import time
 import _thread
 
 
-from obx.object   import Object, edit, format, keys, parse
-from obx.runtime  import Commands, Event, Reactor, later, launch
-from obz.persist  import Config, Cache, ident, last, write
+from obx import Object, edit, format, keys
+
+
+from ..runtime  import Commands, Event, Reactor, later, launch
+from ..parse    import parse
+from ..persist  import Config, Cache, ident, last, write
 
 
 IGNORE = ["PING", "PONG", "PRIVMSG"]

@@ -9,11 +9,9 @@ import os
 import sys
 
 
-from obx.object  import parse
-from obx.runtime import Client, Commands, Event, errors, later, scan, wrap
-
-
+from .parse   import parse
 from .persist import Config
+from .runtime import Client, Commands, Event, errors, later, scan, wrap
 
 
 Cfg = Config()
