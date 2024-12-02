@@ -2,18 +2,23 @@
 # pylint: disable=C0115,C0116,C0415,R0903,R0912,R0915,W0105,W0718,E0402
 
 
-"control"
+"main"
 
 
+import os
 import sys
 
 
-from .object  import Config, parse
-from .persist import NAME
-from .runtime import Client, Commands, Event, errors, later, scan, wrap
+from obx.object  import Config, parse
+from obx.persist import NAME, Workdir
+from obx.runtime import Client, Commands, Event, errors, later, scan, wrap
 
 
 Cfg  = Config()
+
+
+NAME = "obz"
+Workdir.wdr = os.path.expanduser("~/.{NAME}")
 
 
 class CLI(Client):
@@ -53,8 +58,8 @@ def srv(event):
 
 
 def main():
-    parse(Cfg, " ".join(sys.argv[1:]))
     Commands.add(srv)
+    parse(Cfg, " ".join(sys.argv[1:]))
     from .modules import face
     scan(face)
     evt = Event()

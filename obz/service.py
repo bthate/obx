@@ -5,15 +5,15 @@
 "service"
 
 
-from .persist import NAME, pidfile, pidname
-from .runtime import errors, forever, privileges, scan, wrap
+from obx.persist import NAME, pidfile, pidname
+from obx.runtime import errors, forever, privileges, scan, wrap
 
 
 def service():
     privileges()
     pidfile(pidname(NAME))
-    from .modules import face
-    scan(face, init=True)
+    from .modules import face as mods
+    scan(mods, init=True)
     forever()
 
 

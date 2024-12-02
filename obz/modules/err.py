@@ -5,7 +5,7 @@
 "errors"
 
 
-from ..runtime import Errors
+from obx.runtime import Errors
 
 
 def err(event):

@@ -9,8 +9,8 @@ import os
 import sys
 
 
-from .persist import NAME, pidfile, pidname
-from .runtime import errors, forever, privileges, scan, wrap
+from obx.persist import NAME, pidfile, pidname
+from obx.runtime import errors, forever, privileges, scan, wrap
 
 
 def daemon(verbose=False):
