@@ -114,7 +114,7 @@ def match(obj, txt):
             yield key
 
 
-def parse(obj, txt=None):
+def parse(obj, txt=None) -> None:
     if txt is None:
         txt = ""
     args = []

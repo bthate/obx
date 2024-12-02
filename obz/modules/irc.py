@@ -17,12 +17,11 @@ import _thread
 
 
 from obx.object   import Object, edit, format, keys, parse
-from obx.persist  import Cache, ident, last, write
 from obx.runtime  import Commands, Event, Reactor, later, launch
+from obz.persist  import Config, Cache, ident, last, write
 
 
 IGNORE = ["PING", "PONG", "PRIVMSG"]
-NAME = Object.__module__.rsplit(".", maxsplit=2)[-2]
 
 
 output = None
@@ -47,19 +46,19 @@ def init():
 
 class Config(Object):
 
-    channel = f'#{NAME}'
+    channel = f'#{Config.name}'
     commands = True
     control = '!'
     edited = time.time()
-    nick = NAME
+    nick = Config.name
     password = ""
     port = 6667
-    realname = NAME
+    realname = Config.name
     sasl = False
     server = 'localhost'
     servermodes = ''
     sleep = 60
-    username = NAME
+    username = Config.name
     users = False
 
     def __init__(self):
@@ -557,7 +556,7 @@ def cb_001(bot, evt):
 
 def cb_notice(bot, evt):
     if evt.txt.startswith('VERSION'):
-        txt = f'\001VERSION {NAME.upper()} 140 - {bot.cfg.username}\001'
+        txt = f'\001VERSION {Config.name.upper()} 140 - {bot.cfg.username}\001'
         bot.docommand('NOTICE', evt.channel, txt)
 
 

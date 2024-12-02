@@ -9,7 +9,7 @@ import time
 
 
 from obx.object  import format
-from obx.persist import find, fntime, laps, long, skel, types
+from obz.persist import find, fntime, laps, long, skel, types
 
 
 def fnd(event):

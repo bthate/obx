@@ -8,7 +8,7 @@
 import time
 
 
-from obx.persist import laps
+from obz.persist import laps
 
 
 STARTTIME = time.time()

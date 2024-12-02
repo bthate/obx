@@ -14,10 +14,7 @@ import uuid
 import _thread
 
 
-from .object import Object, dump, load, search, update
-
-
-NAME = Object.__module__.rsplit(".", maxsplit=2)[-2]
+from obx.object import Object, dump, load, search, update
 
 
 cachelock = _thread.allocate_lock()
@@ -27,10 +24,11 @@ lock      = _thread.allocate_lock()
 p         = os.path.join
 
 
-class Workdir:
+class Config:
 
     fqns = []
-    wdr  = os.path.expanduser(f"~/.{NAME}")
+    name = "obz"
+    wdr  = os.path.expanduser("~/.{Config.name}")
 
 
 def long(name):
@@ -44,18 +42,18 @@ def long(name):
 
 
 def modname():
-    return p(Workdir.wdr, "mods")
+    return p(Config.wdr, "mods")
 
 
 def pidname(name):
-    return p(Workdir.wdr, f"{name}.pid")
+    return p(Config.wdr, f"{name}.pid")
 
 
 def store(pth=""):
-    stor = p(Workdir.wdr, "store", "")
+    stor = p(Config.wdr, "store", "")
     if not os.path.exists(stor):
         skel()
-    return p(Workdir.wdr, "store", pth)
+    return p(Config.wdr, "store", pth)
 
 
 class Cache:
@@ -186,7 +184,7 @@ def pidfile(filename):
 
 
 def skel():
-    stor = p(Workdir.wdr, "store", "")
+    stor = p(Config.wdr, "store", "")
     path = pathlib.Path(stor)
     path.mkdir(parents=True, exist_ok=True)
     return path
@@ -278,7 +276,7 @@ def sync(obj, pth):
 
 def __dir__():
     return (
-        'Workdir',
+        'Config',
         'find',
         'fetch',
         'last',

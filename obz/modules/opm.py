@@ -13,7 +13,7 @@ import _thread
 
 
 from obx.object  import Object, update
-from obx.persist import find, ident, spl, write
+from obz.persist import find, ident, spl, write
 
 
 from .rss import Rss

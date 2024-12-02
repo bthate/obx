@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # This file is placed in the Public Domain.
-# pylint: disable=C,W0105,W0201,W0212,W0718,E0401
+# pylint: disable=C,R0903,W0105,W0201,W0212,W0718,E0401
 
 
 "tinder"
@@ -17,12 +17,12 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.__main__ import NAME, Config, command, parse, scan
-from obx.modules import face
-from obx.object  import Object
-from obx.persist import Workdir, laps, skel
-from obx.runtime import BufferedClient, Commands, Errors, Event
-from obx.runtime import  errors, later, launch
+from obz.control import command
+from obz.modules import face
+from obz.object  import Config, Object, parse
+from obz.persist import NAME, Workdir, laps, skel
+from obz.runtime import BufferedClient, Commands, Errors, Event
+from obz.runtime import errors, later, launch, scan
 
 
 cfg = Config()

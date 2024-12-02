@@ -9,8 +9,8 @@ import os
 import sys
 
 
-from obx.persist import NAME, pidfile, pidname
 from obx.runtime import errors, forever, privileges, scan, wrap
+from obz.persist import Config, pidfile, pidname
 
 
 def daemon(verbose=False):
@@ -42,7 +42,7 @@ def wrapped():
 def main():
     daemon(True)
     privileges()
-    pidfile(pidname(NAME))
+    pidfile(pidname(Config.name))
     from .modules import face
     scan(face, init=True)
     forever()

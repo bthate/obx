@@ -20,8 +20,8 @@ from urllib.parse import quote_plus, urlencode
 
 
 from obx.object  import Object, format, update
-from obx.persist import Cache, find, fntime, laps, last, ident, spl, write
 from obx.runtime import Repeater, launch
+from obz.persist import Cache, find, fntime, laps, last, ident, spl, write
 
 
 DEBUG = False

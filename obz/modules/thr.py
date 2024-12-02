@@ -10,7 +10,7 @@ import time
 
 
 from obx.object  import Object, update
-from obx.persist import laps
+from obz.persist import laps
 
 
 STARTTIME = time.time()

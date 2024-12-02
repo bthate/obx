@@ -9,16 +9,14 @@ import os
 import sys
 
 
-from obx.object  import Config, parse
-from obx.persist import NAME, Workdir
+from obx.object  import parse
 from obx.runtime import Client, Commands, Event, errors, later, scan, wrap
 
 
-Cfg  = Config()
+from .persist import Config
 
 
-NAME = "obz"
-Workdir.wdr = os.path.expanduser("~/.{NAME}")
+Cfg = Config()
 
 
 class CLI(Client):

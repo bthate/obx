@@ -9,7 +9,7 @@ import time
 
 
 from obx.object  import Object
-from obx.persist import find, fntime, ident, laps, write
+from obz.persist import find, fntime, ident, laps, write
 
 
 class Log(Object):
