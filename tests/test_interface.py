@@ -27,14 +27,12 @@ MODULE = [
     'ObjectDecoder',
     'ObjectEncoder',
     'construct',
-    'dump',
     'dumps',
     'edit',
     'format',
     'hook',
     'items',
     'keys',
-    'load',
     'loads',
     'match',
     'search',
@@ -81,7 +79,7 @@ class TestInterface(unittest.TestCase):
             mod1 = getattr(obx, mod, None)
             if not mod1:
                 okd = False
-                print(mod)
+                print(mod1)
                 break
         self.assertTrue(okd)
 
@@ -91,7 +89,7 @@ class TestInterface(unittest.TestCase):
             mod1 = getattr(obx, attr, None)
             if not mod1:
                 okd = False
-                print(mod)
+                print(attr)
                 break
         self.assertTrue(okd)
 

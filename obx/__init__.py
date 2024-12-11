@@ -9,22 +9,10 @@ import json
 import _thread
 
 
-"defines"
-
-
-lock = _thread.allocate_lock()
-
-
-"classes"
-
-
 class Object:
 
     def __str__(self):
         return str(self.__dict__)
-
-
-"methods"
 
 
 def construct(obj, *args, **kwargs):
@@ -139,9 +127,6 @@ def values(obj):
     return obj.__dict__.values()
 
 
-"decoder"
-
-
 class ObjectDecoder(json.JSONDecoder):
 
     def __init__(self, *args, **kwargs):
@@ -163,25 +148,10 @@ def hook(objdict):
     return obj
 
 
-def load(fpt, *args, **kw):
-    kw["cls"] = ObjectDecoder
-    kw["object_hook"] = hook
-    return json.load(fpt, *args, **kw)
-
-
 def loads(string, *args, **kw):
     kw["cls"] = ObjectDecoder
     kw["object_hook"] = hook
     return json.loads(string, *args, **kw)
-
-
-def write(obj, pth):
-    with lock:
-        with open(pth, 'w', encoding='utf-8') as ofile:
-            dump(obj, ofile, indent=4)
-
-
-"encoder"
 
 
 class ObjectEncoder(json.JSONEncoder):
@@ -213,33 +183,15 @@ class ObjectEncoder(json.JSONEncoder):
         return json.JSONEncoder.iterencode(self, o, _one_shot)
 
 
-def dump(*args, **kw):
-    kw["cls"] = ObjectEncoder
-    return json.dump(*args, **kw)
-
-
 def dumps(*args, **kw):
     kw["cls"] = ObjectEncoder
     return json.dumps(*args, **kw)
-
-
-def read(obj, pth):
-    with lock:
-        with open(pth, 'r', encoding='utf-8') as ofile:
-            try:
-                update(obj, load(ofile))
-            except json.decoder.JSONDecodeError as ex:
-                raise Exception(pth) from ex
-
-
-"interface"
 
 
 def __dir__():
     return (
         'Object',
         'construct',
-        'dump',
         'dumps',
         'edit',
         'format',
@@ -247,12 +199,9 @@ def __dir__():
         'ident',
         'items',
         'keys',
-        'load',
         'loads',
         'match',
-        'read',
         'search',
         'update',
-        'values',
-        'write'
+        'values'
     )

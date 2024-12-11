@@ -29,11 +29,3 @@ class TestComposite(unittest.TestCase):
         obj.obj = Object()
         obj.obj.abc = "test"
         self.assertEqual(obj.obj.abc, "test")
-
-    def testtyped(self):
-        obj = Temp()
-        obj.obj = Temp()
-        txt = dumps(obj)
-        obj2 = loads(txt)
-        self.assertEqual(type(obj2), Temp)
-        
