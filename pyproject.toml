@@ -8,18 +8,18 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "obx"
 description = "a clean namespace"
-version = "31"
+version = "32"
 authors = [
     {name = "Bart Thate",email = "bthate@dds.nl"},
 ]
 readme = "README.rst"
 license = {text="Public Domain"}
 classifiers = [ 
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 1 - Planning',
     'License :: Public Domain',
-    'Operating System :: Unix',
     'Programming Language :: Python',
-    'Topic :: Utilities'
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Libraries :: Python Modules'
 ]
 
 [project.urls]
@@ -31,4 +31,3 @@ classifiers = [
 packages = [
     "obx",
 ]
-zip-safe=true
