@@ -7,8 +7,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "obx"
-description = "program your own commands."
-version = "30"
+description = "a clean namespace"
+version = "31"
 authors = [
     {name = "Bart Thate",email = "bthate@dds.nl"},
 ]
@@ -22,13 +22,6 @@ classifiers = [
     'Topic :: Utilities'
 ]
 
-
-[project.scripts]
-'obx'  = 'obx.__main__:wrapped'
-'obxd' = 'obx.daemon:main'
-'obxs' = 'obx.service:wrapped'
-
-
 [project.urls]
 "home" = "https://pypi.org/project/obx"
 "bugs" = "https://github.com/bthate/obx/issues"
@@ -37,6 +30,5 @@ classifiers = [
 [tool.setuptools]
 packages = [
     "obx",
-    "obx.modules"
 ]
 zip-safe=true

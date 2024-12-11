@@ -9,7 +9,7 @@ import os
 import sys
 
 
-NAME = "obz"
+NAME = "obx"
 
 
 def popen(txt):
@@ -22,4 +22,4 @@ if os.path.exists("bin/clean"):
     popen("bin/clean")
 
 
-popen(f"pylint {NAME} bin/{NAME}c bin/tinder tests")
+popen(f"pylint {NAME} tests")

@@ -9,17 +9,10 @@ import os
 import sys
 
 
-"utilities"
-
-
 def popen(txt):
-    "run popen command."
     for line in os.popen(txt).readlines():
         print(line.rstrip())
         sys.stdout.flush()
 
 
-"rutime"
-
-
-os.popen(r"tar zcvf nixm.tar.gz --exclude='nixm/\.git/*' nixm")
+os.popen(r"tar zcvf obx.tar.gz --exclude='obx/\.git/*' obx")

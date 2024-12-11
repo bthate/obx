@@ -10,30 +10,6 @@ import json
 
 class Object:
 
-    def __contains__(self, key):
-        return key in dir(self)
-
-    def __getstate__(self):
-        pass
-
-    def __iter__(self):
-        return iter(self.__dict__)
-
-    def __len__(self):
-        return len(self.__dict__)
-
-    def __str__(self):
-        return str(self.__dict__)
-
-
-class Obj(Object):
-
-    def __getattr__(self, key):
-        return self.__dict__.get(key, "")
-
-
-class Config(Obj):
-
     pass
 
 
@@ -218,12 +194,18 @@ def dumps(*args, **kw):
 def __dir__():
     return (
         'Object',
+        'ObjectDecoder',
+        'ObjectEncoder',
         'construct',
+        'dump',
         'dumps',
         'edit',
-        'keys',
-        'loads',
+        'format',
+        'hook',
         'items',
+        'keys',
+        'load',
+        'loads',
         'match',
         'search',
         'update',
