@@ -1,7 +1,7 @@
 **NAME**
 
 
-obx - a clean namespace.
+``obx`` - a clean namespace.
 
 
 **SYNOPSIS**
