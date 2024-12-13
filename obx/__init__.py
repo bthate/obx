@@ -13,7 +13,6 @@ so the namespace is not cluttered with method names.
 
 
 import json
-import _thread
 
 
 class Object:
