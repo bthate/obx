@@ -352,14 +352,6 @@ def forever():
             _thread.interrupt_main()
 
 
-def privileges():
-    import pwd
-    import getpass
-    pwnam2 = pwd.getpwnam(getpass.getuser())
-    os.setgid(pwnam2.pw_gid)
-    os.setuid(pwnam2.pw_uid)
-
-
 def spl(txt):
     try:
         result = txt.split(',')
@@ -392,7 +384,6 @@ def __dir__():
         'later',
         'launch',
         'name',
-        'privileges',
         'scan',
         'spl',
         'wrap'
