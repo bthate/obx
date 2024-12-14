@@ -5,7 +5,7 @@
 """a clean namespace
 
 
-obx allows for easy json loads/dumps of objects, it provides
+allows for easy json loads/dumps of objects, it provides
 an “clean namespace” Object class that only has dunder method
 so the namespace is not cluttered with method names.
 

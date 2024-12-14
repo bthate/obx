@@ -35,4 +35,4 @@ class TestComposite(unittest.TestCase):
         obj.obj = Object()
         obj.obj.a = "b"
         oo = loads(dumps(obj))
-        self.assertEqual(oo.a, "b")
+        self.assertEqual(oo.obj.a, "b")
