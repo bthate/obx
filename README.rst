@@ -1,7 +1,7 @@
 **NAME**
 
 
-``obx`` - a clean namespace.
+``OBX`` - a clean namespace.
 
 
 **SYNOPSIS**
@@ -18,13 +18,13 @@
 **DESCRIPTION**
 
 
-``obx`` contains all the python3 code to program objects in a functional
+``OBX`` contains all the python3 code to program objects in a functional
 way. It provides a base Object class that has only dunder methods, all
 methods are factored out into functions with the objects as the first
 argument. It is called Object Programming (OP), OOP without the
 oriented.
 
-``obx`` allows for easy json save//load to/from disk of objects. It
+``OBX`` allows for easy json save//load to/from disk of objects. It
 provides an "clean namespace" Object class that only has dunder
 methods, so the namespace is not cluttered with method names. This
 makes storing and reading to/from json possible.
@@ -50,4 +50,4 @@ Bart Thate <bthate@dds.nl>
 
 **COPYRIGHT**
 
-``obx`` is Public Domain.
+``OBX`` is Public Domain.
