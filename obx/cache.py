@@ -25,19 +25,6 @@ class Cache:
             yield Cache.objs.get(key)
 
 
-class Fleet:
-
-    bots = {}
-    
-    @staticmethod
-    def add(bot):
-        Fleet.bots[repr(bot)] = bot
-
-    @staticmethod
-    def get(name):
-        return Fleet.bots.get(name)
-
-
 "interface"
 
 

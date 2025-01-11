@@ -27,7 +27,7 @@ class Reactor:
         func = self.cbs.get(evt.type, None)
         if func:
             try:
-                evt._thr = launch(func, evt)
+                evt._thr = launch(func, self, evt)
             except Exception as ex:
                 evt._ex = ex
                 later(ex)
@@ -68,6 +68,19 @@ class Reactor:
     def wait(self):
         self.stopped.wait()
 
+
+class Pool(Reactor):
+
+    def callback(self, evt):
+        func = self.cbs.get(evt.type, None)
+        if func:
+            try:
+                evt._thr = launch(func, self, evt)
+            except Exception as ex:
+                evt._ex = ex
+                later(ex)
+                evt.ready()
+        
 
 "interface"
 

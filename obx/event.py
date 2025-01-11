@@ -28,7 +28,7 @@ class Event(Object):
         return self.__dict__.get(key, "")
 
     def ok(self):
-        self.reply(f"ok {self.txt}")
+        self.reply(f"ok")
 
     def ready(self):
         self._ready.set()

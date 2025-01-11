@@ -46,12 +46,11 @@ class Commands:
 
 
 @locked
-def command(evt):
+def command(bot, evt):
     parse(evt)
     func = Commands.cmds.get(evt.cmd, None)
     if func:
         func(evt)
-    bot = Fleet.get(evt.orig)
     bot.display(evt)
     evt.ready()
 

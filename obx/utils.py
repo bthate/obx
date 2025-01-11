@@ -51,9 +51,9 @@ def locked(func, *args):
 
     lock = _thread.allocate_lock()
 
-    def dolock(*args, **kwargs):
+    def dolock(bot, evt, *args, **kwargs):
         with lock:
-            func(*args, **kwargs)
+            func(bot, evt, *args, **kwargs)
     return dolock
 
 

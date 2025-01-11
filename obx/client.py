@@ -5,8 +5,8 @@
 "client"
 
 
-from .cache   import Fleet
 from .command import command
+from .fleet   import Fleet
 from .output  import Output
 from .reactor import Reactor
 

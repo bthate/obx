@@ -18,6 +18,7 @@ from .config  import Config
 from .event   import Event
 from .find    import Workdir, pidname
 from .modules import face
+from .pool    import PoolClient
 from .thread  import errors, later
 
 
@@ -34,7 +35,7 @@ Workdir.wdr = os.path.expanduser(f"~/.{Config.name}")
 "console"
 
 
-class CLI(Client):
+class CLI(PoolClient):
 
     def raw(self, txt):
         print(txt)
@@ -157,7 +158,7 @@ def control():
     evt.orig = repr(csl)
     evt.type = "command"
     evt.txt = cfg.otxt
-    command(evt)
+    command(csl, evt)
     evt.wait()
 
 
