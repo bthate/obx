@@ -8,18 +8,7 @@
 import unittest
 
 
-from obx import Object, dumps, loads
-
-
-class Tmp(Object):
-
-    pass
-
-class Temp(Object):
-
-    def __init__(self):
-        Object.__init__(self)
-        self.a = Tmp()
+from obx.object import Object
 
 
 class TestComposite(unittest.TestCase):
@@ -29,10 +18,3 @@ class TestComposite(unittest.TestCase):
         obj.obj = Object()
         obj.obj.abc = "test"
         self.assertEqual(obj.obj.abc, "test")
-    
-    def testloads(self):
-        obj = Object()
-        obj.obj = Object()
-        obj.obj.a = "b"
-        oo = loads(dumps(obj))
-        self.assertEqual(oo.obj.a, "b")

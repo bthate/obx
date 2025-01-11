@@ -14,32 +14,29 @@ import unittest
 import obx
 
 
-from obx import *
+from obx.object import *
+
+
+import obx.client
+import obx.find
+import obx.modules
+import obx.object
+import obx.reactor
+import obx.thread
+import obx.timers
+import obx.utils
 
 
 PACKAGE = [
-    '__init__',
+    'client',
+    'find',
+    'modules',
+    'object',
+    'reactor',
+    'thread',
+    'timers',
+    'utils'
 ]
-
-
-MODULE = [
-    'Object',
-    'ObjectDecoder',
-    'ObjectEncoder',
-    'construct',
-    'dumps',
-    'edit',
-    'format',
-    'hook',
-    'items',
-    'keys',
-    'loads',
-    'match',
-    'search',
-    'update',
-    'values'
-]
-
 
 
 METHODS = [
@@ -79,17 +76,7 @@ class TestInterface(unittest.TestCase):
             mod1 = getattr(obx, mod, None)
             if not mod1:
                 okd = False
-                print(mod1)
-                break
-        self.assertTrue(okd)
-
-    def test_module(self):
-        okd = True
-        for attr in MODULE:
-            mod1 = getattr(obx, attr, None)
-            if not mod1:
-                okd = False
-                print(attr)
+                print(mod)
                 break
         self.assertTrue(okd)
 

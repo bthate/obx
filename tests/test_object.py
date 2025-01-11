@@ -8,7 +8,7 @@
 import unittest
 
 
-from obx import Object, format, items, keys, update, values
+from obx.object import Object, items, keys, update, values
 
 
 import obx
@@ -22,14 +22,10 @@ attrs1 = (
     'Obj',
     'construct',
     'dumps',
-    'edit',
-    'format',
     'fqn',
     'items',
     'keys',
     'loads',
-    'match',
-    'search',
     'update',
     'values'
 )
@@ -103,11 +99,6 @@ class TestObject(unittest.TestCase):
         obj = Object()
         self.assertEqual(obj.__dict__, {})
 
-    def test_format(self):
-        obj = Object()
-        obj.a = "b"
-        self.assertEqual(format(obj), 'a=b')
-
     def test_getattribute(self):
         obj = Object()
         obj.key = "value"
@@ -157,7 +148,7 @@ class TestObject(unittest.TestCase):
         self.assertTrue(okd)
 
     def test_module(self):
-        self.assertEqual(Object().__module__, "obx")
+        self.assertEqual(Object().__module__, "obx.object")
 
     def test_register(self):
         obj = Object()
