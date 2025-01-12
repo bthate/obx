@@ -45,7 +45,7 @@ class Commands:
 "callbacks"
 
 
-@locked
+#@locked
 def command(bot, evt):
     parse(evt)
     func = Commands.cmds.get(evt.cmd, None)

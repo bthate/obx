@@ -19,7 +19,6 @@ from .errors  import errors, later
 from .event   import Event
 from .find    import Workdir, pidname
 from .modules import face
-from .pool    import PoolClient
 
 
 "defines"
@@ -35,7 +34,7 @@ Workdir.wdr = os.path.expanduser(f"~/.{Config.name}")
 "console"
 
 
-class CLI(PoolClient):
+class CLI(Client):
 
     def raw(self, txt):
         print(txt)
