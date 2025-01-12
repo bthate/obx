@@ -45,14 +45,14 @@ class Commands:
 "callbacks"
 
 
-#@locked
 def command(bot, evt):
-    parse(evt)
-    func = Commands.cmds.get(evt.cmd, None)
-    if func:
-        func(evt)
-    bot.display(evt)
-    evt.ready()
+    with lock:
+        parse(evt)
+        func = Commands.cmds.get(evt.cmd, None)
+        if func:
+            func(evt)
+        bot.display(evt)
+        evt.ready()
 
 
 "utilities"

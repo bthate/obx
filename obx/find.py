@@ -65,6 +65,7 @@ def types():
 def fns(clz):
     dname = ''
     pth = store(clz)
+    res = []
     for rootdir, dirs, _files in os.walk(pth, topdown=False):
         if dirs:
             for dname in sorted(dirs):
@@ -89,8 +90,7 @@ def find(clz, selector=None, index=None, deleted=False, matching=False):
         nrs += 1
         if index is not None and nrs != int(index):
             continue
-        res.append((fnm, obj))
-    return res
+        yield (fnm, obj)
 
 
 "methods"
