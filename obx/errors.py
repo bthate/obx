@@ -5,6 +5,9 @@
 "errors"
 
 
+import traceback
+
+
 class Errors:
 
     errors = []

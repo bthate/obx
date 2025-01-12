@@ -15,11 +15,11 @@ import _thread
 from .client  import Client
 from .command import Commands, command, parse, scan
 from .config  import Config
+from .errors  import errors, later
 from .event   import Event
 from .find    import Workdir, pidname
 from .modules import face
 from .pool    import PoolClient
-from .thread  import errors, later
 
 
 "defines"

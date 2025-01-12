@@ -16,34 +16,41 @@ from .fleet   import Fleet
 from .reactor import Reactor
 
 
-class Pool(Reactor):
+class Worker(Reactor):
 
-    def callback(self, evt):
-        func = self.cbs.get(evt.type, None)
-        if func:
+    def loop(self):
+        while not self.stopped.is_set():
             try:
-                submit(func, self, evt)
-            except Exception as ex:
-                evt._ex = ex
-                later(ex)
-                evt.ready()
+                evt = self.poll()
+                if evt is None:
+                    break
+                evt.orig = repr(self)
+                command(self, evt)
+            except (KeyboardInterrupt, EOFError):
+                if "ready" in dir(evt):
+                    evt.ready()
+                _thread.interrupt_main()
 
 
-def submit(func, *args, **kwargs):
-    with cf.ThreadPoolExecutor(max_workers=5) as executor:
-        try:
-            future = executor.submit(func, *args, **kwargs)
-            future.result()
-        except Exception as ex:
-            later(ex)
+class Pool:
+
+    workers = [Worker()] * 6
+
+    @staticmethod
+    def put(evt):
+        for worker in Pool.workers:
+            if worker.qsize() == 0:
+                worker.put(evt)
+                return
+        worker = Worker()
+        worker.put(evt)
 
 
-class PoolClient(Pool):
+class PoolClient(Worker):
 
     def __init__(self):
-        Pool.__init__(self)
+        Worker.__init__(self)
         Fleet.add(self)
-        self.register("command", command)
 
     def display(self, evt):
         for txt in evt.result:

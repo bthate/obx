@@ -10,7 +10,7 @@ import types
 import _thread
 
 
-from .cache  import Fleet
+from .fleet  import Fleet
 from .parse  import parse
 from .thread import launch
 from .utils  import locked

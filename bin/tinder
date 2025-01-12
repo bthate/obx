@@ -20,11 +20,13 @@ sys.path.insert(0, os.getcwd())
 from obx.client  import Buffered, Client
 from obx.command import Commands, parse, scan
 from obx.config  import Config
+from obx.errors  import errors, later
 from obx.event   import Event
 from obx.find    import Workdir, fntime, skel
 from obx.modules import face
 from obx.object  import Object, keys
-from obx.thread  import errors, later, launch
+from obx.pool    import PoolClient
+from obx.thread  import launch
 from obx.utils   import elapsed
 
 
@@ -74,7 +76,7 @@ param.ver = [""]
 "console"
 
 
-class CLI(Client):
+class CLI(PoolClient):
 
     def raw(self, txt):
         if "v" in cfg.opts:
