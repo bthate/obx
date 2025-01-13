@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.[B
-# pylint: disable=C,W0105,E0402
+# pylint: disable=C,W0105,W0622,E0402
 
 
 "find"
@@ -8,8 +8,7 @@
 import time
 
 
-from ..find  import find, fntime, format, long, skel, types
-from ..utils import elapsed
+from ..find  import elapsed, find, fntime, format, long, skel, types
 
 
 "commands"

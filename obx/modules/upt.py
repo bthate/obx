@@ -8,10 +8,7 @@
 import time
 
 
-from ..utils import elapsed
-
-
-"defines"
+from ..find import elapsed
 
 
 STARTTIME = time.time()

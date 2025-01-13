@@ -20,11 +20,10 @@ from urllib.parse import quote_plus, urlencode
 
 from ..cache   import Cache
 from ..command import spl
-from ..find    import find, fntime, format, ident, last, store
+from ..find    import elapsed, find, fntime, format, ident, last, store
 from ..object  import Object, update, write
 from ..timers  import Repeater
 from ..thread  import launch
-from ..utils   import elapsed
 
 
 "defines"

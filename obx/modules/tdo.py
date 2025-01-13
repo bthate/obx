@@ -8,12 +8,8 @@
 import time
 
 
-from ..find   import find, fntime, ident, store
+from ..find   import elapsed, find, fntime, ident, store
 from ..object import Object, write
-from ..utils  import elapsed
-
-
-"todo"
 
 
 class Todo(Object):

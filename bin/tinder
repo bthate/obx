@@ -17,16 +17,15 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.client  import Client
+from obx.client  import Buffered, Client
 from obx.command import Commands, parse, scan
 from obx.config  import Config
 from obx.errors  import errors, later
 from obx.event   import Event
-from obx.find    import Workdir, fntime, skel
+from obx.find    import Workdir, elapsed, fntime, skel
 from obx.modules import face
 from obx.object  import Object, keys
 from obx.thread  import launch
-from obx.utils   import elapsed
 
 
 "defines"
@@ -75,7 +74,7 @@ param.ver = [""]
 "console"
 
 
-class CLI(Client):
+class CLI(Buffered):
 
     def raw(self, txt):
         if "v" in cfg.opts:
@@ -159,7 +158,7 @@ def main():
         thr.join()
     consume(events)
     clt.stop()
-    clt.wait()
+    #clt.wait()
 
 
 if __name__ == "__main__":

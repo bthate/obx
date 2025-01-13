@@ -9,11 +9,8 @@ import threading
 import time
 
 
+from ..find   import elapsed
 from ..object import Object, update
-from ..utils  import elapsed
-
-
-"defines"
 
 
 STARTTIME = time.time()

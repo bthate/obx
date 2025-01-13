@@ -1,17 +1,20 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0613,E0402
+# pylint: disable=C,R0903,W0105,W0612,W0613,E0402
 
 
 "client"
+
+
+import queue
+import threading
 
 
 from .command import command
 from .fleet   import Fleet
-from .output  import Output
 from .reactor import Reactor
 
 
-"client"
+from .thread import launch
 
 
 class Client(Reactor):
@@ -22,11 +25,46 @@ class Client(Reactor):
         self.register("command", command)
 
     def display(self, evt):
-        for txt in evt.result:
+        for txt, tme in sorted(evt.result, key=lambda x: x[1]):
             self.raw(txt)
 
     def raw(self, txt):
         raise NotImplementedError("raw")
+
+
+"output"
+
+
+class Output:
+
+    cache = {}
+
+    def __init__(self):
+        self.oqueue = queue.Queue()
+        self.dostop = threading.Event()
+
+    def oput(self, channel, txt):
+        self.oqueue.put((channel, txt))
+
+    def output(self):
+        while not self.dostop.is_set():
+            (channel, txt) = self.oqueue.get()
+            if channel is None and txt is None:
+                self.oqueue.task_done()
+                break
+            self.dosay(channel, txt)
+            self.oqueue.task_done()
+
+    def start(self):
+        launch(self.output)
+
+    def stop(self):
+        self.oqueue.join()
+        self.dostop.set()
+        self.oqueue.put((None, None))
+
+    def wait(self):
+        self.dostop.wait()
 
 
 "buffer"
@@ -39,7 +77,7 @@ class Buffered(Output, Client):
         Client.__init__(self)
 
     def display(self, evt):
-        for txt in evt.result:
+        for txt, tme in sorted(evt.result, key=lambda x: x[1]):
             self.oput(evt.channel, txt)
 
     def dosay(self, channel, txt):
@@ -67,5 +105,6 @@ class Buffered(Output, Client):
 def __dir__():
     return (
         'Buffered',
-        'Client'
+        'Client',
+        'Output'
     )

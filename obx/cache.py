@@ -15,7 +15,7 @@ class Cache:
 
     @staticmethod
     def get(path):
-        return Cache.objs.get(path)
+        return Cache.objs.get(path, None)
 
     @staticmethod
     def typed(matcher):

@@ -13,9 +13,6 @@ import _thread
 from .thread import later, launch
 
 
-"reactor"
-
-
 class Reactor:
 
     def __init__(self):

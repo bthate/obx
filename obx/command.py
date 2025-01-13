@@ -13,16 +13,9 @@ import _thread
 from .fleet  import Fleet
 from .parse  import parse
 from .thread import launch
-from .utils  import locked
-
-
-"defines"
 
 
 lock = _thread.allocate_lock()
-
-
-"commands"
 
 
 class Commands:

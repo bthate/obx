@@ -8,9 +8,6 @@
 from .object import Obj
 
 
-"config"
-
-
 class Config(Obj):
 
     name = Obj.__module__.split(".")[0]
