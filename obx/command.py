@@ -38,7 +38,8 @@ class Commands:
 
 
 def command(bot, evt):
-    with lock:
+    #with lock:
+    if True:
         parse(evt)
         func = Commands.cmds.get(evt.cmd, None)
         if func:

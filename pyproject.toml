@@ -36,5 +36,4 @@ classifiers = [
 [tool.setuptools]
 packages = [
     "obx",
-    "obx.modules"
 ]

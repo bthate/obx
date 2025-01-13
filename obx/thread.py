@@ -12,45 +12,29 @@ import traceback
 import _thread
 
 
-class Thread(threading.Thread):
+class Worker(threading.Thread):
 
     def __init__(self, func, thrname, *args, daemon=True, **kwargs):
         super().__init__(None, self.run, thrname, (), {}, daemon=daemon)
-        self.name = thrname or name(func)
         self.queue = queue.Queue()
-        self.result = None
         self.starttime = time.time()
+        self.stopped = threading.Event()
         self.queue.put_nowait((func, args))
 
-    def __contains__(self, key):
-        return key in self.__dict__
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        yield from dir(self)
-
-    def size(self):
-        return self.queue.qsize()
-
-    def join(self, timeout=None):
-        super().join(timeout)
-        return self.result
-
     def run(self):
-        try:
-            func, args = self.queue.get()
-            self.result = func(*args)
-        except (KeyboardInterrupt, EOFError):
-            _thread.interrupt_main()
-        except Exception as ex:
-            later(ex)
+        while not self.stopped.is_set():
+            try:
+                func, args = self.queue.get()
+                self.result = func(*args)
+            except (KeyboardInterrupt, EOFError):
+                _thread.interrupt_main()
+            except Exception as ex:
+                later(ex)
 
 
 def launch(func, *args, **kwargs):
     nme = kwargs.get("name", name(func))
-    thread = Thread(func, nme, *args, **kwargs)
+    thread = threading.Thread(None, func, nme, args, kwargs)
     thread.start()
     return thread
 

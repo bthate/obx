@@ -21,7 +21,6 @@ from obx.client  import Buffered, Client, Config
 from obx.command import Commands, parse, scan
 from obx.event   import Event
 from obx.find    import Workdir, elapsed, fntime, skel
-from obx.modules import face
 from obx.object  import Object, keys
 from obx.thread  import launch, errors, later
 
@@ -34,6 +33,13 @@ Workdir.wdr  = ".test"
 
 cfg = Config()
 cfg.index = 0
+
+
+
+if os.path.exists("mods"):
+    from mods import face
+else:
+    face = None
 
 
 lap = 1
@@ -72,7 +78,7 @@ param.ver = [""]
 "console"
 
 
-class CLI(Buffered):
+class CLI(Client):
 
     def raw(self, txt):
         if "v" in cfg.opts:
@@ -136,7 +142,7 @@ def main():
     global nrs
     global nrcommand
     parse(cfg, " ".join(sys.argv[1:]))
-    face.rss.DEBUG = True
+    #face.rss.DEBUG = True
     scan(face)
     nrcommand = len(Commands.cmds) or 1
     if "v" in cfg.opts:
@@ -156,7 +162,7 @@ def main():
         thr.join()
     consume(events)
     clt.stop()
-    #clt.wait()
+    clt.wait()
 
 
 if __name__ == "__main__":

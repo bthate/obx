@@ -8,8 +8,8 @@
 import time
 
 
-from ..find   import elapsed, find, fntime, ident, store
-from ..object import Object, write
+from obx.find   import elapsed, find, fntime, ident, store
+from obx.object import Object, write
 
 
 class Todo(Object):

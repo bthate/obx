@@ -18,12 +18,12 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, urlencode
 
 
-from ..cache   import Cache
-from ..command import spl
-from ..find    import elapsed, find, fntime, format, ident, last, store
-from ..object  import Object, update, write
-from ..timers  import Repeater
-from ..thread  import launch
+from obx.cache   import Cache
+from obx.command import spl
+from obx.find    import elapsed, find, fntime, format, ident, last, store
+from obx.object  import Object, update, write
+from obx.timers  import Repeater
+from obx.thread  import launch
 
 
 "defines"

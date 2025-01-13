@@ -5,7 +5,7 @@
 "show list of commands"
 
 
-from ..command import Commands
+from obx.command import Commands
 
 
 "commands"

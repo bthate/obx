@@ -16,13 +16,13 @@ import time
 import _thread
 
 
-from ..cache   import Cache
-from ..command import command
-from ..event   import Event
-from ..find    import format, ident, last, store
-from ..object  import Object, Obj, edit, keys, write
-from ..reactor import Reactor
-from ..thread  import later, launch
+from obx.cache   import Cache
+from obx.command import command
+from obx.event   import Event
+from obx.find    import format, ident, last, store
+from obx.object  import Object, Obj, edit, keys, write
+from obx.reactor import Reactor
+from obx.thread  import later, launch
 
 
 "defines"

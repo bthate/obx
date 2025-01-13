@@ -97,16 +97,16 @@ class Buffered(Output, Client):
         raise NotImplementedError("raw")
 
     def stop(self):
-        Output.stop(self)
         Client.stop(self)
+        Output.stop(self)
 
     def start(self):
-        Output.start(self)
         Client.start(self)
+        Output.start(self)
 
     def wait(self):
-        Output.wait(self)
         Client.wait(self)
+        Output.wait(self)
 
 
 "interface"

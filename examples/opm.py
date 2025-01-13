@@ -10,9 +10,11 @@ import uuid
 import _thread
 
 
-from ..command import spl
-from ..find    import find, ident, store
-from ..object  import Object, update, write
+from obx.command import spl
+from obx.find    import find, ident, store
+from obx.object  import Object, update, write
+
+
 from  .rss     import Rss
 
 

@@ -8,7 +8,7 @@
 import time
 
 
-from ..find  import elapsed, find, fntime, format, long, skel, types
+from obx.find  import elapsed, find, fntime, format, long, skel, types
 
 
 "commands"
