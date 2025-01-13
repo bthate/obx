@@ -8,7 +8,7 @@
 class Fleet:
 
     bots = {}
-    
+
     @staticmethod
     def add(bot):
         Fleet.bots[repr(bot)] = bot

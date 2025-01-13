@@ -41,7 +41,7 @@ class Reactor:
                 if "ready" in dir(evt):
                     evt.ready()
                 _thread.interrupt_main()
-                
+
     def poll(self):
         return self.queue.get()
 

@@ -211,7 +211,7 @@ def wrap(func):
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old)
     for line in errors():
         print(line)
-    
+
 
 def wrapped():
     wrap(main)

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0612,W0613,E0402
+# pylint: disable=C,R0903,W0105,W0612,E0402
 
 
 "client"
@@ -99,7 +99,7 @@ class Buffered(Output, Client):
     def stop(self):
         Output.stop(self)
         Client.stop(self)
-    
+
     def start(self):
         Output.start(self)
         Client.start(self)

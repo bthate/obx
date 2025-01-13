@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R,W0105,W0622
+# pylint: disable=C,R0903,W0105
 
 
 "a clean namespace"
@@ -76,8 +76,7 @@ def edit(obj, setter, skip=False):
 def items(obj):
     if isinstance(obj,type({})):
         return obj.items()
-    else:
-        return obj.__dict__.items()
+    return obj.__dict__.items()
 
 
 def keys(obj):
