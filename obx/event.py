@@ -16,7 +16,6 @@ class Event(Obj):
 
     def __init__(self):
         Obj.__init__(self)
-        self._ex    = None
         self._ready = threading.Event()
         self._thr   = None
         self.ctime  = time.time()

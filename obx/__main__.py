@@ -14,13 +14,10 @@ import _thread
 
 from .client  import Client, Config
 from .command import Commands, command, parse, scan
-from .errors  import errors, later
 from .event   import Event
 from .find    import Workdir, pidname
 from .modules import face
-
-
-"defines"
+from .thread  import errors, later
 
 
 cfg = Config()

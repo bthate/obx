@@ -26,7 +26,6 @@ class Reactor:
             try:
                 evt._thr = launch(func, self, evt)
             except Exception as ex:
-                evt._ex = ex
                 later(ex)
                 evt.ready()
 

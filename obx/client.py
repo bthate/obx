@@ -77,7 +77,7 @@ class Output:
         self.dostop.wait()
 
 
-"buffer"
+"buffered"
 
 
 class Buffered(Output, Client):

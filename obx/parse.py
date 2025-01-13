@@ -8,9 +8,6 @@
 from .object import Obj
 
 
-"parse"
-
-
 def parse(obj, txt=None):
     if txt is None:
         if "txt" in dir(obj):

@@ -172,7 +172,6 @@ def dumps(*args, **kw):
 "disk"
 
 
-
 def cdir(pth):
     path = pathlib.Path(pth)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -195,7 +194,7 @@ def write(obj, pth):
         txt = dumps(obj, indent=4)
         with open(pth, 'w', encoding='utf-8') as ofile:
             ofile.write(txt)
-        return pth
+    return pth
 
 
 "interface"

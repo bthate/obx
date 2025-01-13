@@ -25,7 +25,7 @@ classifiers = [
 
 
 [project.scripts]
-"obx" = "obx.__main__:wrapped"
+"obx" = "obx.__main__:main"
 
 [project.urls]
 "home" = "https://pypi.org/project/obx"

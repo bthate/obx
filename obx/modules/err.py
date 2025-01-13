@@ -5,7 +5,7 @@
 "errors"
 
 
-from ..errors import Errors
+from ..thread import Errors
 
 
 "commands"
