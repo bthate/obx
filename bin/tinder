@@ -17,9 +17,8 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.client  import Buffered, Client
+from obx.client  import Buffered, Client, Config
 from obx.command import Commands, parse, scan
-from obx.config  import Config
 from obx.errors  import errors, later
 from obx.event   import Event
 from obx.find    import Workdir, elapsed, fntime, skel

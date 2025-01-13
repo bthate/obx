@@ -100,6 +100,11 @@ def values(obj):
 "decoder"
 
 
+class DecodeError(Exception):
+
+    pass
+
+
 class ObjectDecoder(json.JSONDecoder):
 
     def __init__(self, *args, **kwargs):
@@ -128,6 +133,11 @@ def loads(string, *args, **kw):
 
 
 "encoder"
+
+
+class EncodeError(Exception):
+
+    pass
 
 
 class ObjectEncoder(json.JSONEncoder):
@@ -162,6 +172,7 @@ def dumps(*args, **kw):
 "disk"
 
 
+
 def cdir(pth):
     path = pathlib.Path(pth)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -174,7 +185,7 @@ def read(obj, pth):
                 obj2 = loads(ofile.read())
                 update(obj, obj2)
             except json.decoder.JSONDecodeError as ex:
-                raise Exception(pth) from ex
+                raise DecodeError(pth) from ex
     return pth
 
 

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0718,E0402
+# pylint: disable=C,R0903,W0105,W0212,W0718,E0402
 
 
 "reactor"
@@ -66,23 +66,10 @@ class Reactor:
         self.stopped.wait()
 
 
-class Pool(Reactor):
-
-    def callback(self, evt):
-        func = self.cbs.get(evt.type, None)
-        if func:
-            try:
-                evt._thr = launch(func, self, evt)
-            except Exception as ex:
-                evt._ex = ex
-                later(ex)
-                evt.ready()
-        
-
 "interface"
 
 
 def __dir__():
     return (
-        'Reactor'
+        'Reactor',
     )

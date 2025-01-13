@@ -11,10 +11,9 @@ import threading
 
 from .command import command
 from .fleet   import Fleet
+from .object  import Obj
 from .reactor import Reactor
-
-
-from .thread import launch
+from .thread  import launch
 
 
 class Client(Reactor):
@@ -32,6 +31,14 @@ class Client(Reactor):
         raise NotImplementedError("raw")
 
 
+"config"
+
+
+class Config(Obj):
+
+    name = Obj.__module__.split(".")[0]
+
+
 "output"
 
 
@@ -42,6 +49,9 @@ class Output:
     def __init__(self):
         self.oqueue = queue.Queue()
         self.dostop = threading.Event()
+
+    def dosay(self, channel, txt):
+        raise NotImplementedError("dosay")
 
     def oput(self, channel, txt):
         self.oqueue.put((channel, txt))
@@ -106,5 +116,6 @@ def __dir__():
     return (
         'Buffered',
         'Client',
+        'Config',
         'Output'
     )

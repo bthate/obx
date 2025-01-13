@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,W0105
+# pylint: disable=C,W0105,E0402
 
 
 "event"
@@ -25,7 +25,7 @@ class Event(Obj):
         self.txt    = ""
 
     def ok(self):
-        self.reply(f"ok")
+        self.reply("ok")
 
     def ready(self):
         self._ready.set()

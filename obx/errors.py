@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain
-# pylint: disable=C
+# pylint: disable=C,R0903,W0105
 
 
 "errors"
@@ -38,7 +38,7 @@ def later(exc):
 
 
 def __dir__():
-     return (
+    return (
          'errors',
          'later'
     )

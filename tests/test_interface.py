@@ -24,7 +24,6 @@ import obx.object
 import obx.reactor
 import obx.thread
 import obx.timers
-import obx.utils
 
 
 PACKAGE = [
@@ -34,8 +33,7 @@ PACKAGE = [
     'object',
     'reactor',
     'thread',
-    'timers',
-    'utils'
+    'timers'
 ]
 
 

@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0212,W0611,W0718,E0402
+# pylint: disable=C,R0903,W0105,W0212,W0611,W0718,E0402
 
 
 "main"
@@ -12,9 +12,8 @@ import time
 import _thread
 
 
-from .client  import Client
+from .client  import Client, Config
 from .command import Commands, command, parse, scan
-from .config  import Config
 from .errors  import errors, later
 from .event   import Event
 from .find    import Workdir, pidname
