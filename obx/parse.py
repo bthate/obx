@@ -5,7 +5,7 @@
 "command parsing"
 
 
-from .object import Obj
+from .object import Default
 
 
 def parse(obj, txt=None):
@@ -17,12 +17,12 @@ def parse(obj, txt=None):
     args = []
     obj.args    = []
     obj.cmd     = ""
-    obj.gets    = Obj()
+    obj.gets    = Default()
     obj.index   = None
     obj.mod     = ""
     obj.opts    = ""
     obj.result  = []
-    obj.sets    = Obj()
+    obj.sets    = Default()
     obj.txt     = txt or ""
     obj.otxt    = obj.txt
     _nr = -1

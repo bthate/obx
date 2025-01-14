@@ -9,13 +9,13 @@ import threading
 import time
 
 
-from .object import Obj
+from .object import Default
 
 
-class Event(Obj):
+class Event(Default):
 
     def __init__(self):
-        Obj.__init__(self)
+        Default.__init__(self)
         self._ready = threading.Event()
         self._thr   = None
         self.ctime  = time.time()
@@ -30,7 +30,7 @@ class Event(Obj):
         self._ready.set()
 
     def reply(self, txt):
-        self.result.append((txt, time.time()))
+        self.result.append(txt)
 
     def wait(self):
         self._ready.wait()

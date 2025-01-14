@@ -9,18 +9,44 @@ import datetime
 import os
 import pathlib
 import time
+import _thread
 
 
-from .cache  import Cache
 from .object import Object, items, keys, read, update
 
 
 p = os.path.join
 
 
+lock = _thread.allocate_lock()
+
+
 class Workdir:
 
     wdr  = ""
+
+
+"cache"
+
+
+class Cache:
+
+    objs = {}
+
+    @staticmethod
+    def add(path, obj):
+        Cache.objs[path] = obj
+
+    @staticmethod
+    def get(path):
+        return Cache.objs.get(path, None)
+
+    @staticmethod
+    def typed(matcher):
+        for key in Cache.objs:
+            if matcher not in key:
+                continue
+            yield Cache.objs.get(key)
 
 
 "path"
@@ -60,6 +86,7 @@ def types():
 def fns(clz):
     dname = ''
     pth = store(clz)
+    res = []
     for rootdir, dirs, _files in os.walk(pth, topdown=False):
         if dirs:
             for dname in sorted(dirs):
@@ -71,24 +98,25 @@ def fns(clz):
 
 def find(clz, selector=None, index=None, deleted=False, matching=False):
     skel()
-    nrs = -1
-    pth = long(clz)
-    res = []
-    for fnm in fns(pth):
-        obj = Cache.get(fnm)
-        if not obj:
-            obj = Object()
-            read(obj, fnm)
-            Cache.add(fnm, obj)
-        if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
-            continue
-        if selector and not search(obj, selector, matching):
-            continue
-        nrs += 1
-        if index is not None and nrs != int(index):
-            continue
-        res.append((fnm, obj))
-    return res
+    with lock:
+        nrs = -1
+        pth = long(clz)
+        res = []
+        for fnm in fns(pth):
+            obj = Cache.get(fnm)
+            if not obj:
+                obj = Object()
+                read(obj, fnm)
+                Cache.add(fnm, obj)
+            if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
+               continue
+            if selector and not search(obj, selector, matching):
+               continue
+            nrs += 1
+            if index is not None and nrs != int(index):
+                continue
+            res.append((fnm, obj))
+        return res
 
 
 "methods"
@@ -231,6 +259,7 @@ def strip(pth, nmr=3):
 
 def __dir__():
     return (
+        'Cache',
         'Workdir',
         'elapsed',
         'find',

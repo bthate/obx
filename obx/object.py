@@ -20,7 +20,7 @@ class Object:
         return str(self.__dict__)
 
 
-class Obj(Object):
+class Default(Object):
 
     def __contains__(self, key):
         return key in dir(self)
@@ -201,8 +201,8 @@ def write(obj, pth):
 
 def __dir__():
     return (
+        'Default',
         'Object',
-        'Obj',
         'construct',
         'dumps',
         'edit',

@@ -17,7 +17,7 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.client  import Buffered, Client, Config
+from obx.client  import Client, Config
 from obx.command import Commands, parse, scan
 from obx.event   import Event
 from obx.find    import Workdir, elapsed, fntime, skel
@@ -83,7 +83,6 @@ class CLI(Client):
     def raw(self, txt):
         if "v" in cfg.opts:
             print(txt)
-            sys.stdout.flush()
 
 
 "utilities"
@@ -92,7 +91,7 @@ class CLI(Client):
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
     print(f"{Config.name.upper()} since {tme}")
-    print(keys(Commands.cmds))
+    print(",".join(keys(Commands.cmds)))
 
 
 def consume(evts):

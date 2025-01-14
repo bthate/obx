@@ -18,7 +18,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, urlencode
 
 
-from obx.cache   import Cache
+from obx.client  import Fleet
 from obx.command import spl
 from obx.find    import elapsed, find, fntime, format, ident, last, store
 from obx.object  import Object, update, write
@@ -139,8 +139,8 @@ class Fetcher(Object):
             txt = f'[{feedname}] '
         for obj in result:
             txt2 = txt + self.display(obj)
-            for obj in Cache.typed("IRC"):
-                obj.announce(txt2)
+            for bot in Fleet.bots.values():
+                bot.announce(txt2)
         return counter
 
     def run(self, silent=False):

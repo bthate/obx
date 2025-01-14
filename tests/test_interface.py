@@ -27,9 +27,9 @@ import obx.timers
 
 
 PACKAGE = [
+    'cache',
     'client',
     'find',
-    'modules',
     'object',
     'reactor',
     'thread',

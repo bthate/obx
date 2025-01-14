@@ -7,14 +7,10 @@
 
 import inspect
 import types
-import _thread
 
 
 from .parse  import parse
 from .thread import launch
-
-
-lock = _thread.allocate_lock()
 
 
 class Commands:
@@ -38,14 +34,12 @@ class Commands:
 
 
 def command(bot, evt):
-    #with lock:
-    if True:
-        parse(evt)
-        func = Commands.cmds.get(evt.cmd, None)
-        if func:
-            func(evt)
-        bot.display(evt)
-        evt.ready()
+    parse(evt)
+    func = Commands.cmds.get(evt.cmd, None)
+    if func:
+        func(evt)
+    bot.display(evt)
+    evt.ready()
 
 
 "utilities"

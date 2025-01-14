@@ -11,7 +11,7 @@ import threading
 
 from .command import command
 from .fleet   import Fleet
-from .object  import Obj
+from .object  import Default
 from .reactor import Reactor
 from .thread  import launch
 
@@ -24,7 +24,7 @@ class Client(Reactor):
         self.register("command", command)
 
     def display(self, evt):
-        for txt, tme in sorted(evt.result, key=lambda x: x[1]):
+        for txt in evt.result:
             self.raw(txt)
 
     def raw(self, txt):
@@ -34,9 +34,25 @@ class Client(Reactor):
 "config"
 
 
-class Config(Obj):
+class Config(Default):
 
-    name = Obj.__module__.split(".")[0]
+    name = Default.__module__.split(".")[0]
+
+
+"fleet"
+
+
+class Fleet:
+
+    bots = {}
+
+    @staticmethod
+    def add(bot):
+        Fleet.bots[repr(bot)] = bot
+
+    @staticmethod
+    def get(name):
+        return Fleet.bots.get(name, None)
 
 
 "output"
@@ -49,6 +65,10 @@ class Output:
     def __init__(self):
         self.oqueue = queue.Queue()
         self.dostop = threading.Event()
+
+    def display(self, evt):
+        for txt in evt.result:
+            self.oput(evt.channel, txt)
 
     def dosay(self, channel, txt):
         raise NotImplementedError("dosay")
@@ -77,45 +97,13 @@ class Output:
         self.dostop.wait()
 
 
-"buffered"
-
-
-class Buffered(Output, Client):
-
-    def __init__(self):
-        Output.__init__(self)
-        Client.__init__(self)
-
-    def display(self, evt):
-        for txt, tme in sorted(evt.result, key=lambda x: x[1]):
-            self.oput(evt.channel, txt)
-
-    def dosay(self, channel, txt):
-        self.raw(txt)
-
-    def raw(self, txt):
-        raise NotImplementedError("raw")
-
-    def stop(self):
-        Client.stop(self)
-        Output.stop(self)
-
-    def start(self):
-        Client.start(self)
-        Output.start(self)
-
-    def wait(self):
-        Client.wait(self)
-        Output.wait(self)
-
-
 "interface"
 
 
 def __dir__():
     return (
-        'Buffered',
         'Client',
         'Config',
+        'Fleet',
         'Output'
     )

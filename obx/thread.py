@@ -14,18 +14,19 @@ import _thread
 
 class Worker(threading.Thread):
 
-    def __init__(self, func, thrname, *args, daemon=True, **kwargs):
+    def __init__(self, func, name, *args, daemon=True, **kwargs):
         super().__init__(None, self.run, thrname, (), {}, daemon=daemon)
+        self.name = name
         self.queue = queue.Queue()
         self.starttime = time.time()
         self.stopped = threading.Event()
-        self.queue.put_nowait((func, args))
+        self.queue.put((func, args))
 
     def run(self):
         while not self.stopped.is_set():
             try:
                 func, args = self.queue.get()
-                self.result = func(*args)
+                func(*args)
             except (KeyboardInterrupt, EOFError):
                 _thread.interrupt_main()
             except Exception as ex:

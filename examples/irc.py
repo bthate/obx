@@ -16,11 +16,11 @@ import time
 import _thread
 
 
-from obx.cache   import Cache
+from obx.client  import Fleet
 from obx.command import command
 from obx.event   import Event
 from obx.find    import format, ident, last, store
-from obx.object  import Object, Obj, edit, keys, write
+from obx.object  import Default, Object, edit, keys, write
 from obx.reactor import Reactor
 from obx.thread  import later, launch
 
@@ -58,7 +58,7 @@ def init():
 "config"
 
 
-class Config(Obj):
+class Config(Default):
 
     channel = f'#{NAME}'
     commands = True
@@ -75,7 +75,7 @@ class Config(Obj):
     users = False
 
     def __init__(self):
-        Obj.__init__(self)
+        Default.__init__(self)
         self.channel = Config.channel
         self.commands = Config.commands
         self.nick = Config.nick
@@ -147,6 +147,7 @@ class Output:
                 break
             if self.dostop.is_set():
                 break
+            print(txt)
             txtlist = wrapper.wrap(txt)
             if len(txtlist) > 3:
                 self.extend(channel, txtlist)
@@ -206,7 +207,7 @@ class IRC(Reactor, Output):
         self.register('QUIT', cb_quit)
         self.register("366", cb_ready)
         self.ident = ident(self)
-        Cache.add(self.ident, self)
+        Fleet.add(self)
 
     def announce(self, txt):
         for channel in self.channels:
@@ -617,7 +618,7 @@ def mre(event):
     if not event.channel:
         event.reply('channel is not set.')
         return
-    bot = Cache.get(event.orig)
+    bot = Fleet.get(event.orig)
     if 'cache' not in dir(bot):
         event.reply('bot is missing cache')
         return

@@ -18,9 +18,6 @@ from obx.object  import Object, update, write
 from  .rss     import Rss
 
 
-"defines"
-
-
 importlock = _thread.allocate_lock()
 skipped    = []
 
@@ -168,4 +165,3 @@ TEMPLATE = """<opml version="1.0">
     </head>
     <body>
         <outline title="opml" text="rss feeds">"""
-
