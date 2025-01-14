@@ -21,7 +21,7 @@ from obx.clients import Client, Config
 from obx.command import Commands, parse, scan
 from obx.persist import Workdir, elapsed, fntime, skel
 from obx.objects import Object, keys
-from obx.modules import face
+from obx.modules import face as MODS
 from obx.reactor import Event
 from obx.threads import launch, errors, later
 
@@ -38,9 +38,9 @@ cfg.index = 0
 
 
 if os.path.exists("mods"):
-    from mods import face as face2
+    import mods
 else:
-    face2 = None
+    mods = None
 
 
 lap = 1
@@ -143,7 +143,7 @@ def main():
     global nrcommand
     parse(cfg, " ".join(sys.argv[1:]))
     #face.rss.DEBUG = True
-    scan(face, face2)
+    scan(MODS, mods)
     nrcommand = len(Commands.cmds) or 1
     if "v" in cfg.opts:
         banner()

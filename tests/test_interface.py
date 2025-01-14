@@ -18,7 +18,7 @@ from obx.objects import *
 
 
 import obx.clients
-import obx.persist
+import obx.locator
 import obx.modules
 import obx.objects
 import obx.reactor
@@ -28,9 +28,9 @@ import obx.threads
 PACKAGE = [
     'clients',
     'command',
+    'locator',
     'modules',
     'objects',
-    'persist',
     'reactor',
     'threads',
 ]

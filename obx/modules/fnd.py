@@ -8,7 +8,7 @@
 import time
 
 
-from obx.persist import elapsed, find, fntime, format, long, skel, types
+from obx.locator import elapsed, find, fntime, format, long, skel, types
 
 
 "commands"
