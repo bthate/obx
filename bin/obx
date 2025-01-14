@@ -18,7 +18,7 @@ sys.path.insert(0, os.getcwd())
 
 from obx.clients import Client, Config
 from obx.command import Commands, command, parse, scan
-from obx.modules import face
+from obx.modules import face as MODS
 from obx.persist import Workdir, pidname
 from obx.reactor import Event
 from obx.threads import errors, later
@@ -32,9 +32,9 @@ Workdir.wdr = os.path.expanduser(f"~/.{Config.name}")
 
 
 if os.path.exists("mods"):
-    from mods import face as face2
+    import mods
 else:
-    face = None    
+    mods = None    
 
 
 "console"
@@ -142,7 +142,7 @@ def console():
     parse(cfg, " ".join(sys.argv[1:]))
     if "v" in cfg.opts:
         banner()
-    for mod, thr in scan(face, face2, init="i" in cfg.opts, disable=cfg.sets.dis):
+    for mod, thr in scan(MODS, mods, init="i" in cfg.opts, disable=cfg.sets.dis):
         if "v" in cfg.opts and "output" in dir(mod):
             mod.output = print
         if thr and "w" in cfg.opts:
@@ -158,7 +158,7 @@ def control():
     Commands.add(srv)
     parse(cfg, " ".join(sys.argv[1:]))
     csl = CLI()
-    scan(face)
+    scan(MODS, mods)
     evt = Event()
     evt.orig = repr(csl)
     evt.type = "command"
