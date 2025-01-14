@@ -50,6 +50,11 @@ class Fleet:
         Fleet.bots[repr(bot)] = bot
 
     @staticmethod
+    def announce(txt):
+        for bot in Fleet.bots:
+            bot.raw(txt)
+
+    @staticmethod
     def get(name):
         return Fleet.bots.get(name, None)
 
