@@ -5,7 +5,7 @@
 "errors"
 
 
-from obx.thread import Errors
+from obx.threads import Errors
 
 
 "commands"

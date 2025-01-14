@@ -10,10 +10,9 @@ import threading
 
 
 from .command import command
-from .fleet   import Fleet
-from .object  import Default
+from .objects import Default
 from .reactor import Reactor
-from .thread  import launch
+from .threads import launch
 
 
 class Client(Reactor):

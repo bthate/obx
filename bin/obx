@@ -16,11 +16,12 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.client  import Client, Config
+from obx.clients import Client, Config
 from obx.command import Commands, command, parse, scan
-from obx.event   import Event
-from obx.find    import Workdir, pidname
-from obx.thread  import errors, later
+from obx.modules import face
+from obx.persist import Workdir, pidname
+from obx.reactor import Event
+from obx.threads import errors, later
 
 
 cfg = Config()
@@ -31,15 +32,9 @@ Workdir.wdr = os.path.expanduser(f"~/.{Config.name}")
 
 
 if os.path.exists("mods"):
-    from mods import face
+    from mods import face as face2
 else:
     face = None    
-
-
-if os.path.exists("examples"):
-    from examples import face as face2
-else:
-    face2 = None
 
 
 "console"

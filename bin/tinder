@@ -17,12 +17,13 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.client  import Client, Config
+from obx.clients import Client, Config
 from obx.command import Commands, parse, scan
-from obx.event   import Event
-from obx.find    import Workdir, elapsed, fntime, skel
-from obx.object  import Object, keys
-from obx.thread  import launch, errors, later
+from obx.persist import Workdir, elapsed, fntime, skel
+from obx.objects import Object, keys
+from obx.modules import face
+from obx.reactor import Event
+from obx.threads import launch, errors, later
 
 
 "defines"
@@ -37,9 +38,9 @@ cfg.index = 0
 
 
 if os.path.exists("mods"):
-    from mods import face
+    from mods import face as face2
 else:
-    face = None
+    face2 = None
 
 
 lap = 1
@@ -59,7 +60,7 @@ param.cmd = [""]
 param.dne = ["mekker", ""]
 param.dpl = ["hnrss title,url", ""]
 param.exp = ['']
-param.fnd = ["log", "todo", "rss", "config", "urls", ""]
+param.fnd = ["log", ""]
 param.imp = ["tests/feeds.opml", ""]
 param.log = ["bla", ""]
 param.mod = [""]
@@ -142,7 +143,7 @@ def main():
     global nrcommand
     parse(cfg, " ".join(sys.argv[1:]))
     #face.rss.DEBUG = True
-    scan(face)
+    scan(face, face2)
     nrcommand = len(Commands.cmds) or 1
     if "v" in cfg.opts:
         banner()
@@ -161,7 +162,7 @@ def main():
         thr.join()
     consume(events)
     clt.stop()
-    clt.wait()
+    #clt.wait()
 
 
 if __name__ == "__main__":

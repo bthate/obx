@@ -12,7 +12,7 @@ import time
 import _thread
 
 
-from .object import Object, items, keys, read, update
+from .objects import Object, items, keys, read, update
 
 
 p = os.path.join

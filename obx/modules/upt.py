@@ -8,7 +8,7 @@
 import time
 
 
-from obx.find import elapsed
+from obx.persist import elapsed
 
 
 STARTTIME = time.time()

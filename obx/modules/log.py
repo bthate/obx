@@ -8,8 +8,8 @@
 import time
 
 
-from obx.find   import elapsed, find, fntime, ident, store
-from obx.object import Object, write
+from obx.objects import Object, write
+from obx.persist import elapsed, find, fntime, ident, store
 
 
 "log"

@@ -7,10 +7,12 @@
 
 import queue
 import threading
+import time
 import _thread
 
 
-from .thread import later, launch
+from .objects import Default
+from .threads import later, launch
 
 
 class Reactor:
@@ -66,10 +68,40 @@ class Reactor:
         self.stopped.wait()
 
 
+"event"
+
+
+class Event(Default):
+
+    def __init__(self):
+        Default.__init__(self)
+        self._ready = threading.Event()
+        self._thr   = None
+        self.ctime  = time.time()
+        self.result = []
+        self.type   = "event"
+        self.txt    = ""
+
+    def ok(self):
+        self.reply("ok")
+
+    def ready(self):
+        self._ready.set()
+
+    def reply(self, txt):
+        self.result.append(txt)
+
+    def wait(self):
+        self._ready.wait()
+        if self._thr:
+            self._thr.join()
+
+
 "interface"
 
 
 def __dir__():
     return (
-        'Reactor',
+        'Event',
+        'Reactor'
     )

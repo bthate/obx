@@ -12,10 +12,10 @@ import traceback
 import _thread
 
 
-class Worker(threading.Thread):
+class Thread(threading.Thread):
 
     def __init__(self, func, name, *args, daemon=True, **kwargs):
-        super().__init__(None, self.run, thrname, (), {}, daemon=daemon)
+        super().__init__(None, self.run, name, (), {}, daemon=daemon)
         self.name = name
         self.queue = queue.Queue()
         self.starttime = time.time()
@@ -23,19 +23,16 @@ class Worker(threading.Thread):
         self.queue.put((func, args))
 
     def run(self):
-        while not self.stopped.is_set():
-            try:
-                func, args = self.queue.get()
-                func(*args)
-            except (KeyboardInterrupt, EOFError):
-                _thread.interrupt_main()
-            except Exception as ex:
-                later(ex)
+        func, args = self.queue.get()
+        func(*args)
+
+
+"utility"
 
 
 def launch(func, *args, **kwargs):
     nme = kwargs.get("name", name(func))
-    thread = threading.Thread(None, func, nme, args, kwargs)
+    thread = Thread(func, nme, *args, **kwargs)
     thread.start()
     return thread
 
@@ -53,6 +50,47 @@ def name(obj):
     if '__name__' in dir(obj):
         return f'{obj.__class__.__name__}.{obj.__name__}'
     return None
+
+
+"timers"
+
+
+class Timer:
+
+    def __init__(self, sleep, func, *args, thrname=None, **kwargs):
+        self.args  = args
+        self.func  = func
+        self.kwargs = kwargs
+        self.sleep = sleep
+        self.name  = thrname or kwargs.get("name", name(func))
+        self.state = {}
+        self.timer = None
+
+    def run(self):
+        self.state["latest"] = time.time()
+        launch(self.func, *self.args)
+
+    def start(self):
+        timer = threading.Timer(self.sleep, self.run)
+        timer.name   = self.name
+        timer.sleep  = self.sleep
+        timer.state  = self.state
+        timer.func   = self.func
+        timer.state["starttime"] = time.time()
+        timer.state["latest"]    = time.time()
+        timer.start()
+        self.timer   = timer
+
+    def stop(self):
+        if self.timer:
+            self.timer.cancel()
+
+
+class Repeater(Timer):
+
+    def run(self):
+        launch(self.start)
+        super().run()
 
 
 "errors"
@@ -90,7 +128,9 @@ def later(exc):
 def __dir__():
     return (
         'Errors',
+        'Repeater',
         'Thread',
+        'Timer',
         'errors',
         'later',
         'launch',

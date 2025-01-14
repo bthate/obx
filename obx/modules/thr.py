@@ -9,8 +9,8 @@ import threading
 import time
 
 
-from obx.find   import elapsed
-from obx.object import Object, update
+from obx.persist import elapsed
+from obx.objects import Object, update
 
 
 STARTTIME = time.time()

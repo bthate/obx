@@ -6,7 +6,7 @@
 "interface"
 
 
-from . import cmd, err, fnd, log, mod, tdo, thr, upt
+from . import cmd, err, fnd, log, mod, thr, upt
 
 
 "teh dir"
@@ -17,10 +17,10 @@ def __dir__():
         'cmd',
         'err',
         'fnd',
-        'log',
         'mod',
-        'tdo',
-        'thr'
+        'log',
+        'thr',
+        'upt'
     )
 
 
