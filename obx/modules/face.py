@@ -20,7 +20,7 @@ def __dir__():
         'mod',
         'log',
         'thr',
-        'upt'
+        #'upt'
     )
 
 

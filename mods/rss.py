@@ -20,9 +20,9 @@ from urllib.parse import quote_plus, urlencode
 
 from obx.clients import Fleet
 from obx.command import spl
-from obx.persist import elapsed, find, fntime, format, ident, last, store
+from obx.locater import elapsed, find, fntime, format, ident, last, store
 from obx.objects import Object, update, write
-from obx.threads import launch
+from obx.threads import Repeater, launch
 
 
 "defines"

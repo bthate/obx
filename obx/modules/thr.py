@@ -9,7 +9,7 @@ import threading
 import time
 
 
-from obx.locator import elapsed
+from obx.locater import elapsed
 from obx.objects import Object, update
 
 

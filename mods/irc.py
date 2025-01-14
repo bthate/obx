@@ -19,7 +19,7 @@ import _thread
 from obx.clients import Fleet
 from obx.command import command
 from obx.objects import Default, Object, edit, keys, write
-from obx.persist import format, ident, last, store
+from obx.locater import format, ident, last, store
 from obx.reactor import Event, Reactor
 from obx.threads import later, launch
 

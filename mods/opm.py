@@ -11,7 +11,7 @@ import _thread
 
 
 from obx.command import spl
-from obx.persist import find, ident, store
+from obx.locater import find, ident, store
 from obx.objects import Object, update, write
 
 

@@ -8,7 +8,7 @@
 import time
 
 
-from obx.locator import elapsed, find, fntime, ident, store
+from obx.locater import elapsed, find, fntime, ident, store
 from obx.objects import Object, write
 
 
