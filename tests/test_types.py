@@ -8,7 +8,7 @@
 import unittest
 
 
-from obx.object import Object, dumps, loads
+from obx.objects import Object, dumps, loads
 
 
 class A(Object):

@@ -14,26 +14,25 @@ import unittest
 import obx
 
 
-from obx.object import *
+from obx.objects import *
 
 
-import obx.client
-import obx.find
+import obx.clients
+import obx.persist
 import obx.modules
-import obx.object
+import obx.objects
 import obx.reactor
-import obx.thread
-import obx.timers
+import obx.threads
 
 
 PACKAGE = [
-    'cache',
-    'client',
-    'find',
-    'object',
+    'clients',
+    'command',
+    'modules',
+    'objects',
+    'persist',
     'reactor',
-    'thread',
-    'timers'
+    'threads',
 ]
 
 

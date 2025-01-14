@@ -8,7 +8,7 @@
 import unittest
 
 
-from obx.object import Object, items, keys, update, values
+from obx.objects import Object, items, keys, update, values
 
 
 import obx
@@ -148,7 +148,7 @@ class TestObject(unittest.TestCase):
         self.assertTrue(okd)
 
     def test_module(self):
-        self.assertEqual(Object().__module__, "obx.object")
+        self.assertEqual(Object().__module__, "obx.objects")
 
     def test_register(self):
         obj = Object()

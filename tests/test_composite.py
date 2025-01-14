@@ -8,7 +8,7 @@
 import unittest
 
 
-from obx.object import Object
+from obx.objects import Object
 
 
 class TestComposite(unittest.TestCase):
