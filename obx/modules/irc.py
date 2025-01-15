@@ -146,7 +146,8 @@ class Output:
                 break
             if self.dostop.is_set():
                 break
-            print(txt)
+            if not txt:
+                continue
             txtlist = wrapper.wrap(txt)
             if len(txtlist) > 3:
                 self.extend(channel, txtlist)
