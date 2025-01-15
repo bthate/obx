@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0718
+# pylint: disable=C0115,C0116,,R0903,W0105,W0718
 
 
 "threading"
@@ -9,14 +9,16 @@ import queue
 import threading
 import time
 import traceback
-import _thread
+
+
+"thread"
 
 
 class Thread(threading.Thread):
 
-    def __init__(self, func, name, *args, daemon=True, **kwargs):
+    def __init__(self, func, thrname, *args, daemon=True, **kwargs):
         super().__init__(None, self.run, name, (), {}, daemon=daemon)
-        self.name = name
+        self.name = thrname
         self.queue = queue.Queue()
         self.starttime = time.time()
         self.stopped = threading.Event()

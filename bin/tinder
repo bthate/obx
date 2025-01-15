@@ -19,7 +19,7 @@ sys.path.insert(0, os.getcwd())
 
 from obx.clients import Client, Config
 from obx.command import Commands, parse, scan
-from obx.persist import Workdir, elapsed, fntime, skel
+from obx.locater import Workdir, elapsed, skel
 from obx.objects import Object, keys
 from obx.modules import face as MODS
 from obx.reactor import Event

@@ -18,7 +18,7 @@ from obx.objects import *
 
 
 import obx.clients
-import obx.locator
+import obx.locater
 import obx.modules
 import obx.objects
 import obx.reactor

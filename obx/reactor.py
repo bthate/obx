@@ -1,8 +1,8 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0212,W0718,E0402
+# pylint: disable=C0103,C0115,C0116,R0903,W0105,W0212,W0718,E0402
 
 
-"reactor"
+"react"
 
 
 import queue
@@ -13,6 +13,9 @@ import _thread
 
 from .objects import Default
 from .threads import later, launch
+
+
+"reactor"
 
 
 class Reactor:

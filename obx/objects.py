@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105
+# pylint: disable=C0115,C0116,,R0903,W0105
 
 
 "a clean namespace"
@@ -13,11 +13,17 @@ import threading
 lock = threading.RLock()
 
 
+"object"
+
+
 class Object:
 
 
     def __str__(self):
         return str(self.__dict__)
+
+
+"default"
 
 
 class Default(Object):

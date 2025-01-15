@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0622,E0402
+# pylint: disable=C0115,C0116,R0903,W0105,W0622,E0402
 
 
 "locate objects"
@@ -19,6 +19,9 @@ p = os.path.join
 
 
 lock = _thread.allocate_lock()
+
+
+"workdir"
 
 
 class Workdir:
@@ -86,7 +89,6 @@ def types():
 def fns(clz):
     dname = ''
     pth = store(clz)
-    res = []
     for rootdir, dirs, _files in os.walk(pth, topdown=False):
         if dirs:
             for dname in sorted(dirs):
@@ -109,9 +111,9 @@ def find(clz, selector=None, index=None, deleted=False, matching=False):
                 read(obj, fnm)
                 Cache.add(fnm, obj)
             if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
-               continue
+                continue
             if selector and not search(obj, selector, matching):
-               continue
+                continue
             nrs += 1
             if index is not None and nrs != int(index):
                 continue
@@ -195,7 +197,7 @@ def search(obj, selector, matching=None):
     return res
 
 
-"utility"
+"utilities"
 
 
 def elapsed(seconds, short=True):

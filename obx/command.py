@@ -1,8 +1,8 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,W0105,E0402
+# pylint: disable=C0115,C0116,R0912,R0915,W0105,E0402
 
 
-"commands"
+"user commands"
 
 
 import inspect
@@ -12,6 +12,8 @@ import types
 from .objects import Default
 from .threads import launch
 
+
+"commands"
 
 class Commands:
 
@@ -115,7 +117,7 @@ def parse(obj, txt=None):
 def scan(*pkgs, init=False, disable=""):
     result = []
     for mod in modloop(*pkgs, disable=disable):
-        if type(mod) is not types.ModuleType:
+        if not isinstance(mod, types.ModuleType):
             continue
         Commands.scan(mod)
         thr = None

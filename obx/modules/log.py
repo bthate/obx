@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,E0402
+# pylint: disable=C0115,C0116,R0903,W0105,E0402
 
 
 "log text"
@@ -39,4 +39,3 @@ def log(event):
     obj.txt = event.rest
     write(obj, store(ident(obj)))
     event.ok()
-
