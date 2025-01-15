@@ -44,7 +44,8 @@ else:
 class CLI(Client):
 
     def raw(self, txt):
-        print(txt)
+        print(txt.encode('utf-8', 'replace').decode("utf-8"))
+        sys.stdout.flush()
 
 
 class Console(CLI):

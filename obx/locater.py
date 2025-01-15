@@ -98,7 +98,7 @@ def fns(clz):
                         yield p(ddd, fll)
 
 
-def find(clz, selector=None, index=None, deleted=False, matching=False):
+def find(clz, selector=None, deleted=False, matching=False):
     skel()
     with lock:
         nrs = -1
@@ -113,9 +113,6 @@ def find(clz, selector=None, index=None, deleted=False, matching=False):
             if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
                 continue
             if selector and not search(obj, selector, matching):
-                continue
-            nrs += 1
-            if index is not None and nrs != int(index):
                 continue
             res.append((fnm, obj))
         return res
@@ -189,7 +186,7 @@ def search(obj, selector, matching=None):
             continue
         if matching and value == val:
             res = True
-        elif str(value).lower() in str(val).lower():
+        elif str(value).lower() in str(val).lower() or value == "match":
             res = True
         else:
             res = False

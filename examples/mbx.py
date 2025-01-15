@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C,R
 
 
 "mailbox"
@@ -14,33 +13,17 @@ from obx.locater import elapsed, find, fntime, format, store, ident
 from obx.objects import Object, update, write
 
 
-MONTH = {
-    'Jan': 1,
-    'Feb': 2,
-    'Mar': 3,
-    'Apr': 4,
-    'May': 5,
-    'Jun': 6,
-    'Jul': 7,
-    'Aug': 8,
-    'Sep': 9,
-    'Oct': 10,
-    'Nov': 11,
-    'Dec': 12
-}
+"email"
 
 
 class Email(Object):
-
-    "Email"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = ""
 
 
-def to_date(date):
-    "match date in string." 
+def todate(date):
     date = date.replace("_", ":")
     res = date.split()
     ddd = ""
@@ -76,8 +59,10 @@ def to_date(date):
     return ddd
 
 
+"commands"
+
+
 def cor(event):
-    "correspondence"
     if not event.args:
         event.reply("cor <email>")
         return
@@ -89,23 +74,25 @@ def cor(event):
             txt = ",".join(event.args[1:])
         else:
             txt = "From,Subject"
-        event.reply("%s %s %s" % (nr, fmt(email, txt, plain=True), laps(time.time() - fntime(email.__stp__))))
+        event.reply("%s %s %s" % (nr, formt(email, txt, plain=True), elapsed(time.time() - fntime(email.__stp__))))
 
 
 def eml(event):
-    "emnail"
-    if not event.args:
-        event.reply("eml <searchtxtinemail>")
-        return
-    nr = -1
-    for fn, o in find("email"):
-        if event.rest in o.text:
-            nr += 1
-            event.reply("%s %s %s" % (nr, fmt(o, "From,Subject"), laps(time.time() - fntime(fn))))
+    nrs = -1
+    result = sorted(find("email", event.gets), key=lambda x: todate(getattr(x[1], "Date", "")))
+    if event.index:
+        o = result[event.index][1]
+        print(str(o))
+        tme = getattr(o, "Date", "")
+        #print(tme)
+        event.reply(f'{event.index} {format(o, ["From", "Subject"] + event.args)}')
+    else:
+        for fnm, o in result:
+            nrs += 1
+            event.reply(f'{nr} {format(o, ["From", "Subject"])} {elapsed(time.time() - fntime(fnm))}')
 
 
 def mbx(event):
-    "mailbox"
     if not event.args:
         return
     fn = os.path.expanduser(event.args[0])
@@ -123,7 +110,6 @@ def mbx(event):
         pass
     for m in thing:
         o = Email()
-        print(m._headers)
         update(o, dict(m._headers)) # pylint: disable=W0212
         o.text = ""
         for payload in m.walk():
@@ -134,3 +120,22 @@ def mbx(event):
         nr += 1
     if nr:
         event.reply("ok %s" % nr)
+
+
+"data"
+
+
+MONTH = {
+    'Jan': 1,
+    'Feb': 2,
+    'Mar': 3,
+    'Apr': 4,
+    'May': 5,
+    'Jun': 6,
+    'Jul': 7,
+    'Aug': 8,
+    'Sep': 9,
+    'Oct': 10,
+    'Nov': 11,
+    'Dec': 12
+}

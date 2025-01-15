@@ -37,6 +37,7 @@ class Commands:
 
 def command(bot, evt):
     parse(evt)
+    print(evt, evt.gets)
     func = Commands.cmds.get(evt.cmd, None)
     if func:
         func(evt)
@@ -84,10 +85,7 @@ def parse(obj, txt=None):
             continue
         if "==" in spli:
             key, value = spli.split("==", maxsplit=1)
-            val = getattr(obj.gets, key, None)
-            if val:
-                value = val + "," + value
-                setattr(obj.gets, key, value)
+            setattr(obj.gets, key, value)
             continue
         if "=" in spli:
             key, value = spli.split("=", maxsplit=1)

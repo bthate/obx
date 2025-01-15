@@ -22,8 +22,8 @@ class Client(Reactor):
 
     def __init__(self):
         Reactor.__init__(self)
-        Fleet.add(self)
         self.register("command", command)
+        Fleet.add(self)
 
     def display(self, evt):
         for txt in evt.result:
