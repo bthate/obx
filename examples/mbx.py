@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-#
 # pylint: disable=C,R
 
 
@@ -11,7 +10,7 @@ import os
 import time
 
 
-from obx.locater import elapsed, find, fntime, format
+from obx.locater import elapsed, find, fntime, format, store, ident
 from obx.objects import Object, update, write
 
 
@@ -124,13 +123,14 @@ def mbx(event):
         pass
     for m in thing:
         o = Email()
-        update(o, m._headers) # pylint: disable=W0212
+        print(m._headers)
+        update(o, dict(m._headers)) # pylint: disable=W0212
         o.text = ""
         for payload in m.walk():
             if payload.get_content_type() == 'text/plain':
                 o.text += payload.get_payload()
         o.text = o.text.replace("\\n", "\n")
-        sync(o)
+        write(o, store(ident(o)))
         nr += 1
     if nr:
         event.reply("ok %s" % nr)

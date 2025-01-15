@@ -92,10 +92,10 @@ def keys(obj):
 
 
 def update(obj, data):
-    if isinstance(data, type({})):
-        obj.__dict__.update(data)
-    else:
+    if not isinstance(data, type({})):
         obj.__dict__.update(vars(data))
+    else:
+        obj.__dict__.update(data)
 
 
 def values(obj):
