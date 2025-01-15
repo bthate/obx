@@ -31,7 +31,8 @@ p   = os.path.join
 Workdir.wdr = os.path.expanduser(f"~/.{Config.name}")
 
 
-if os.path.exists("mods"):
+if os.path.exists(p(Workdir.wdr, "mods")):
+    sys.path.insert(0, Workdir.wdr)
     import mods
 else:
     mods = None    
@@ -133,7 +134,7 @@ def background():
     daemon(True)
     privileges()
     pidfile(pidname(Config.name))
-    scan(face, init=True)
+    scan(MODS, mods, init=True)
     forever()
 
 
