@@ -19,9 +19,8 @@ sys.path.insert(0, os.getcwd())
 from obx.clients import Client, Config
 from obx.command import Commands, command, parse, scan
 from obx.modules import face as MODS
-from obx.locater import Workdir, pidname
-from obx.reactor import Event
-from obx.threads import errors, later
+from obx.persist import Workdir, pidname
+from obx.runtime import Event, errors, later
 
 
 cfg = Config()

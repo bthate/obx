@@ -18,21 +18,19 @@ from obx.objects import *
 
 
 import obx.clients
-import obx.locater
 import obx.modules
 import obx.objects
-import obx.reactor
-import obx.threads
+import obx.persist
+import obx.runtime
 
 
 PACKAGE = [
     'clients',
     'command',
-    'locator',
     'modules',
     'objects',
-    'reactor',
-    'threads',
+    'persist',
+    'runtime'
 ]
 
 
