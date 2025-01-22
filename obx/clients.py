@@ -52,7 +52,7 @@ class Fleet:
 
     @staticmethod
     def announce(txt):
-        for bot in Fleet.bots:
+        for bot in Fleet.bots.values():
             bot.announce(txt)
 
     @staticmethod
