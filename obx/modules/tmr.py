@@ -10,12 +10,13 @@ import re
 import time as ttime
 
 
+from obr.locater import find
 from obr.objects import update
-from obr.persist import find, elapsed, write
-from obr.runtime import Event, Fleet, Timer, launch
-
-
-"defines"
+from obr.persist import write
+from obr.events  import Event
+from obr.fleet   import Fleet
+from obr.timers  import Timer
+from obr.threads import launch
 
 
 MONTHS = [
@@ -43,9 +44,6 @@ FORMATS = [
 ]
 
 
-"init"
-
-
 def init():
     for _fn, obj in find("timer"):
         if "time" not in dir(obj):
@@ -58,15 +56,9 @@ def init():
             timer.start()
 
 
-"exceptions"
-
-
 class NoDate(Exception):
 
     pass
-
-
-"utilities"
 
 
 def extract_date(daystr):
@@ -178,9 +170,6 @@ def to_day(daystr):
 
 def today():
     return str(datetime.datetime.today()).split()[0]
-
-
-"commands"
 
 
 def tmr(event):

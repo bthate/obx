@@ -8,8 +8,10 @@
 import time
 
 
+from obr.locater import find
 from obr.objects import Object
-from obr.persist import elapsed, find, fntime, write
+from obr.persist import write
+from obr.utility import elapsed, fntime
 
 
 class Log(Object):

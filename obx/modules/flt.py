@@ -6,7 +6,7 @@
 
 
 from obr.objects import fmt
-from obr.runtime import name
+from obr.threads import name
 from obx.clients import Fleet
 
 

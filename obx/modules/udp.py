@@ -12,14 +12,12 @@ import threading
 import time
 
 
+from obr.fleet   import Fleet
 from obr.objects import Object
-from obr.runtime import Fleet, launch
+from obr.threads import launch
 
 
 DEBUG = False
-
-
-"init"
 
 
 def init():
@@ -28,17 +26,11 @@ def init():
     return udpd
 
 
-"config"
-
-
 class Cfg(Object):
 
     addr = ""
     host = "localhost"
     port = 5500
-
-
-"udp"
 
 
 class UDP(Object):
@@ -85,17 +77,11 @@ class UDP(Object):
         launch(self.loop)
 
 
-"utilities"
-
-
 def toudp(host, port, txt):
     if DEBUG:
         return
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(bytes(txt.strip(), "utf-8"), (host, port))
-
-
-"command"
 
 
 def udp(event):

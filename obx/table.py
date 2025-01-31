@@ -27,6 +27,25 @@ class Table:
         Table.mods[mod.__name__] = mod
 
     @staticmethod
+    def all(pkg, mods=""):
+        res = []
+        path = pkg.__path__[0]
+        pname = ".".join(path.split(os.sep)[-2:])
+        for nme in Table.modules(path):
+            if "__" in nme:
+                continue
+            if mods and nme not in spl(mods):
+                continue
+            name = pname + "." + nme
+            if not name:
+                continue
+            mod = Table.load(name)
+            if not mod:
+                continue
+            res.append(mod)
+        return res
+
+    @staticmethod
     def get(name):
         return Table.mods.get(name, None)
 
@@ -64,25 +83,6 @@ class Table:
                 if x.endswith(".py") and not x.startswith("__") and
                 x not in Table.disable
                ]
-
-    @staticmethod
-    def scan(pkg, mods=""):
-        res = []
-        path = pkg.__path__[0]
-        pname = ".".join(path.split(os.sep)[-2:])
-        for nme in Table.modules(path):
-            if "__" in nme:
-                continue
-            if mods and nme not in spl(mods):
-                continue
-            name = pname + "." + nme
-            if not name:
-                continue
-            mod = Table.load(name)
-            if not mod:
-                continue
-            res.append(mod)
-        return res
 
 
 def gettable():

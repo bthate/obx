@@ -10,11 +10,10 @@ import os
 import time
 
 
+from obr.locater import find
 from obr.objects import Object, fmt, update
-from obr.persist import elapsed, find, fntime, write
-
-
-"email"
+from obr.persist import write
+from obr.utility import elapsed, fntime
 
 
 class Email(Object):
@@ -22,9 +21,6 @@ class Email(Object):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = ""
-
-
-"utility"
 
 
 def todate(date):
@@ -61,9 +57,6 @@ def todate(date):
                         except (IndexError, KeyError):
                             ddd = ""
     return ddd
-
-
-"commands"
 
 
 def cor(event):
@@ -125,9 +118,6 @@ def mbx(event):
         nr += 1
     if nr:
         event.reply("ok %s" % nr)
-
-
-"data"
 
 
 MONTH = {

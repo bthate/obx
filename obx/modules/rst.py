@@ -13,16 +13,16 @@ import time
 from http.server  import HTTPServer, BaseHTTPRequestHandler
 
 
+from obr.errors  import later
 from obr.objects import Object
-from obr.persist import Workdir, types
-from obr.runtime import later, launch
+from obr.threads import launch
+from obr.workdir import Workdir, types
+
+
 from obx.clients import Default
 
 
 DEBUG = False
-
-
-"init"
 
 
 def init():
@@ -36,16 +36,10 @@ def init():
     return rest
 
 
-"config"
-
-
 class Config(Default):
 
     hostname = "localhost"
     port     = 10102
-
-
-"rest"
 
 
 class REST(HTTPServer, Object):
@@ -131,9 +125,6 @@ class RESTHandler(BaseHTTPRequestHandler):
 
     def log(self, code):
         pass
-
-
-"utilities"
 
 
 def html(txt):

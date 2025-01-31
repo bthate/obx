@@ -23,9 +23,9 @@ class Errors:
             plugfile = fname[:-3].split("/")
             mod = []
             for i in plugfile[::-1]:
-                if "home" in i:
-                    break
                 mod.append(i)
+                if i in ['obx', 'obr']:
+                    break
             ownname = '.'.join(mod[::-1])
             if ownname.endswith("__"):
                 continue

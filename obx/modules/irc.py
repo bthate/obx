@@ -16,15 +16,21 @@ import time
 import _thread
 
 
-from obr.objects import Object, edit, fmt, keys
-from obr.persist import ident, last, write
-from obr.runtime import Default, Event, Fleet, Reactor, later, launch
+from obr.default import Default
+from obr.errors  import later
+from obr.events  import Event
+from obr.fleet   import Fleet
+from obr.locater import last
+from obr.objects import Object, edit, fmt, fqn, keys
+from obr.persist import ident, write
+from obr.reactor import Reactor
+from obr.threads import launch
+from obr.workdir import skel
+
+
 from obx.clients import Config as Main
 from obx.clients import output
 from obx.command import command
-
-
-"defines"
 
 
 IGNORE = ["PING", "PONG", "PRIVMSG"]
@@ -41,18 +47,12 @@ def debug(txt):
     output(txt)
 
 
-"init"
-
-
 def init():
     irc = IRC()
     irc.start()
     irc.events.ready.wait()
     debug(f'{fmt(irc.cfg, skip="edited,password")}')
     return irc
-
-
-"config"
 
 
 class Config(Default):
@@ -83,9 +83,6 @@ class Config(Default):
         self.username = Config.username
 
 
-"textwrap"
-
-
 class TextWrap(textwrap.TextWrapper):
 
     def __init__(self):
@@ -99,9 +96,6 @@ class TextWrap(textwrap.TextWrapper):
 
 
 wrapper = TextWrap()
-
-
-"output"
 
 
 class Output:
@@ -166,9 +160,6 @@ class Output:
         if chan in dir(Output.cache):
             return len(getattr(Output.cache, chan, []))
         return 0
-
-
-"irc"
 
 
 class IRC(Reactor, Output):
@@ -519,9 +510,6 @@ class IRC(Reactor, Output):
         self.events.ready.wait()
 
 
-"callbacks"
-
-
 def cb_auth(bot, evt):
     bot = Fleet.get(evt.orig)
     bot.docommand(f'AUTHENTICATE {bot.cfg.password}')
@@ -603,9 +591,6 @@ def cb_quit(evt):
     debug(f"quit from {bot.cfg.server}")
     if evt.orig and evt.orig in bot.zelf:
         bot.stop()
-
-
-"commands"
 
 
 def cfg(event):

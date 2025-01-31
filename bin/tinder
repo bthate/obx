@@ -19,10 +19,12 @@ sys.path.insert(0, os.getcwd())
 
 from obr.errors  import errors, later
 from obr.events  import Event
+from obr.fleet   import Fleet
 from obr.objects import Object, keys
 from obr.threads import launch
 from obr.utility import elapsed
 from obr.workdir import Workdir, skel
+
 
 from obx.clients import Buffered, Config
 from obx.command import Commands, command, parse
@@ -145,7 +147,8 @@ def main():
     global nrs
     global nrcommand
     parse(cfg, " ".join(sys.argv[1:]))
-    for mod in Table.scan(MODS):
+    for mod in Table.all(MODS):
+        Commands.scan(mod)
         mod.DEBUG = True
         mod.output = print
     nrcommand = len(Commands.cmds) or 1

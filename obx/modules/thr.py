@@ -10,11 +10,10 @@ import time
 
 
 from obr.objects import Object, update
-from obr.persist import elapsed
-from obr.runtime import STARTTIME
+from obr.utility import elapsed
 
 
-"commands"
+STARTTIME = time.time()
 
 
 def thr(event):

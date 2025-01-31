@@ -9,12 +9,11 @@ import datetime
 import time
 
 
+from obr.events  import Event
+from obr.fleet   import Fleet
 from obr.objects import Object, construct, keys
-from obr.persist import elapsed
-from obr.runtime import Event, Fleet, Repeater
-
-
-"defines"
+from obr.timers  import Repeater
+from obr.utility import elapsed
 
 
 DAY = 24*60*60
@@ -22,9 +21,6 @@ YEAR = 365*DAY
 SOURCE = "https://github.com/bthate/genocide"
 STARTDATE = "2019-03-04 00:00:00"
 STARTTIME = time.mktime(time.strptime(STARTDATE, "%Y-%m-%d %H:%M:%S"))
-
-
-"init"
 
 
 def init():
@@ -39,9 +35,6 @@ def init():
             sec = seconds(val)
             repeater = Repeater(sec, cbstats, evt, thrname=aliases.get(key))
             repeater.start()
-
-
-"model"
 
 
 oor = """"Totaal onderliggende doodsoorzaken (aantal)";

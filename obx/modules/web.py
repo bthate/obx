@@ -13,9 +13,10 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
+from obr.default import Default
+from obr.errors  import later
 from obr.objects import Object
-from obr.runtime import later, launch
-from obx.clients import Default
+from obr.threads import launch
 
 
 a = os.path.abspath
@@ -25,9 +26,6 @@ p = os.path.join
 
 BASE = p(d(d(__file__)), "html", "")
 DEBUG = False
-
-
-"init"
 
 
 def init():
@@ -49,24 +47,15 @@ def html2(txt):
 """ % txt
 
 
-"exceptions"
-
-
 class WebError(Exception):
 
     pass
-
-
-"config"
 
 
 class Config(Default):
 
     hostname = "localhost"
     port     = 8000
-
-
-"rest"
 
 
 class HTTP(HTTPServer, Object):

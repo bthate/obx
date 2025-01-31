@@ -13,8 +13,8 @@ import threading
 
 from obr.default import Default
 from obr.errors  import later
+from obx.table   import Table, gettable
 from obr.threads import launch
-from obx.table   import gettable
 
 
 initlock = threading.RLock()

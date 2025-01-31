@@ -8,7 +8,13 @@ import os
 
 
 from .caching import Cache
-from .workdir import store
+from .objects import Object, fqn, items, update
+from .persist import read
+from .workdir import long, skel, store
+from .utility import fntime
+
+
+p = os.path.join
 
 
 def fns(clz):

@@ -23,16 +23,13 @@ from urllib.parse import quote_plus, urlencode
 from obr.objects import Object, fmt, update
 from obr.locater import find, last
 from obr.persist import ident, store, write
-from obr.runtime import Repeater, launch
+from obr.threads import launch
+from obr.timers  import Repeater
 from obr.workdir import store
-from obr.utility import elapsed, fntime
+from obr.utility import elapsed, fntime, spl
 
 
 from obx.clients import Fleet
-from obx.command import spl
-
-
-"defines"
 
 
 DEBUG = False
@@ -43,16 +40,10 @@ importlock = _thread.allocate_lock()
 skipped    = []
 
 
-"init"
-
-
 def init():
     fetcher = Fetcher()
     fetcher.start()
     return fetcher
-
-
-"data"
 
 
 class Feed(Object):
@@ -74,9 +65,6 @@ class Rss(Object):
 class Urls(Object):
 
     pass
-
-
-"fetcher"
 
 
 class Fetcher(Object):
@@ -158,9 +146,6 @@ class Fetcher(Object):
             repeater.start()
 
 
-"parser"
-
-
 class Parser:
 
     @staticmethod
@@ -210,9 +195,6 @@ class Parser:
                     setattr(obj, itm, val)
             result.append(obj)
         return result
-
-
-"utilities"
 
 
 def cdata(line):
@@ -438,9 +420,6 @@ class OPML:
                 setattr(obj, itm, val.strip())
             result.append(obj)
         return result
-
-
-"utilities"
 
 
 def attrs(obj, txt):
