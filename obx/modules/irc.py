@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,C0115,C0116,W0105,W0718
+# pylint: disable=R,C0115,C0116,W0105,W0613,W0718,E0402
 
 
 "internet relay chat"
@@ -16,11 +16,11 @@ import time
 import _thread
 
 
-from obx.clients import Fleet
-from obx.command import command
-from obx.objects import Default, Object, edit, fmt, keys
-from obx.persist import ident, last, write
-from obx.runtime import Event, Reactor, later, launch
+from ..clients import output
+from ..command import command
+from ..objects import Object, edit, fmt, keys
+from ..persist import ident, last, write
+from ..runtime import Default, Event, Fleet, Reactor, later, launch
 
 
 "defines"
@@ -33,14 +33,14 @@ NAME   = Object.__module__.rsplit(".", maxsplit=2)[-2]
 saylock = _thread.allocate_lock()
 
 
-"init"
-
-
 def debug(txt):
     for ign in IGNORE:
         if ign in txt:
             return
-    # output here
+    output(txt)
+
+
+"init"
 
 
 def init():
@@ -72,6 +72,7 @@ class Config(Default):
 
     def __init__(self):
         Default.__init__(self)
+        self.control = Config.control
         self.channel = Config.channel
         self.commands = Config.commands
         self.nick = Config.nick
@@ -521,17 +522,20 @@ class IRC(Reactor, Output):
 
 
 def cb_auth(bot, evt):
+    bot = Fleet.get(evt.orig)
     bot.docommand(f'AUTHENTICATE {bot.cfg.password}')
 
 
-def cb_cap(bot, evt):
+def cb_cap(evt):
+    bot = Fleet.get(evt.orig)
     if bot.cfg.password and 'ACK' in evt.arguments:
         bot.direct('AUTHENTICATE PLAIN')
     else:
         bot.direct('CAP REQ :sasl')
 
 
-def cb_error(bot, evt):
+def cb_error(evt):
+    bot = Fleet.get(evt.orig)
     if not bot.state.nrerror:
         bot.state.nrerror = 0
     bot.state.nrerror += 1
@@ -539,12 +543,14 @@ def cb_error(bot, evt):
     debug(evt.txt)
 
 
-def cb_h903(bot, evt):
+def cb_h903(evt):
+    bot = Fleet.get(evt.orig)
     bot.direct('CAP END')
     bot.events.authed.set()
 
 
-def cb_h904(bot, evt):
+def cb_h904(evt):
+    bot = Fleet.get(evt.orig)
     bot.direct('CAP END')
     bot.events.authed.set()
 
@@ -552,40 +558,47 @@ def cb_h904(bot, evt):
 def cb_kill(bot, evt):
     pass
 
-def cb_log(bot, evt):
+
+def cb_log(evt):
     pass
 
-def cb_ready(bot, evt):
+
+def cb_ready(evt):
+    bot = Fleet.get(evt.orig)
     bot.events.ready.set()
 
 
-def cb_001(bot, evt):
+def cb_001(evt):
+    bot = Fleet.get(evt.orig)
     bot.logon()
 
 
-def cb_notice(bot, evt):
+def cb_notice(evt):
+    bot = Fleet.get(evt.orig)
     if evt.txt.startswith('VERSION'):
         txt = f'\001VERSION {NAME.upper()} 140 - {bot.cfg.username}\001'
         bot.docommand('NOTICE', evt.channel, txt)
 
 
-def cb_privmsg(bot, evt):
+def cb_privmsg(evt):
+    bot = Fleet.get(evt.orig)
     if not bot.cfg.commands:
         return
     if evt.txt:
-        if evt.txt[0] in ['!',]:
-            evt.txt = evt.txt[1:]
-        elif evt.txt.startswith(f'{bot.cfg.nick}:'):
+        cmnd = False
+        if evt.txt.startswith(f'{bot.cfg.nick}:'):
             evt.txt = evt.txt[len(bot.cfg.nick)+1:]
-        else:
-            return
-        if evt.txt:
+            cmnd = True
+        elif evt.txt[0] == bot.cfg.control:
+            evt.txt = evt.txt[1:]
             evt.txt = evt.txt[0].lower() + evt.txt[1:]
-        if evt.txt:
-            command(bot, evt)
+            cmnd = True
+        if cmnd:
+            command(evt)
 
 
-def cb_quit(bot, evt):
+def cb_quit(evt):
+    bot = Fleet.get(evt.orig)
     debug(f"quit from {bot.cfg.server}")
     if evt.orig and evt.orig in bot.zelf:
         bot.stop()

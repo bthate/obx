@@ -1,16 +1,37 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,R0912,W0105
+# pylint: disable=C0115,C0116,C0415,R0903,R0912,W0105,W0612,W0613,W0718,E0402
 
 
-"user commands"
+"command"
 
 
+import importlib
 import inspect
-import types
+import os
+import threading
 
 
-from obx.objects import Default
-from obx.runtime import launch
+from obr.runtime import Default, Fleet, later, launch
+
+
+"locks"
+
+
+initlock = threading.RLock()
+loadlock = threading.RLock()
+lock     = threading.RLock()
+
+
+"defines"
+
+
+def gettable():
+    try:
+        from .lookups import NAMES as names
+    except Exception as ex:
+        later(ex)
+        names = {}
+    return names
 
 
 "commands"
@@ -19,10 +40,21 @@ from obx.runtime import launch
 class Commands:
 
     cmds = {}
+    names = gettable()
 
     @staticmethod
-    def add(func):
+    def add(func, mod=None):
         Commands.cmds[func.__name__] = func
+        if mod:
+            Commands.names[func.__name__] = mod.__name__
+
+    @staticmethod
+    def get(cmd):
+        return Commands.cmds.get(cmd, None)
+
+    @staticmethod
+    def getname(cmd):
+        return Commands.names.get(cmd)
 
     @staticmethod
     def scan(mod):
@@ -30,29 +62,101 @@ class Commands:
             if key.startswith("cb"):
                 continue
             if 'event' in cmdz.__code__.co_varnames:
-                Commands.add(cmdz)
+                Commands.add(cmdz, mod)
 
 
-def command(bot, evt):
+"table"
+
+
+class Table:
+
+    disable = ["wsd",]
+    mods = {}
+
+    @staticmethod
+    def add(mod):
+        Table.mods[mod.__name__] = mod
+
+    @staticmethod
+    def get(name):
+        return Table.mods.get(name, None)
+
+    @staticmethod
+    def inits(names, pname):
+        with initlock:
+            mods = []
+            for name in spl(names):
+                mname = pname + "." + name
+                if not mname:
+                    continue
+                mod = Table.load(mname)
+                if not mod:
+                    continue
+                thr = launch(mod.init)
+                mods.append((mod, thr))
+            return mods
+
+    @staticmethod
+    def load(name):
+        with loadlock:
+            pname = ".".join(name.split(".")[:-1])
+            module = Table.mods.get(name)
+            if not module:
+                try:
+                    Table.mods[name] = module = importlib.import_module(name, pname)
+                except Exception as exc:
+                    later(exc)
+            return module
+
+    @staticmethod
+    def modules(path):
+        return [
+                x[:-3] for x in os.listdir(path)
+                if x.endswith(".py") and not x.startswith("__") and
+                x not in Table.disable
+               ]
+
+    @staticmethod
+    def scan(pkg, mods=""):
+        res = []
+        path = pkg.__path__[0]
+        pname = ".".join(path.split(os.sep)[-2:])
+        for nme in Table.modules(path):
+            if "__" in nme:
+                continue
+            if mods and nme not in spl(mods):
+                continue
+            name = pname + "." + nme
+            if not name:
+                continue
+            mod = Table.load(name)
+            if not mod:
+                continue
+            Commands.scan(mod)
+            res.append(mod)
+        return res
+
+
+"callbacks"
+
+
+def command(evt):
     parse(evt)
-    func = Commands.cmds.get(evt.cmd, None)
-    if func:
-        func(evt)
-    bot.display(evt)
-    evt.ready()
+    func = Commands.get(evt.cmd)
+    if not func:
+        mname = Commands.names.get(evt.cmd)
+        if mname:
+            mod = Table.load(mname)
+            Commands.scan(mod)
+            func = Commands.get(evt.cmd)
+    if not func:
+        evt.ready()
+        return
+    func(evt)
+    Fleet.display(evt)
 
 
 "utilities"
-
-
-def modloop(*pkgs, disable=""):
-    for pkg in pkgs:
-        for modname in dir(pkg):
-            if modname in spl(disable):
-                continue
-            if modname.startswith("__"):
-                continue
-            yield getattr(pkg, modname)
 
 
 def parse(obj, txt=None):
@@ -68,7 +172,7 @@ def parse(obj, txt=None):
     obj.index   = None
     obj.mod     = ""
     obj.opts    = ""
-    obj.result  = []
+    obj.result  = {}
     obj.sets    = Default()
     obj.txt     = txt or ""
     obj.otxt    = obj.txt
@@ -109,19 +213,6 @@ def parse(obj, txt=None):
     return obj
 
 
-def scan(*pkgs, init=False, disable=""):
-    result = []
-    for mod in modloop(*pkgs, disable=disable):
-        if not isinstance(mod, types.ModuleType):
-            continue
-        Commands.scan(mod)
-        thr = None
-        if init and "init" in dir(mod):
-            thr = launch(mod.init)
-        result.append((mod, thr))
-    return result
-
-
 def spl(txt):
     try:
         result = txt.split(',')
@@ -135,8 +226,10 @@ def spl(txt):
 
 def __dir__():
     return (
+        'Table',
         'Commands',
         'command',
+        'cmd',
         'parse',
-        'scan'
+        'spl'
     )

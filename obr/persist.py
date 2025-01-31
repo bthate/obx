@@ -1,8 +1,8 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,R0903,W0105
+# pylint: disable=C0115,C0116,R0903,W0105,W0612,W0613,W0622,E0402
 
 
-"locate objects"
+"persistence"
 
 
 import datetime
@@ -14,15 +14,16 @@ import threading
 
 
 
-from obx.objects import Object, dumps, fqn, items, loads, update
+from .objects import Object, dumps, fqn, items, loads, update
 
 
-"defines"
+"locks"
 
 
-p      = os.path.join
-rwlock = threading.RLock()
-lock   = threading.RLock()
+p        = os.path.join
+rwlock   = threading.RLock()
+findlock = threading.RLock()
+lock     = threading.RLock()
 
 
 "exceptions"
@@ -31,29 +32,6 @@ lock   = threading.RLock()
 class DecodeError(Exception):
 
     pass
-
-
-"cache"
-
-
-class Cache:
-
-    objs = {}
-
-    @staticmethod
-    def add(path, obj):
-        Cache.objs[path] = obj
-
-    @staticmethod
-    def get(path):
-        return Cache.objs.get(path, None)
-
-    @staticmethod
-    def typed(matcher):
-        for key in Cache.objs:
-            if matcher not in key:
-                continue
-            yield Cache.objs.get(key)
 
 
 "workdir"
@@ -94,6 +72,7 @@ def types():
 
 "disk"
 
+
 def cdir(pth):
     path = pathlib.Path(pth)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -121,6 +100,29 @@ def write(obj, pth=None):
     return pth
 
 
+"cache"
+
+
+class Cache:
+
+    objs = {}
+
+    @staticmethod
+    def add(path, obj):
+        Cache.objs[path] = obj
+
+    @staticmethod
+    def get(path):
+        return Cache.objs.get(path, None)
+
+    @staticmethod
+    def typed(matcher):
+        for key in Cache.objs:
+            if matcher not in key:
+                continue
+            yield Cache.objs.get(key)
+
+
 "find"
 
 
@@ -138,21 +140,20 @@ def fns(clz):
 
 def find(clz, selector=None, deleted=False, matching=False):
     skel()
-    with lock:
-        pth = long(clz)
-        res = []
-        for fnm in fns(pth):
-            obj = Cache.get(fnm)
-            if not obj:
-                obj = Object()
-                read(obj, fnm)
-                Cache.add(fnm, obj)
-            if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
-                continue
-            if selector and not search(obj, selector, matching):
-                continue
-            res.append((fnm, obj))
-        return res
+    pth = long(clz)
+    res = []
+    for fnm in fns(pth):
+        obj = Cache.get(fnm)
+        if not obj:
+            obj = Object()
+            read(obj, fnm)
+            Cache.add(fnm, obj)
+        if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
+            continue
+        if selector and not search(obj, selector, matching):
+            continue
+        res.append((fnm, obj))
+    return sorted(res, key=lambda x: fntime(x[0]))
 
 
 "methods"
@@ -160,6 +161,7 @@ def find(clz, selector=None, deleted=False, matching=False):
 
 def ident(obj):
     return p(fqn(obj),*str(datetime.datetime.now()).split())
+
 
 
 def last(obj, selector=None):

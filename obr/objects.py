@@ -1,5 +1,5 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,R0903,W0105
+# pylint: disable=C0115,C0116,R0902,R0903,W0105,E0402
 
 
 "a clean namespace"
@@ -13,9 +13,12 @@ import json
 
 class Object:
 
+
+    def __len__(self):
+        return len(self.__dict__)
+
     def __str__(self):
         return str(self.__dict__)
-
 
 
 def construct(obj, *args, **kwargs):
@@ -64,11 +67,6 @@ def values(obj):
 "decoder"
 
 
-class DecodeError(Exception):
-
-    pass
-
-
 class ObjectDecoder(json.JSONDecoder):
 
     def __init__(self, *args, **kwargs):
@@ -99,11 +97,6 @@ def loads(string, *args, **kw):
 "encoder"
 
 
-class EncodeError(Exception):
-
-    pass
-
-
 class ObjectEncoder(json.JSONEncoder):
 
     def __init__(self, *args, **kwargs):
@@ -119,7 +112,10 @@ class ObjectEncoder(json.JSONEncoder):
         try:
             return json.JSONEncoder.default(self, o)
         except TypeError:
-            return vars(o)
+            try:
+                return vars(o)
+            except TypeError:
+                return repr(o)
 
     def encode(self, o) -> str:
         return json.JSONEncoder.encode(self, o)
@@ -131,24 +127,6 @@ class ObjectEncoder(json.JSONEncoder):
 def dumps(*args, **kw):
     kw["cls"] = ObjectEncoder
     return json.dumps(*args, **kw)
-
-
-"default"
-
-
-class Default(Object):
-
-    def __contains__(self, key):
-        return key in dir(self)
-
-    def __getattr__(self, key):
-        return self.__dict__.get(key, "")
-
-    def __iter__(self):
-        return iter(self.__dict__)
-
-    def __len__(self):
-        return len(self.__dict__)
 
 
 "methods"
@@ -204,7 +182,6 @@ def fmt(obj, args=None, skip=None, plain=False):
 
 def __dir__():
     return (
-        'Default',
         'Object',
         'construct',
         'dumps',

@@ -9,7 +9,7 @@ import queue
 import threading
 
 
-from obr.runtime import Default, Fleet, Reactor, launch
+from .runtime import Default, Fleet, Reactor, launch
 
 
 "config"
