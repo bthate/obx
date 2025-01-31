@@ -10,12 +10,12 @@ import sys
 import time
 
 
-from http.server  import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
-from ..clients import Default
-from ..objects import Object
-from ..runtime import later, launch
+from obr.objects import Object
+from obr.runtime import later, launch
+from obx.clients import Default
 
 
 a = os.path.abspath
@@ -137,7 +137,6 @@ class HTTPHandler(BaseHTTPRequestHandler):
         if self.path == "/":
             self.path = "/index.html"
         path = a(BASE + self.path)
-        print(path)
         if not os.path.exists(path):
             self.write_header("text/html")
             self.send_response(404)

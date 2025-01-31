@@ -19,11 +19,9 @@ import _thread
 from obr.objects import Object, edit, fmt, keys
 from obr.persist import ident, last, write
 from obr.runtime import Default, Event, Fleet, Reactor, later, launch
-
-
-from ..clients import Config as Main
-from ..clients import output
-from ..command import command
+from obx.clients import Config as Main
+from obx.clients import output
+from obx.command import command
 
 
 "defines"

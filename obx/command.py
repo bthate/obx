@@ -153,7 +153,7 @@ def command(evt):
         evt.ready()
         return
     func(evt)
-    Fleet.display(evt)
+    evt.display()
 
 
 "utilities"

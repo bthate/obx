@@ -45,7 +45,67 @@ class Default:
         return str(self.__dict__)
 
 
-"event"
+"errors"
+
+
+class Errors:
+
+    name   = Default.__module__.rsplit(".", maxsplit=2)[-2]
+    errors = []
+
+    @staticmethod
+    def format(exc) -> str:
+        exctype, excvalue, trb = type(exc), exc, exc.__traceback__
+        trace = traceback.extract_tb(trb)
+        result = ""
+        for i in trace:
+            fname = i[0]
+            linenr = i[1]
+            plugfile = fname[:-3].split("/")
+            mod = []
+            nr = 0
+            for i in plugfile[::-1]:
+                nr += 1
+                if nr > 3:
+                    break
+                mod.append(i)
+            ownname = '.'.join(mod[::-1])
+            if "python" in ownname:
+                continue
+            if ownname.endswith("__"):
+                continue
+            if ownname.startswith("<"):
+                continue
+            if "usr.lib" in ownname:
+                continue
+            if not ownname:
+                continue
+            result += f"{ownname}:{linenr} "
+        del trace
+        res = f"{exctype} {result[:-1]} {excvalue}"
+        return res
+
+    @staticmethod
+    def full(exc) -> str:
+        return traceback.format_exception(
+            type(exc),
+            exc,
+            exc.__traceback__
+        )
+
+
+def errors() -> []:
+    return Errors.errors
+
+
+def later(exc) -> None:
+    excp = exc.with_traceback(exc.__traceback__)
+    fmt = Errors.format(excp)
+    if fmt not in Errors.errors:
+        Errors.errors.append(fmt)
+
+
+"reactor"
 
 
 class Event(Default):
@@ -77,67 +137,11 @@ class Event(Default):
             self._thr.join()
 
 
-
-"errors"
-
-
-class Errors:
-
-    name = Default.__module__.rsplit(".", maxsplit=2)[-2]
-    errors = []
-
-    @staticmethod
-    def format(exc) -> str:
-        exctype, excvalue, trb = type(exc), exc, exc.__traceback__
-        trace = traceback.extract_tb(trb)
-        result = ""
-        for i in trace:
-            fname = i[0]
-            if not Errors.name in fname:
-                continue
-            linenr = i[1]
-            plugfile = fname[:-3].split("/")
-            mod = []
-            for i in plugfile[::-1]:
-                mod.append(i)
-                if Errors.name == i:
-                    break
-            ownname = '.'.join(mod[::-1])
-            result += f"{ownname}:{linenr} "
-        del trace
-        res = f"{exctype} {result[:-1]} {excvalue}"
-        return res
-
-    @staticmethod
-    def full(exc) -> str:
-        return traceback.format_exception(
-            type(exc),
-            exc,
-            exc.__traceback__
-        )
-
-
-def errors() -> []:
-    return Errors.errors
-
-
-def later(exc) -> None:
-    excp = exc.with_traceback(exc.__traceback__)
-    fmt = Errors.format(excp)
-    if fmt not in Errors.errors:
-        Errors.errors.append(fmt)
-
-
-
-
-"reactor"
-
-
 class Reactor:
 
     def __init__(self):
-        self.cbs = {}
-        self.queue = queue.Queue()
+        self.cbs     = {}
+        self.queue   = queue.Queue()
         self.ready   = threading.Event()
         self.stopped = threading.Event()
 
@@ -158,6 +162,7 @@ class Reactor:
                 evt = self.poll()
                 evt.orig = repr(self)
                 self.callback(evt)
+                self.queue.task_done()
             except (KeyboardInterrupt, EOFError):
                 if evt:
                     evt.ready()
@@ -165,7 +170,8 @@ class Reactor:
         self.ready.set()
 
     def poll(self) -> Event:
-        return self.queue.get()
+        evt = self.queue.get()
+        return evt
 
     def put(self, evt) -> None:
         self.queue.put(evt)
@@ -185,7 +191,9 @@ class Reactor:
         self.stopped.set()
 
     def wait(self) -> None:
-        self.ready.wait()
+        self.stopped.wait()
+        self.queue.join()
+        print(self.queue.qsize())
 
 
 "thread"
@@ -324,6 +332,11 @@ class Fleet:
         if bot:
             bot.say(channel, txt)
 
+    @staticmethod
+    def wait():
+        for bot in Fleet.bots.values():
+            if "wait" in dir(bot):
+                bot.wait()
 
 
 "interface"

@@ -23,10 +23,8 @@ from urllib.parse import quote_plus, urlencode
 from obr.objects import Object, fmt, update
 from obr.persist import elapsed, find, fntime, ident, last, store, write
 from obr.runtime import Repeater, launch
-
-
-from ..clients import Fleet
-from ..command import spl
+from obx.clients import Fleet
+from obx.command import spl
 
 
 "defines"
