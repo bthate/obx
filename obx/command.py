@@ -11,30 +11,15 @@ import os
 import threading
 
 
-from obr.runtime import Default, Fleet, later, launch
-
-
-"locks"
+from obr.default import Default
+from obr.errors  import later
+from obr.threads import launch
+from obx.table   import gettable
 
 
 initlock = threading.RLock()
 loadlock = threading.RLock()
 lock     = threading.RLock()
-
-
-"defines"
-
-
-def gettable():
-    try:
-        from .lookups import NAMES as names
-    except Exception as ex:
-        later(ex)
-        names = {}
-    return names
-
-
-"commands"
 
 
 class Commands:
@@ -65,81 +50,6 @@ class Commands:
                 Commands.add(cmdz, mod)
 
 
-"table"
-
-
-class Table:
-
-    disable = ["wsd",]
-    mods = {}
-
-    @staticmethod
-    def add(mod):
-        Table.mods[mod.__name__] = mod
-
-    @staticmethod
-    def get(name):
-        return Table.mods.get(name, None)
-
-    @staticmethod
-    def inits(names, pname):
-        with initlock:
-            mods = []
-            for name in spl(names):
-                mname = pname + "." + name
-                if not mname:
-                    continue
-                mod = Table.load(mname)
-                if not mod:
-                    continue
-                thr = launch(mod.init)
-                mods.append((mod, thr))
-            return mods
-
-    @staticmethod
-    def load(name):
-        with loadlock:
-            pname = ".".join(name.split(".")[:-1])
-            module = Table.mods.get(name)
-            if not module:
-                try:
-                    Table.mods[name] = module = importlib.import_module(name, pname)
-                except Exception as exc:
-                    later(exc)
-            return module
-
-    @staticmethod
-    def modules(path):
-        return [
-                x[:-3] for x in os.listdir(path)
-                if x.endswith(".py") and not x.startswith("__") and
-                x not in Table.disable
-               ]
-
-    @staticmethod
-    def scan(pkg, mods=""):
-        res = []
-        path = pkg.__path__[0]
-        pname = ".".join(path.split(os.sep)[-2:])
-        for nme in Table.modules(path):
-            if "__" in nme:
-                continue
-            if mods and nme not in spl(mods):
-                continue
-            name = pname + "." + nme
-            if not name:
-                continue
-            mod = Table.load(name)
-            if not mod:
-                continue
-            Commands.scan(mod)
-            res.append(mod)
-        return res
-
-
-"callbacks"
-
-
 def command(evt):
     parse(evt)
     func = Commands.get(evt.cmd)
@@ -154,9 +64,6 @@ def command(evt):
         return
     func(evt)
     evt.display()
-
-
-"utilities"
 
 
 def parse(obj, txt=None):
@@ -213,23 +120,10 @@ def parse(obj, txt=None):
     return obj
 
 
-def spl(txt):
-    try:
-        result = txt.split(',')
-    except (TypeError, ValueError):
-        result = txt
-    return [x for x in result if x]
-
-
-"interface"
-
-
 def __dir__():
     return (
-        'Table',
         'Commands',
         'command',
         'cmd',
-        'parse',
-        'spl'
+        'parse'
     )

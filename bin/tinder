@@ -17,11 +17,16 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
+from obr.errors  import errors, later
+from obr.events  import Event
 from obr.objects import Object, keys
-from obr.persist import Workdir, elapsed, skel
-from obr.runtime import Event, Fleet, launch, errors, later
+from obr.threads import launch
+from obr.utility import elapsed
+from obr.workdir import Workdir, skel
+
 from obx.clients import Buffered, Config
-from obx.command import Commands, Table, command, parse
+from obx.command import Commands, command, parse
+from obx.table   import Table
 
 
 import obx.modules as MODS

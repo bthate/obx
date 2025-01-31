@@ -10,7 +10,7 @@
 import unittest
 
 
-from mods.rss import Parser
+from obx.modules.rss import Parser
 
 
 class TestAtom(unittest.TestCase):

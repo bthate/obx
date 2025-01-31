@@ -9,10 +9,10 @@ import queue
 import threading
 
 
-from obr.runtime import Default, Fleet, Reactor, launch
-
-
-"config"
+from obr.default import Default
+from obr.fleet   import Fleet
+from obr.reactor import Reactor
+from obr.threads import launch
 
 
 class Config(Default):
@@ -20,9 +20,6 @@ class Config(Default):
     init = ""
     name = "obx"
     opts = Default()
-
-
-"client"
 
 
 class Client(Reactor):
@@ -38,11 +35,7 @@ class Client(Reactor):
         self.raw(txt)
 
 
-"output"
-
-
 class Output:
-
     def __init__(self):
         self.oqueue   = queue.Queue()
         self.running = threading.Event()
@@ -75,9 +68,6 @@ class Output:
         self.oqueue.join()
 
 
-"buffered"
-
-
 class Buffered(Client, Output):
 
     def __init__(self):
@@ -100,9 +90,6 @@ class Buffered(Client, Output):
         Output.wait(self)
 
 
-"utilities"
-
-
 def debug(txt) -> None:
     if "v" in Config.opts:
         output(txt)
@@ -113,9 +100,6 @@ def output(txt) -> None:
     print(txt)
 
 
-"interface"
-
-
 def __dir__():
     return (
         'Default',
@@ -124,5 +108,3 @@ def __dir__():
         'debug'
     )
 
-
-__all__ = __dir__()

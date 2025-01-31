@@ -10,7 +10,7 @@
 import unittest
 
 
-from mods.opm import OPMLParser
+from obx.modules.rss import OPMLParser
 
 
 class TestAttrs(unittest.TestCase):

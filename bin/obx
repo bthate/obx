@@ -16,11 +16,17 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obr.objects import dumps
-from obr.persist import Workdir, pidname
-from obr.runtime import Event, Fleet, errors, later, launch
+from obr.events  import Event
+from obr.errors  import errors, later
+from obr.fleet   import Fleet
+from obr.encoder import dumps
+from obr.threads import launch
+from obr.workdir import Workdir, pidname
+from obr.utility import spl
+
 from obx.clients import Client, Config, output
-from obx.command import Commands, Table, command, parse, spl
+from obx.command import Commands, command, parse
+from obx.table   import Table
 
 
 import obx.clients
