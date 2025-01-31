@@ -10,8 +10,8 @@ import os
 import time
 
 
-from ..objects import Object, fmt, update
-from ..persist import elapsed, find, fntime, write
+from obr.objects import Object, fmt, update
+from obr.persist import elapsed, find, fntime, write
 
 
 "email"

@@ -17,13 +17,14 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.clients import Client, Config
-from obx.command import Commands, parse, scan
-from obx.locater import Workdir, elapsed, skel
-from obx.objects import Object, keys
-from obx.modules import face as MODS
-from obx.reactor import Event
-from obx.threads import launch, errors, later
+from obx.clients import Buffered, Config
+from obx.command import Commands, Table, command, parse
+from obr.objects import Object, keys
+from obr.persist import Workdir, elapsed, skel
+from obr.runtime import Event, launch, errors, later
+
+
+import obx.modules as MODS
 
 
 "defines"
@@ -34,13 +35,6 @@ Workdir.wdr  = ".test"
 
 cfg = Config()
 cfg.index = 0
-
-
-
-if os.path.exists("mods"):
-    import mods
-else:
-    mods = None
 
 
 lap = 1
@@ -55,6 +49,7 @@ paylock = _thread.allocate_lock()
 
 
 param = Object()
+param.log = ["bla", ""]
 param.cfg = ["cfg nick=mekker", ""]
 param.cmd = [""]
 param.dne = ["mekker", ""]
@@ -62,7 +57,6 @@ param.dpl = ["hnrss title,url", ""]
 param.exp = ['']
 param.fnd = ["log", ""]
 param.imp = ["tests/feeds.opml", ""]
-param.log = ["bla", ""]
 param.mod = [""]
 param.mre = [""]
 param.nme = ["hnrss hackernews", ""]
@@ -79,7 +73,11 @@ param.ver = [""]
 "console"
 
 
-class CLI(Client):
+class CLI(Buffered):
+
+    def __init__(self):
+        Buffered.__init__(self)
+        self.register("command", command)
 
     def raw(self, txt):
         if "v" in cfg.opts:
@@ -92,14 +90,14 @@ class CLI(Client):
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
     print(f"{Config.name.upper()} since {tme}")
-    print(",".join(keys(Commands.cmds)))
+    print(",".join(sorted(keys(Commands.cmds))))
 
 
 def consume(evts):
     done = []
-    for evt in sorted(evts, key=lambda x: x.ctime):
-        evt.wait()
-        done.append(evt)
+    for event in evts:
+        event.wait()
+        done.append(event)
     for todo in done:
         events.remove(todo)
     return done
@@ -107,13 +105,13 @@ def consume(evts):
 
 def payload(clt):
     nmr = 0
-    for cmdd in sorted(Commands.cmds):
+    for cmdd in Commands.names.keys():
         for ex in getattr(param, cmdd, [""]):
-            evt = Event()
-            evt.txt = cmdd + " " + ex
-            evt.type = "command"
-            events.append(evt)
-            clt.put(evt)
+            event = Event()
+            event.txt = cmdd + " " + ex
+            event.type = "command"
+            events.append(event)
+            clt.put(event)
             nmr += 1
     return nmr
 
@@ -142,8 +140,9 @@ def main():
     global nrs
     global nrcommand
     parse(cfg, " ".join(sys.argv[1:]))
-    #face.rss.DEBUG = True
-    scan(MODS, mods)
+    for mod in Table.scan(MODS):
+        mod.DEBUG = True
+        mod.output = print
     nrcommand = len(Commands.cmds) or 1
     if "v" in cfg.opts:
         banner()
@@ -162,6 +161,7 @@ def main():
         thr.join()
     consume(events)
     clt.stop()
+    time.sleep(.01)
     #clt.wait()
 
 
@@ -176,6 +176,8 @@ if __name__ == "__main__":
         if not list(errors()):
             print("no errors")
         if events:
+            for evt in events:
+                print(evt)
             print(f"{len(events)} events")
         print(f"{lap} {nrs} {nrcommand} {percall}")
     sys.stdout.flush()

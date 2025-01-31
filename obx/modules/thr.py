@@ -9,9 +9,9 @@ import threading
 import time
 
 
-from ..objects import Object, update
-from ..persist import elapsed
-from ..runtime import STARTTIME
+from obr.objects import Object, update
+from obr.persist import elapsed
+from obr.runtime import STARTTIME
 
 
 "commands"

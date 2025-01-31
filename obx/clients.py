@@ -17,8 +17,8 @@ from obr.runtime import Default, Fleet, Reactor, launch
 
 class Config(Default):
 
-    init = "irc,mdl,rss"
-    name = Default.__module__.rsplit(".", maxsplit=2)[-2]
+    init = ""
+    name = "obx"
     opts = Default()
 
 

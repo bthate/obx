@@ -12,9 +12,9 @@ import threading
 import time
 
 
-from ..clients import Fleet
-from ..objects import Object
-from ..runtime import launch
+from obr.clients import Fleet
+from obr.objects import Object
+from obr.runtime import launch
 
 
 DEBUG = False

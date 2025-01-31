@@ -10,9 +10,9 @@ import re
 import time as ttime
 
 
-from ..objects import update
-from ..persist import find, elapsed, write
-from ..runtime import Event, Fleet, Timer, launch
+from obr.objects import update
+from obr.persist import find, elapsed, write
+from obr.runtime import Event, Fleet, Timer, launch
 
 
 "defines"

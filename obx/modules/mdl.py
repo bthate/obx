@@ -9,9 +9,9 @@ import datetime
 import time
 
 
-from ..objects import Object, construct, keys
-from ..persist import elapsed
-from ..runtime import Event, Fleet, Repeater
+from obr.objects import Object, construct, keys
+from obr.persist import elapsed
+from obr.runtime import Event, Fleet, Repeater
 
 
 "defines"

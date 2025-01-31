@@ -16,18 +16,21 @@ import time
 import _thread
 
 
+from obr.objects import Object, edit, fmt, keys
+from obr.persist import ident, last, write
+from obr.runtime import Default, Event, Fleet, Reactor, later, launch
+
+
+from ..clients import Config as Main
 from ..clients import output
 from ..command import command
-from ..objects import Object, edit, fmt, keys
-from ..persist import ident, last, write
-from ..runtime import Default, Event, Fleet, Reactor, later, launch
 
 
 "defines"
 
 
 IGNORE = ["PING", "PONG", "PRIVMSG"]
-NAME   = Object.__module__.rsplit(".", maxsplit=2)[-2]
+NAME   = Main.name
 
 
 saylock = _thread.allocate_lock()
@@ -47,7 +50,7 @@ def init():
     irc = IRC()
     irc.start()
     irc.events.ready.wait()
-    debug(f'{fmt(Config, skip="edited,password")}')
+    debug(f'{fmt(irc.cfg, skip="edited,password")}')
     return irc
 
 

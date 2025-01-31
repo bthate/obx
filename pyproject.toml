@@ -9,12 +9,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "obx"
 description = "OBX"
-version = "40"
+version = "50"
 authors = [
     {name = "Bart Thate",email = "bthate@dds.nl"},
 ]
 readme = "README.rst"
 license = {text="Public Domain"}
+dependencies = [
+    'obr',
+]
 classifiers = [ 
     'Development Status :: 1 - Planning',
     'License :: Public Domain',

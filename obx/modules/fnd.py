@@ -8,8 +8,8 @@
 import time
 
 
-from ..objects import fmt
-from ..persist import elapsed, find, fntime, long, skel, types
+from obr.objects import fmt
+from obr.persist import elapsed, find, fntime, long, skel, types
 
 
 def fnd(event):

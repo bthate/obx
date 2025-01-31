@@ -8,8 +8,8 @@
 import time
 
 
-from ..objects import Object
-from ..persist import elapsed, find, fntime, write
+from obr.objects import Object
+from obr.persist import elapsed, find, fntime, write
 
 
 "todo"
