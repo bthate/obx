@@ -11,7 +11,9 @@ import threading
 
 
 from .caching import Cache
-from .objects import Object, dumps, fqn, items, loads, update
+from .decoder import loads
+from .encoder import dumps
+from .objects import Object, fqn, items, update
 from .workdir import Workdir, store
 
 

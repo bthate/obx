@@ -168,7 +168,7 @@ def main():
     for thr in thrs:
         thr.join()
     consume(events)
-    Fleet.wait()
+    #Fleet.wait()
     clt.stop()
 
 
