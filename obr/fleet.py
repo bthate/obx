@@ -53,6 +53,7 @@ class Fleet:
     def wait():
         for bot in Fleet.bots.values():
             if "wait" in dir(bot):
+                print(bot)
                 bot.wait()
 
 

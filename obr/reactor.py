@@ -70,6 +70,7 @@ class Reactor:
 
     def wait(self) -> None:
         self.ready.wait()
+        self.queue.join()
 
 
 def __dir__():

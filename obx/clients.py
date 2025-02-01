@@ -66,6 +66,7 @@ class Output:
 
     def wait(self) -> None:
         self.oqueue.join()
+        self.running.wait()
 
 
 class Buffered(Client, Output):
@@ -82,12 +83,12 @@ class Buffered(Client, Output):
         Client.start(self)
 
     def stop(self) -> None:
-        Client.stop(self)
         Output.stop(self)
+        Client.stop(self)
 
     def wait(self) -> None:
-        Client.wait(self)
         Output.wait(self)
+        Client.wait(self)
 
 
 def debug(txt) -> None:
