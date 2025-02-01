@@ -5,13 +5,13 @@
 
 
 import os
+import time
 
 
-from .cache   import Cache
+from .caching import Cache
 from .objects import Object, fqn, items, update
 from .persist import read
 from .workdir import long, skel, store
-from .utils   import fntime
 
 
 p = os.path.join
@@ -27,6 +27,19 @@ def fns(clz):
                     ddd = p(rootdir, dname)
                     for fll in os.listdir(ddd):
                         yield p(ddd, fll)
+
+
+def fntime(daystr):
+    daystr = daystr.replace('_', ':')
+    datestr = ' '.join(daystr.split(os.sep)[-2:])
+    if '.' in datestr:
+        datestr, rest = datestr.rsplit('.', 1)
+    else:
+        rest = ''
+    timed = time.mktime(time.strptime(datestr, '%Y-%m-%d %H:%M:%S'))
+    if rest:
+        timed += float('.' + rest)
+    return timed
 
 
 def find(clz, selector=None, deleted=False, matching=False):
@@ -83,6 +96,7 @@ def search(obj, selector, matching=None):
 def __dir__():
     return (
         'fns',
+        'fntime',
         'find',
         'last',
         'search'

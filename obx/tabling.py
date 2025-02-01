@@ -10,9 +10,8 @@ import os
 import threading
 
 
-from obr.errors  import later
-from obr.threads import launch
-from obr.utils   import spl
+from obr.threads import later, launch
+from obx.utility import spl
 
 
 initlock = threading.RLock()
@@ -96,8 +95,17 @@ def gettable():
     return names
 
 
+def spl(txt):
+    try:
+        result = txt.split(',')
+    except (TypeError, ValueError):
+        result = txt
+    return [x for x in result if x]
+
+
 def __dir__():
     return (
         'Table',
-        'gettable'
+        'gettable',
+        'spl'
     )

@@ -10,7 +10,7 @@ import threading
 
 
 from obr.default import Default
-from obx.table   import Table, gettable
+from obx.tabling import Table, gettable
 
 
 initlock = threading.RLock()
@@ -116,10 +116,19 @@ def parse(obj, txt=None):
     return obj
 
 
+def spl(txt):
+    try:
+        result = txt.split(',')
+    except (TypeError, ValueError):
+        result = txt
+    return [x for x in result if x]
+
+
 def __dir__():
     return (
         'Commands',
         'command',
         'cmd',
-        'parse'
+        'parse',
+        'spl'
     )

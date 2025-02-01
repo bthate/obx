@@ -13,9 +13,8 @@ import time
 from http.server  import HTTPServer, BaseHTTPRequestHandler
 
 
-from obr.errors  import later
 from obr.objects import Object
-from obr.threads import launch
+from obr.threads import later, launch
 from obr.workdir import Workdir, types
 
 

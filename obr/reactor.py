@@ -6,14 +6,45 @@
 
 import queue
 import threading
+import time
 import typing
 
 
-from .errors  import later
-from .events  import Event
-from .threads import launch
+from .default import Default
+from .threads import later, launch
 
+
+cblock = threading.RLock()
 lock = threading.RLock()
+
+
+class Event(Default):
+
+    def __init__(self):
+        Default.__init__(self)
+        self._ready = threading.Event()
+        self._thr   = None
+        self.ctime  = time.time()
+        self.result = {}
+        self.type   = "event"
+        self.txt    = ""
+
+    def display(self) -> None:
+        Fleet.display(self)
+
+    def done(self) -> None:
+        self.reply("ok")
+
+    def ready(self) -> None:
+        self._ready.set()
+
+    def reply(self, txt) -> None:
+        self.result[time.time()] = txt
+
+    def wait(self) -> None:
+        self._ready.wait()
+        if self._thr:
+            self._thr.join()
 
 
 class Reactor:
@@ -25,7 +56,7 @@ class Reactor:
         self.stopped = threading.Event()
 
     def callback(self, evt) -> None:
-        with lock:
+        with cblock:
             func = self.cbs.get(evt.type, None)
             if func:
                 try:
@@ -73,7 +104,56 @@ class Reactor:
         self.queue.join()
 
 
+class Fleet:
+
+    bots = {}
+
+    @staticmethod
+    def add(bot) -> None:
+        Fleet.bots[repr(bot)] = bot
+
+    @staticmethod
+    def announce(txt) -> None:
+        for bot in Fleet.bots.values():
+            bot.announce(txt)
+
+    @staticmethod
+    def display(evt) -> None:
+        with lock:
+            for tme in sorted(evt.result):
+                text = evt.result[tme]
+                Fleet.say(evt.orig, evt.channel, text)
+            evt.ready()
+
+    @staticmethod
+    def first() -> None:
+        bots =  list(Fleet.bots.values())
+        res = None
+        if bots:
+            res = bots[0]
+        return res
+
+    @staticmethod
+    def get(orig) -> None:
+        return Fleet.bots.get(orig, None)
+
+    @staticmethod
+    def say(orig, channel, txt) -> None:
+        bot = Fleet.get(orig)
+        if bot:
+            bot.say(channel, txt)
+
+    @staticmethod
+    def wait():
+        for bot in Fleet.bots.values():
+            if "wait" in dir(bot):
+                print(bot)
+                bot.wait()
+
+
 def __dir__():
     return (
-        'Reactor',
+        'Event',
+        'Fleet',
+        'Reactor'
     )

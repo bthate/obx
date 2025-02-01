@@ -17,14 +17,11 @@ import _thread
 
 
 from obr.default import Default
-from obr.errors  import later
-from obr.events  import Event
-from obr.fleet   import Fleet
-from obr.locate  import last
+from obr.locater import last
 from obr.objects import Object, edit, fmt, keys
 from obr.persist import ident, write
-from obr.reactor import Reactor
-from obr.threads import launch
+from obr.reactor import Event, Fleet, Reactor
+from obr.threads import later, launch
 
 
 from obx.clients import Config as Main

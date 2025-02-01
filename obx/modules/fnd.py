@@ -8,10 +8,10 @@
 import time
 
 
-from obr.locate  import find
+from obr.locater import find, fntime
 from obr.objects import fmt
-from obr.utils   import elapsed, fntime
 from obr.workdir import long, skel, types
+from obx.utility import elapsed
 
 
 def fnd(event):

@@ -10,7 +10,7 @@ import time
 
 
 from obr.objects import Object, update
-from obr.utils   import elapsed
+from obx.utility import elapsed
 
 
 STARTTIME = time.time()

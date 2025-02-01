@@ -40,6 +40,9 @@ def store(pth=""):
     return p(Workdir.wdr, "store", pth)
 
 
+def strip(pth, nmr=3):
+    return os.sep.join(pth.split(os.sep)[-nmr:])
+
 def types():
     return os.listdir(store())
 

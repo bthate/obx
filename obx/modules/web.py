@@ -14,9 +14,8 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
 from obr.default import Default
-from obr.errors  import later
 from obr.objects import Object
-from obr.threads import launch
+from obr.threads import later, launch
 
 
 a = os.path.abspath

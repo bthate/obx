@@ -12,7 +12,7 @@ import threading
 import time
 
 
-from obr.fleet   import Fleet
+from obr.reactor import Fleet
 from obr.objects import Object
 from obr.threads import launch
 

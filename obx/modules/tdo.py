@@ -8,12 +8,10 @@
 import time
 
 
-from obr.locate  import find
+from obr.locater import find, fntime
 from obr.objects import Object
 from obr.persist import write
-from obr.utils   import elapsed, fntime
-
-"todo"
+from obx.utility import elapsed
 
 
 class Todo(Object):
@@ -21,9 +19,6 @@ class Todo(Object):
     def __init__(self):
         Object.__init__(self)
         self.txt = ''
-
-
-"commands"
 
 
 def dne(event):

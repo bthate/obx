@@ -47,19 +47,6 @@ def elapsed(seconds, short=True):
     return txt
 
 
-def fntime(daystr):
-    daystr = daystr.replace('_', ':')
-    datestr = ' '.join(daystr.split(os.sep)[-2:])
-    if '.' in datestr:
-        datestr, rest = datestr.rsplit('.', 1)
-    else:
-        rest = ''
-    timed = time.mktime(time.strptime(datestr, '%Y-%m-%d %H:%M:%S'))
-    if rest:
-        timed += float('.' + rest)
-    return timed
-
-
 def spl(txt):
     try:
         result = txt.split(',')
@@ -68,14 +55,8 @@ def spl(txt):
     return [x for x in result if x]
 
 
-def strip(pth, nmr=3):
-    return os.sep.join(pth.split(os.sep)[-nmr:])
-
-
 def __dir__():
     return (
         'elapsed',
-        'fntime',
-        'spl',
-        'strip'
+        'spl'
     )

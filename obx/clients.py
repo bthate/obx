@@ -10,8 +10,7 @@ import threading
 
 
 from obr.default import Default
-from obr.fleet   import Fleet
-from obr.reactor import Reactor
+from obr.reactor import Fleet, Reactor
 from obr.threads import launch
 
 

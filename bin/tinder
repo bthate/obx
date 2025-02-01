@@ -17,18 +17,16 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obr.errors  import errors, later
-from obr.fleet   import Fleet
-from obr.events  import Event
 from obr.objects import Object, keys
-from obr.threads import launch
-from obr.utils   import elapsed
+from obr.reactor import Event, Fleet
+from obr.threads import errors, later, launch
 from obr.workdir import Workdir, skel
 
 
 from obx.clients import Buffered, Config
 from obx.command import Commands, command, parse
-from obx.table   import Table
+from obx.tabling import Table
+from obx.utility import elapsed
 
 
 import obx.modules as MODS
@@ -168,8 +166,9 @@ def main():
     for thr in thrs:
         thr.join()
     consume(events)
-    clt.wait()
-    #clt.stop()
+    clt.stop()
+    if "w" in cfg.opts:
+        clt.wait()
 
 
 if __name__ == "__main__":
