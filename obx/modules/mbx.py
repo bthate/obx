@@ -10,10 +10,10 @@ import os
 import time
 
 
-from obr.locater import find
+from obr.locate  import find
 from obr.objects import Object, fmt, update
 from obr.persist import write
-from obr.utility import elapsed, fntime
+from obr.utils   import elapsed, fntime
 
 
 class Email(Object):

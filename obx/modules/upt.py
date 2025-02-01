@@ -8,7 +8,7 @@
 import time
 
 
-from obr.utility import elapsed
+from obr.utils import elapsed
 
 
 STARTTIME = time.time()

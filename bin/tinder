@@ -21,7 +21,7 @@ from obr.errors  import errors, later
 from obr.events  import Event
 from obr.objects import Object, keys
 from obr.threads import launch
-from obr.utility import elapsed
+from obr.utils   import elapsed
 from obr.workdir import Workdir, skel
 
 

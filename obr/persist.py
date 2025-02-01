@@ -10,7 +10,7 @@ import pathlib
 import threading
 
 
-from .caching import Cache
+from .cache   import Cache
 from .decoder import loads
 from .encoder import dumps
 from .objects import Object, fqn, items, update

@@ -22,7 +22,7 @@ from obr.fleet   import Fleet
 from obr.encoder import dumps
 from obr.threads import launch
 from obr.workdir import Workdir, pidname
-from obr.utility import spl
+from obr.utils   import spl
 
 
 from obx.clients import Client, Config, output

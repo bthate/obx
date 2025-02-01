@@ -10,14 +10,14 @@ import re
 import time as ttime
 
 
-from obr.locater import find
+from obr.locate  import find
 from obr.objects import update
 from obr.persist import write
 from obr.events  import Event
 from obr.fleet   import Fleet
-from obr.timers  import Timer
+from obr.timer   import Timer
 from obr.threads import launch
-from obr.utility import elapsed
+from obr.utils   import elapsed
 
 
 MONTHS = [

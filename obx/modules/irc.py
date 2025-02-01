@@ -20,7 +20,7 @@ from obr.default import Default
 from obr.errors  import later
 from obr.events  import Event
 from obr.fleet   import Fleet
-from obr.locater import last
+from obr.locate  import last
 from obr.objects import Object, edit, fmt, keys
 from obr.persist import ident, write
 from obr.reactor import Reactor

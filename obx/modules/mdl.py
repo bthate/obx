@@ -12,8 +12,8 @@ import time
 from obr.events  import Event
 from obr.fleet   import Fleet
 from obr.objects import Object, construct, keys
-from obr.timers  import Repeater
-from obr.utility import elapsed
+from obr.timer   import Repeater
+from obr.utils   import elapsed
 
 
 DAY = 24*60*60

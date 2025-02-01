@@ -12,7 +12,7 @@ import threading
 
 from obr.errors  import later
 from obr.threads import launch
-from obr.utility import spl
+from obr.utils   import spl
 
 
 initlock = threading.RLock()

@@ -7,11 +7,11 @@
 import os
 
 
-from .caching import Cache
+from .cache   import Cache
 from .objects import Object, fqn, items, update
 from .persist import read
 from .workdir import long, skel, store
-from .utility import fntime
+from .utils   import fntime
 
 
 p = os.path.join
