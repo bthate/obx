@@ -5,16 +5,12 @@
 "command"
 
 
-import importlib
 import inspect
-import os
 import threading
 
 
 from obr.default import Default
-from obr.errors  import later
 from obx.table   import Table, gettable
-from obr.threads import launch
 
 
 initlock = threading.RLock()

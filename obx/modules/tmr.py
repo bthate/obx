@@ -17,6 +17,7 @@ from obr.events  import Event
 from obr.fleet   import Fleet
 from obr.timers  import Timer
 from obr.threads import launch
+from obr.utility import elapsed
 
 
 MONTHS = [

@@ -19,7 +19,6 @@ sys.path.insert(0, os.getcwd())
 
 from obr.errors  import errors, later
 from obr.events  import Event
-from obr.fleet   import Fleet
 from obr.objects import Object, keys
 from obr.threads import launch
 from obr.utility import elapsed

@@ -21,11 +21,10 @@ from obr.errors  import later
 from obr.events  import Event
 from obr.fleet   import Fleet
 from obr.locater import last
-from obr.objects import Object, edit, fmt, fqn, keys
+from obr.objects import Object, edit, fmt, keys
 from obr.persist import ident, write
 from obr.reactor import Reactor
 from obr.threads import launch
-from obr.workdir import skel
 
 
 from obx.clients import Config as Main

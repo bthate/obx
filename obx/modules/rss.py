@@ -22,7 +22,7 @@ from urllib.parse import quote_plus, urlencode
 
 from obr.objects import Object, fmt, update
 from obr.locater import find, last
-from obr.persist import ident, store, write
+from obr.persist import ident, write
 from obr.threads import launch
 from obr.timers  import Repeater
 from obr.workdir import store
