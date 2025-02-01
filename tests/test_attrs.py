@@ -10,13 +10,13 @@
 import unittest
 
 
-from obx.modules.rss import OPMLParser
+from obx.modules.rss import OPML
 
 
 class TestAttrs(unittest.TestCase):
 
     def test_attrs(self):
-        res = OPMLParser.parse(TXT, "outline")
+        res = OPML.parse(TXT, "outline")
         self.assertTrue(len(res) == 50)
 
 
