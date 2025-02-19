@@ -1,19 +1,16 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0116,W0105,E0402
 
 
-"show running threads."
+"running threads"
 
 
 import threading
 import time
 
 
-from obr.objects import Object, update
-from obx.utility import elapsed
-
-
-STARTTIME = time.time()
+from ..objects import Object, update
+from ..package import STARTTIME
+from ..utility import elapsed
 
 
 def thr(event):
@@ -40,3 +37,9 @@ def thr(event):
         event.reply(' '.join(res))
     else:
         event.reply('no threads')
+
+
+def __dir__():
+    return (
+        'thr',
+    )

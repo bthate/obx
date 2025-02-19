@@ -1,21 +1,16 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,C0415,R0903,R0912,W0105,W0612,W0613,W0718,E0402
 
 
-"command"
+"user commands"
 
 
 import inspect
-import threading
+import typing
 
 
-from obr.default import Default
-from obx.tabling import Table, gettable
-
-
-initlock = threading.RLock()
-loadlock = threading.RLock()
-lock     = threading.RLock()
+from .default import Default
+from .package import Table, gettable
+from .reactor import Fleet
 
 
 class Commands:
@@ -24,21 +19,28 @@ class Commands:
     names = gettable()
 
     @staticmethod
-    def add(func, mod=None):
+    def add(func, mod=None) -> None:
         Commands.cmds[func.__name__] = func
         if mod:
             Commands.names[func.__name__] = mod.__name__
 
     @staticmethod
-    def get(cmd):
-        return Commands.cmds.get(cmd, None)
+    def get(cmd) -> typing.Callable:
+        func = Commands.cmds.get(cmd, None)
+        if not func:
+            mname = Commands.names.get(cmd)
+            if mname:
+                mod = Table.load(mname)
+                Commands.scan(mod)
+                func = Commands.cmds.get(cmd)
+        return func
 
     @staticmethod
-    def getname(cmd):
+    def getname(cmd) -> None:
         return Commands.names.get(cmd)
 
     @staticmethod
-    def scan(mod):
+    def scan(mod) -> None:
         for key, cmdz in inspect.getmembers(mod, inspect.isfunction):
             if key.startswith("cb"):
                 continue
@@ -46,23 +48,16 @@ class Commands:
                 Commands.add(cmdz, mod)
 
 
-def command(evt):
+def command(evt) -> None:
     parse(evt)
     func = Commands.get(evt.cmd)
-    if not func:
-        mname = Commands.names.get(evt.cmd)
-        if mname:
-            mod = Table.load(mname)
-            Commands.scan(mod)
-            func = Commands.get(evt.cmd)
-    if not func:
-        evt.ready()
-        return
-    func(evt)
-    evt.display()
+    if func:
+        func(evt)
+        Fleet.display(evt)
+    evt.ready()
 
 
-def parse(obj, txt=None):
+def parse(obj, txt=None) -> None:
     if txt is None:
         if "txt" in dir(obj):
             txt = obj.txt
@@ -113,22 +108,11 @@ def parse(obj, txt=None):
         obj.txt  = obj.cmd + " " + obj.rest
     else:
         obj.txt = obj.cmd or ""
-    return obj
-
-
-def spl(txt):
-    try:
-        result = txt.split(',')
-    except (TypeError, ValueError):
-        result = txt
-    return [x for x in result if x]
 
 
 def __dir__():
     return (
         'Commands',
         'command',
-        'cmd',
-        'parse',
-        'spl'
+        'parse'
     )

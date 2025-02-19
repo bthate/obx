@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,W0105,R0903,E0402
 
 
 "rich site syndicate"
@@ -20,15 +19,13 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, urlencode
 
 
-from obr.objects import Object, fmt, update
-from obr.locater import find, fntime, last
-from obr.persist import ident, write
-from obr.threads import Repeater, launch
-from obr.workdir import store
-from obx.utility import elapsed, spl
-
-
-from obx.clients import Fleet
+from ..objects import Object, fmt, update
+from ..locater import find, fntime, last
+from ..persist import ident, write
+from ..reactor import Fleet
+from ..threads import Repeater, launch
+from ..workdir import store
+from ..utility import elapsed, spl
 
 
 DEBUG = False
@@ -95,6 +92,7 @@ class Fetcher(Object):
         return result[:-2].rstrip()
 
     def fetch(self, feed, silent=False):
+        """ fetch feed. """
         with fetchlock:
             result = []
             seen = getattr(self.seen, feed.rss, [])
@@ -120,17 +118,16 @@ class Fetcher(Object):
             if not self.seenfn:
                 self.seenfn = store(ident(self.seen))
             write(self.seen, self.seenfn)
-        if silent:
+            if silent:
+                return counter
+            txt = ''
+            feedname = getattr(feed, 'name', None)
+            if feedname:
+                txt = f'[{feedname}] '
+            for obj in result:
+                txt2 = txt + self.display(obj)
+                Fleet.announce(txt2)
             return counter
-        txt = ''
-        feedname = getattr(feed, 'name', None)
-        if feedname:
-            txt = f'[{feedname}] '
-        for obj in result:
-            txt2 = txt + self.display(obj)
-            for bot in Fleet.bots.values():
-                bot.announce(txt2)
-        return counter
 
     def run(self, silent=False):
         thrs = []
@@ -379,7 +376,6 @@ class OPML:
         if 'CDATA' in lne:
             lne = lne.replace('![CDATA[', '')
             lne = lne.replace(']]', '')
-            #lne = lne[1:-1]
         return lne
 
     @staticmethod
@@ -494,3 +490,18 @@ TEMPLATE = """<opml version="1.0">
     </head>
     <body>
         <outline title="opml" text="rss feeds">"""
+
+
+def __dir__():
+    return (
+        'Fetcher',
+        'dpl',
+        'exp',
+        'imp',
+        'init',
+        'nme',
+        'res',
+        'rss',
+        'syn'
+    )
+        

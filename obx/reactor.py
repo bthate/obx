@@ -1,57 +1,28 @@
 # This file is placed in the Public Domain.
 
 
-"reactor"
+"callback engine"
 
 
 import queue
 import threading
-import time
-import typing
+import _thread
 
 
-from .default import Default
-from .threads import later, launch
+from .excepts import later
+from .message import Message
+from .threads import launch
 
 
-cblock = threading.RLock()
-lock = threading.RLock()
-
-
-class Event(Default):
-
-    def __init__(self):
-        Default.__init__(self)
-        self._ready = threading.Event()
-        self._thr   = None
-        self.ctime  = time.time()
-        self.result = {}
-        self.type   = "event"
-        self.txt    = ""
-
-    def display(self) -> None:
-        Fleet.display(self)
-
-    def done(self) -> None:
-        self.reply("ok")
-
-    def ready(self) -> None:
-        self._ready.set()
-
-    def reply(self, txt) -> None:
-        self.result[time.time()] = txt
-
-    def wait(self) -> None:
-        self._ready.wait()
-        if self._thr:
-            self._thr.join()
+cblock      = threading.RLock()
+displaylock = threading.RLock()
 
 
 class Reactor:
 
     def __init__(self):
-        self.cbs = {}
-        self.queue = queue.Queue()
+        self.cbs     = {}
+        self.queue   = queue.Queue()
         self.ready   = threading.Event()
         self.stopped = threading.Event()
 
@@ -69,24 +40,22 @@ class Reactor:
         evt = None
         while not self.stopped.is_set():
             try:
-                evt = self.queue.get()
+                evt = self.poll()
+                if evt is None:
+                    break
                 evt.orig = repr(self)
                 self.callback(evt)
-                self.queue.task_done()
             except (KeyboardInterrupt, EOFError):
                 if evt:
                     evt.ready()
                 _thread.interrupt_main()
         self.ready.set()
 
-    def poll(self) -> Event:
+    def poll(self) -> Message:
         return self.queue.get()
 
     def put(self, evt) -> None:
         self.queue.put(evt)
-
-    def raw(self, txt) -> None:
-        raise NotImplementedError("raw")
 
     def register(self, typ, cbs) -> None:
         self.cbs[typ] = cbs
@@ -98,10 +67,10 @@ class Reactor:
 
     def stop(self) -> None:
         self.stopped.set()
+        self.queue.put(None)
 
     def wait(self) -> None:
         self.ready.wait()
-        self.queue.join()
 
 
 class Fleet:
@@ -119,7 +88,7 @@ class Fleet:
 
     @staticmethod
     def display(evt) -> None:
-        with lock:
+        with displaylock:
             for tme in sorted(evt.result):
                 text = evt.result[tme]
                 Fleet.say(evt.orig, evt.channel, text)
@@ -144,16 +113,14 @@ class Fleet:
             bot.say(channel, txt)
 
     @staticmethod
-    def wait():
+    def wait() -> None:
         for bot in Fleet.bots.values():
             if "wait" in dir(bot):
-                print(bot)
                 bot.wait()
 
 
 def __dir__():
     return (
-        'Event',
         'Fleet',
         'Reactor'
     )

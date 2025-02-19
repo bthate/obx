@@ -1,23 +1,22 @@
 # This file is placed in the Public Domain.
 
 
-"find objects"
+"locating objects"
 
 
 import os
 import time
 
 
-from .caching import Cache
 from .objects import Object, fqn, items, update
-from .persist import read
+from .persist import Cache, read
 from .workdir import long, skel, store
 
 
 p = os.path.join
 
 
-def fns(clz):
+def fns(clz) -> [str]:
     dname = ''
     pth = store(clz)
     for rootdir, dirs, _files in os.walk(pth, topdown=False):
@@ -29,7 +28,7 @@ def fns(clz):
                         yield p(ddd, fll)
 
 
-def fntime(daystr):
+def fntime(daystr) -> int:
     daystr = daystr.replace('_', ':')
     datestr = ' '.join(daystr.split(os.sep)[-2:])
     if '.' in datestr:
@@ -42,7 +41,7 @@ def fntime(daystr):
     return timed
 
 
-def find(clz, selector=None, deleted=False, matching=False):
+def find(clz, selector=None, deleted=False, matching=False) -> [Object]:
     skel()
     pth = long(clz)
     res = []
@@ -60,7 +59,7 @@ def find(clz, selector=None, deleted=False, matching=False):
     return sorted(res, key=lambda x: fntime(x[0]))
 
 
-def last(obj, selector=None):
+def last(obj, selector=None) -> Object:
     if selector is None:
         selector = {}
     result = sorted(
@@ -75,7 +74,7 @@ def last(obj, selector=None):
     return res
 
 
-def search(obj, selector, matching=None):
+def search(obj, selector, matching=None) -> bool:
     res = False
     if not selector:
         return res

@@ -1,17 +1,21 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,C0415,W0718,E0402
 
 
-"table"
+"module table"
 
 
 import importlib
 import os
 import threading
+import time
+import types
 
 
-from obr.threads import later, launch
-from obx.utility import spl
+from .threads import later, launch
+from .utility import spl
+
+
+STARTTIME = time.time()
 
 
 initlock = threading.RLock()
@@ -20,19 +24,21 @@ loadlock = threading.RLock()
 
 class Table:
 
-    disable = ["wsd",]
-    mods = {}
+    disable = []
+    mods    = {}
 
     @staticmethod
-    def add(mod):
+    def add(mod) -> None:
         Table.mods[mod.__name__] = mod
 
     @staticmethod
-    def all(pkg, mods=""):
+    def all(pkg, mods="") -> [types.ModuleType]:
         res = []
         path = pkg.__path__[0]
         pname = ".".join(path.split(os.sep)[-2:])
         for nme in Table.modules(path):
+            if nme in Table.disable:
+                continue
             if "__" in nme:
                 continue
             if mods and nme not in spl(mods):
@@ -47,11 +53,11 @@ class Table:
         return res
 
     @staticmethod
-    def get(name):
+    def get(name) -> types.ModuleType:
         return Table.mods.get(name, None)
 
     @staticmethod
-    def inits(names, pname):
+    def inits(names, pname) -> [types.ModuleType]:
         with initlock:
             mods = []
             for name in spl(names):
@@ -61,12 +67,13 @@ class Table:
                 mod = Table.load(mname)
                 if not mod:
                     continue
-                thr = launch(mod.init)
+                if "init" in dir(mod):
+                    thr = launch(mod.init)
                 mods.append((mod, thr))
             return mods
 
     @staticmethod
-    def load(name):
+    def load(name) -> types.ModuleType:
         with loadlock:
             pname = ".".join(name.split(".")[:-1])
             module = Table.mods.get(name)
@@ -78,7 +85,7 @@ class Table:
             return module
 
     @staticmethod
-    def modules(path):
+    def modules(path) -> [str]:
         return [
                 x[:-3] for x in os.listdir(path)
                 if x.endswith(".py") and not x.startswith("__") and
@@ -86,7 +93,7 @@ class Table:
                ]
 
 
-def gettable():
+def gettable() -> dict:
     try:
         from .lookups import NAMES as names
     except Exception as ex:
@@ -95,17 +102,8 @@ def gettable():
     return names
 
 
-def spl(txt):
-    try:
-        result = txt.split(',')
-    except (TypeError, ValueError):
-        result = txt
-    return [x for x in result if x]
-
-
 def __dir__():
     return (
         'Table',
-        'gettable',
-        'spl'
+        'gettable'
     )

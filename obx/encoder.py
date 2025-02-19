@@ -1,7 +1,7 @@
 # This file is placed in the Public Domain.
 
 
-"encoder"
+"object encoding"
 
 
 import json
@@ -15,7 +15,7 @@ class ObjectEncoder(json.JSONEncoder):
     def __init__(self, *args, **kwargs):
         json.JSONEncoder.__init__(self, *args, **kwargs)
 
-    def default(self, o):
+    def default(self, o) -> str:
         if isinstance(o, dict):
             return o.items()
         if issubclass(type(o), Object):
@@ -30,20 +30,13 @@ class ObjectEncoder(json.JSONEncoder):
             except TypeError:
                 return repr(o)
 
-    def encode(self, o) -> str:
-        return json.JSONEncoder.encode(self, o)
 
-    def iterencode(self, o, _one_shot=False):
-        return json.JSONEncoder.iterencode(self, o, _one_shot)
-
-
-def dumps(*args, **kw):
+def dumps(*args, **kw) -> str:
     kw["cls"] = ObjectEncoder
     return json.dumps(*args, **kw)
 
 
 def __dir__():
     return (
-        'ObjectEncoder',
         'dumps',
     )

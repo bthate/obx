@@ -1,11 +1,10 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0116,E0402
 
 
-"errors"
+"deferred errors"
 
 
-from obr.threads import Errors
+from ..excepts import Errors
 
 
 def err(event):
@@ -17,3 +16,9 @@ def err(event):
         event.reply("no errors")
         return
     event.reply(f"found {nmr} errors.")
+
+
+def __dir__():
+    return (
+        'err',
+    )

@@ -1,17 +1,10 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0116,C0301,E0402
 
 
 "slogan"
 
 
-TXT = """By law, with the use of poison, killing, torturing, castrating, destroying in whole or in part,
-all elderly and all handicapped (Wzd), all criminals (Wfz) and all psychiatric patients (WvGGZ)
-here in the Netherlands."""
-
-
-def lne(event):
-    event.reply(TXT.split("\n", maxsplit=1)[0])
+TXT = "By law using poison destructing in whole or in part elderly handicapped criminals wicked, @KarimKhanQC reconsider OTP-CR-117/19 4 March 2019 http://bit.ly/gcid3"
 
 
 def slg(event):

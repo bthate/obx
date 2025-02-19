@@ -1,13 +1,12 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0116,E0402
 
 
-"fleet"
+"list of bots"
 
 
-from obr.objects import fmt
-from obr.threads import name
-from obx.clients import Fleet
+from ..objects import fmt
+from ..threads import name
+from ..clients import Fleet
 
 
 def flt(event):
@@ -16,3 +15,9 @@ def flt(event):
         event.reply(fmt(list(Fleet.bots.values())[int(event.args[0])]))
     except (KeyError, IndexError, ValueError):
         event.reply(",".join([name(x).split(".")[-1] for x in bots]))
+
+
+def __dir__():
+    return (
+        'flt',
+    )

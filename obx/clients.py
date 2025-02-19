@@ -1,24 +1,25 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,R0903,W0105,W0212,W0613,W0718,E0402
 
 
-"clients"
+"buffered clients"
 
 
+import os
 import queue
 import threading
 
 
-from obr.default import Default
-from obr.reactor import Fleet, Reactor
-from obr.threads import launch
+from .default import Default
+from .reactor import Fleet, Reactor
+from .threads import launch
 
 
 class Config(Default):
 
-    init = ""
-    name = "obx"
-    opts = Default()
+    init    = ""
+    name    = __file__.rsplit(os.sep, maxsplit=2)[-2]
+    opts    = Default()
+    version = 180
 
 
 class Client(Reactor):
@@ -35,6 +36,7 @@ class Client(Reactor):
 
 
 class Output:
+
     def __init__(self):
         self.oqueue   = queue.Queue()
         self.running = threading.Event()
@@ -90,20 +92,12 @@ class Buffered(Client, Output):
         Client.wait(self)
 
 
-def debug(txt) -> None:
-    if "v" in Config.opts:
-        output(txt)
-
-
-def output(txt) -> None:
-    # output here
-    print(txt)
-
-
 def __dir__():
     return (
-        'Default',
+        'Cached',
         'Client',
-        'Fleet',
-        'debug'
+        'Config',
+        'Output',
+        'debug',
+        'output'
     )

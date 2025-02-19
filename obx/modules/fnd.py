@@ -1,17 +1,16 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0116,E0402
 
 
-"find"
+"locate objects"
 
 
 import time
 
 
-from obr.locater import find, fntime
-from obr.objects import fmt
-from obr.workdir import long, skel, types
-from obx.utility import elapsed
+from ..locater import find, fntime
+from ..objects import fmt
+from ..workdir import long, skel, types
+from ..utility import elapsed
 
 
 def fnd(event):
@@ -29,3 +28,9 @@ def fnd(event):
         nmr += 1
     if not nmr:
         event.reply("no result")
+
+
+def __dir__():
+    return (
+        'fnd',
+    )

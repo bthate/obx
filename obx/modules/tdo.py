@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,R0903,W0105,E0402
 
 
 "todo list"
@@ -8,10 +7,10 @@
 import time
 
 
-from obr.locater import find, fntime
-from obr.objects import Object
-from obr.persist import write
-from obx.utility import elapsed
+from ..locater import find, fntime
+from ..objects import Object
+from ..persist import write
+from ..utility import elapsed
 
 
 class Todo(Object):
@@ -21,7 +20,7 @@ class Todo(Object):
         self.txt = ''
 
 
-def dne(event):
+def dne(event) -> None:
     if not event.args:
         event.reply("dne <txt>")
         return
@@ -37,7 +36,7 @@ def dne(event):
         event.reply("nothing todo")
 
 
-def tdo(event):
+def tdo(event) -> None:
     if not event.rest:
         nmr = 0
         for fnm, obj in find('todo'):
@@ -51,3 +50,10 @@ def tdo(event):
     obj.txt = event.rest
     write(obj)
     event.done()
+
+
+def __dir__():
+    return (
+        'dne',
+        'tdo'
+    )

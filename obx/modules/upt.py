@@ -1,18 +1,27 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0116,E0402
 
 
-"uptime"
+"show uptime/version"
 
 
 import time
 
 
-from obx.utility import elapsed
-
-
-STARTTIME = time.time()
+from ..clients import Config
+from ..package import STARTTIME
+from ..utility import elapsed
 
 
 def upt(event):
     event.reply(elapsed(time.time()-STARTTIME))
+
+
+def ver(event):
+    event.reply(f"{Config.name.upper()} {Config.version}")
+
+
+def __dir__():
+    return (
+        'upt',
+        'ver'
+    )

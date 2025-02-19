@@ -1,20 +1,24 @@
 # This file is placed in the Public Domain.
 
 
-"threads"
+"non blocking"
 
 
 import queue
 import threading
 import time
 import typing
-import traceback
+
+
+from .excepts import later
 
 
 lock = threading.RLock()
 
 
 class Thread(threading.Thread):
+
+    bork = False
 
     def __init__(self, func, thrname, *args, daemon=True, **kwargs):
         super().__init__(None, self.run, name, (), {}, daemon=daemon)
@@ -30,11 +34,11 @@ class Thread(threading.Thread):
         try:
             self.result = func(*args)
         except Exception as ex:
+            if Thread.bork:
+                raise ex
             later(ex)
-            try:
+            if args and "ready" in dir(args[0]):
                 args[0].ready()
-            except (AttributeError, IndexError):
-                pass
 
     def join(self, timeout=None) -> typing.Any:
         super().join(timeout)
@@ -99,65 +103,3 @@ class Repeater(Timer):
     def run(self) -> None:
         launch(self.start)
         super().run()
-
-
-class Errors:
-
-    name = __file__.rsplit(".", maxsplit=2)[-2]
-    errors = []
-
-    @staticmethod
-    def format(exc) -> str:
-        exctype, excvalue, trb = type(exc), exc, exc.__traceback__
-        trace = traceback.extract_tb(trb)
-        result = ""
-        for i in trace:
-            fname = i[0]
-            linenr = i[1]
-            plugfile = fname[:-3].split("/")
-            mod = []
-            for i in plugfile[::-1]:
-                mod.append(i)
-                if i in ['obx', 'obr']:
-                    break
-            ownname = '.'.join(mod[::-1])
-            if ownname.endswith("__"):
-                continue
-            if ownname.startswith("<"):
-                continue
-            result += f"{ownname}:{linenr} "
-        del trace
-        res = f"{exctype} {result[:-1]} {excvalue}"
-        return res
-
-    @staticmethod
-    def full(exc) -> str:
-        return traceback.format_exception(
-            type(exc),
-            exc,
-            exc.__traceback__
-        )
-
-
-def errors() -> []:
-    return Errors.errors
-
-
-def later(exc) -> None:
-    excp = exc.with_traceback(exc.__traceback__)
-    fmt = Errors.format(excp)
-    if fmt not in Errors.errors:
-        Errors.errors.append(fmt)
-
-
-def __dir__():
-    return (
-        'Errors',
-        'Repeater',
-        'Thread',
-        'Timer',
-        'errors',
-        'later',
-        'launch',
-        'name'
-    )

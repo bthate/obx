@@ -4,10 +4,6 @@
 "utilities"
 
 
-import os
-import time
-
-
 def elapsed(seconds, short=True):
     txt = ""
     nsec = float(seconds)

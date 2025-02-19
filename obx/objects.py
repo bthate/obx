@@ -1,18 +1,13 @@
 # This file is placed in the Public Domain.
-# pylint: disable=C0115,C0116,R0902,R0903,W0105,E0402
 
 
 "a clean namespace"
 
 
-import json
-
-
-"object"
+import typing
 
 
 class Object:
-
 
     def __len__(self):
         return len(self.__dict__)
@@ -21,7 +16,7 @@ class Object:
         return str(self.__dict__)
 
 
-def construct(obj, *args, **kwargs):
+def construct(obj, *args, **kwargs) -> None:
     if args:
         val = args[0]
         if isinstance(val, zip):
@@ -34,7 +29,7 @@ def construct(obj, *args, **kwargs):
         update(obj, kwargs)
 
 
-def edit(obj, setter, skip=False):
+def edit(obj, setter, skip=False) -> None:
     for key, val in items(setter):
         if skip and val == "":
             continue
@@ -56,7 +51,7 @@ def edit(obj, setter, skip=False):
             setattr(obj, key, val)
 
 
-def fmt(obj, args=None, skip=None, plain=False):
+def fmt(obj, args=None, skip=None, plain=False) -> str:
     if args is None:
         args = keys(obj)
     if skip is None:
@@ -79,37 +74,34 @@ def fmt(obj, args=None, skip=None, plain=False):
     return txt.strip()
 
 
-def fqn(obj):
+def fqn(obj) -> str:
     kin = str(type(obj)).split()[-1][1:-2]
     if kin == "type":
         kin = f"{obj.__module__}.{obj.__name__}"
     return kin
 
 
-def items(obj):
+def items(obj) -> [(str,typing.Any)]:
     if isinstance(obj,type({})):
         return obj.items()
     return obj.__dict__.items()
 
 
-def keys(obj):
+def keys(obj) -> [str]:
     if isinstance(obj, type({})):
         return obj.keys()
     return list(obj.__dict__.keys())
 
 
-def update(obj, data):
+def update(obj, data) -> None:
     if not isinstance(data, type({})):
         obj.__dict__.update(vars(data))
     else:
         obj.__dict__.update(data)
 
 
-def values(obj):
+def values(obj) -> [typing.Any]:
     return obj.__dict__.values()
-
-
-"interface"
 
 
 def __dir__():

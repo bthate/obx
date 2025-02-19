@@ -1,5 +1,4 @@
 # This file is placed in the Public Domain.
-# pylint: disable=R,C0115,C0116,W0105,W0613,W0718,E0402
 
 
 "internet relay chat"
@@ -16,17 +15,16 @@ import time
 import _thread
 
 
-from obr.default import Default
-from obr.locater import last
-from obr.objects import Object, edit, fmt, keys
-from obr.persist import ident, write
-from obr.reactor import Event, Fleet, Reactor
-from obr.threads import later, launch
-
-
-from obx.clients import Config as Main
-from obx.clients import output
-from obx.command import command
+from ..clients import Config as Main
+from ..command import command
+from ..default import Default
+from ..locater import last
+from ..message import Message
+from ..objects import Object, edit, fmt, keys
+from ..persist import ident, write
+from ..reactor import Fleet, Reactor
+from ..runtime import output
+from ..threads import later, launch
 
 
 IGNORE = ["PING", "PONG", "PRIVMSG"]
@@ -37,6 +35,7 @@ saylock = _thread.allocate_lock()
 
 
 def debug(txt):
+    print(txt)
     for ign in IGNORE:
         if ign in txt:
             return
@@ -345,7 +344,7 @@ class IRC(Reactor, Output):
         rawstr = rawstr.replace('\u0001', '')
         rawstr = rawstr.replace('\001', '')
         debug(txt)
-        obj = Event()
+        obj = Message()
         obj.args = []
         obj.rawstr = rawstr
         obj.command = ''
@@ -506,6 +505,9 @@ class IRC(Reactor, Output):
         self.events.ready.wait()
 
 
+"callbacks"
+
+
 def cb_auth(bot, evt):
     bot = Fleet.get(evt.orig)
     bot.docommand(f'AUTHENTICATE {bot.cfg.password}')
@@ -589,6 +591,9 @@ def cb_quit(evt):
         bot.stop()
 
 
+"commands"
+
+
 def cfg(event):
     config = Config()
     fnm = last(config)
@@ -635,3 +640,15 @@ def pwd(event):
     base = base64.b64encode(enc)
     dcd = base.decode('ascii')
     event.reply(dcd)
+
+
+def __dir__():
+    return (
+        'Config',
+        'IRC',
+        'cfg',
+        'debug',
+        'init',
+        'mre',
+        'pwd'
+    )

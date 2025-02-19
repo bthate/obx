@@ -1,53 +1,66 @@
-#!/usr/bin/env python3
 # This file is placed in the Public Domain.
-# pylint: disable=C,R0903,W0105,W0212,W0611,W0613,W0718,E0402
 
 
-"main"
+"scripts"
 
 
 import os
 import pathlib
+import signal
 import sys
 import time
 import _thread
 
 
-sys.path.insert(0, os.getcwd())
+from .clients import Client, Config
+from .command import Commands, command, parse
+from .encoder import dumps
+from .excepts import errors, later
+from .message import Message
+from .package import Table
+from .workdir import Workdir, pidname
 
 
-from obr.encoder import dumps
-from obr.reactor import Event, Fleet
-from obr.threads import launch, errors, later
-from obr.workdir import Workdir, pidname
+from . import modules as MODS
 
 
-from obx.clients import Client, Config, output
-from obx.command import Commands, command, parse, spl
-from obx.tabling import Table
-
-
-import obx.clients
-import obx.modules as MODS
+"defines"
 
 
 cfg   = Config()
 p     = os.path.join
-pname = f"{Config.name}.modules"
+pname = f"{cfg.name}.modules"
 
 
-Workdir.wdr = os.path.expanduser(f"~/.{Config.name}")
-obx.clients.output = print
+Workdir.wdr    = os.path.expanduser(f"~/.{cfg.name}")
 
 
-def debug(txt):
-    # output here
-    if "v" in cfg.opts:
-        output(txt)
+def nil(txt):
+    pass
 
 
 def output(txt):
     print(txt)
+
+
+def enable():
+    global output
+    output = print
+
+
+def disable():
+    global output
+    output = nil
+
+
+def handler(signum, frame):
+    sys.exit(0)
+
+
+signal.signal(signal.SIGHUP, handler)
+
+
+"clients"
 
 
 class CLI(Client):
@@ -73,15 +86,18 @@ class Console(CLI):
         evt.wait()
 
     def poll(self):
-        evt = Event()
+        evt = Message()
         evt.txt = input("> ")
         evt.type = "command"
         return evt
 
 
+"utilities"
+
+
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
-    output(f"{Config.name.upper()} since {tme}")
+    output(f"{cfg.name.upper()} since {tme}")
 
 
 def check(txt):
@@ -123,6 +139,7 @@ def forever():
             _thread.interrupt_main()
 
 
+
 def pidfile(filename):
     if os.path.exists(filename):
         os.unlink(filename)
@@ -144,25 +161,26 @@ def privileges():
 
 
 def background():
-    daemon(True)
+    daemon("-v" in sys.argv)
     privileges()
-    pidfile(pidname(Config.name))
+    disable()
+    pidfile(pidname(cfg.name))
     Commands.add(cmd)
-    Table.inits(Config.init, pname)
+    Table.inits(cfg.init or "irc,rss", pname)
     forever()
 
 
 def console():
-    control()
     import readline # noqa: F401
+    enable()
     Commands.add(cmd)
     parse(cfg, " ".join(sys.argv[1:]))
-    Config.init = cfg.sets.init or Config.init
-    Config.opts = cfg.opts
+    cfg.init = cfg.sets.init or cfg.init
+    cfg.opts = cfg.opts
     if "v" in cfg.opts:
         banner()
-    if "i" in cfg.opts or Config.init:
-        for mod, thr in Table.inits(Config.init, pname):
+    if "i" in cfg.opts or cfg.init:
+        for _mod, thr in Table.inits(cfg.init, pname):
             if "w" in cfg.opts:
                 thr.join()
     csl = Console()
@@ -173,23 +191,27 @@ def console():
 def control():
     if len(sys.argv) == 1:
         return
+    enable()
     Commands.add(cmd)
     Commands.add(srv)
     Commands.add(tbl)
     parse(cfg, " ".join(sys.argv[1:]))
     csl = CLI()
-    evt = Event()
+    evt = Message()
     evt.orig = repr(csl)
     evt.type = "command"
     evt.txt = cfg.otxt
     command(evt)
     evt.wait()
 
+
 def service():
+    signal.signal(signal.SIGHUP, handler)
+    enable()
     privileges()
-    pidfile(pidname(Config.name))
+    pidfile(pidname(cfg.name))
     Commands.add(cmd)
-    Table.inits(Config.init, pname)
+    Table.inits(cfg.init or "irc,rss", pname)
     forever()
 
 
@@ -203,7 +225,7 @@ def cmd(event):
 def srv(event):
     import getpass
     name = getpass.getuser()
-    event.reply(TXT % (Config.name.upper(), name, name, name, Config.name))
+    event.reply(TXT % (cfg.name.upper(), name, name, name, cfg.name))
 
 
 def tbl(event):
@@ -216,7 +238,7 @@ def tbl(event):
     event.reply("")
     event.reply("")
     event.reply(f"NAMES = {dumps(Commands.names, indent=4, sort_keys=True)}")
-    
+
 
 "data"
 
@@ -256,14 +278,6 @@ def wrap(func):
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old)
     for line in errors():
         output(line)
-
-
-def wrapped():
-    wrap(main)
-
-
-def wraps():
-    wrap(service)
 
 
 def main():
