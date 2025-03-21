@@ -1,15 +1,17 @@
 # This file is placed in the Public Domain.
 
 
-"locating objects"
+"locate objects"
 
 
+import datetime
 import os
 import time
 
 
-from .objects import Object, fqn, items, update
-from .persist import Cache, read
+from .cache   import Cache
+from .disk    import read
+from .object  import Object, fqn, items, update
 from .workdir import long, skel, store
 
 
@@ -17,7 +19,6 @@ p = os.path.join
 
 
 def fns(clz) -> [str]:
-    dname = ''
     pth = store(clz)
     for rootdir, dirs, _files in os.walk(pth, topdown=False):
         if dirs:
@@ -29,8 +30,8 @@ def fns(clz) -> [str]:
 
 
 def fntime(daystr) -> int:
-    daystr = daystr.replace('_', ':')
     datestr = ' '.join(daystr.split(os.sep)[-2:])
+    datestr = datestr.replace("_", " ")
     if '.' in datestr:
         datestr, rest = datestr.rsplit('.', 1)
     else:
@@ -43,20 +44,27 @@ def fntime(daystr) -> int:
 
 def find(clz, selector=None, deleted=False, matching=False) -> [Object]:
     skel()
-    pth = long(clz)
     res = []
-    for fnm in fns(pth):
-        obj = Cache.get(fnm)
+    clz = long(clz)
+    for pth in fns(clz):
+        obj = Cache.get(pth)
         if not obj:
             obj = Object()
-            read(obj, fnm)
-            Cache.add(fnm, obj)
+            read(obj, pth)
+            Cache.add(pth, obj)
         if not deleted and '__deleted__' in dir(obj) and obj.__deleted__:
             continue
         if selector and not search(obj, selector, matching):
             continue
-        res.append((fnm, obj))
+        res.append((pth, obj))
     return sorted(res, key=lambda x: fntime(x[0]))
+
+
+"methods"
+
+
+def ident(obj) -> str:
+    return p(fqn(obj),*str(datetime.datetime.now()).split())
 
 
 def last(obj, selector=None) -> Object:
@@ -98,5 +106,6 @@ def __dir__():
         'fntime',
         'find',
         'last',
+        'ident',
         'search'
     )

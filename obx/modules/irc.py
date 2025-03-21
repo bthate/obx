@@ -9,66 +9,64 @@ import os
 import queue
 import socket
 import ssl
+import sys
 import textwrap
 import threading
 import time
-import _thread
 
 
-from ..clients import Config as Main
-from ..command import command
-from ..default import Default
-from ..locater import last
-from ..message import Message
-from ..objects import Object, edit, fmt, keys
-from ..persist import ident, write
-from ..reactor import Fleet, Reactor
-from ..runtime import output
-from ..threads import later, launch
+from ..client  import Client, Fleet
+from ..disk    import write
+from ..event   import Event
+from ..find    import ident, last
+from ..object  import Default, Object, edit, fmt, keys
+from ..thread  import launch
+from ..utils   import debug as ldebug
+from ..workdir import store
+
+from . import Main, command
 
 
-IGNORE = ["PING", "PONG", "PRIVMSG"]
-NAME   = Main.name
+IGNORE  = ["PING", "PONG", "PRIVMSG"]
+NAME    = sys.argv[0].split(os.sep)[-1]
 
 
-saylock = _thread.allocate_lock()
+saylock = threading.RLock()
 
 
 def debug(txt):
-    print(txt)
     for ign in IGNORE:
-        if ign in txt:
+        if ign in str(txt):
             return
-    output(txt)
+    ldebug(txt)
 
 
 def init():
     irc = IRC()
     irc.start()
     irc.events.ready.wait()
-    debug(f'{fmt(irc.cfg, skip="edited,password")}')
+    debug(f'{fmt(Config, skip="edited,password")}')
     return irc
 
 
 class Config(Default):
 
-    channel = f'#{NAME}'
+    channel = f'#{Main.name}'
     commands = True
     control = '!'
-    nick = NAME
+    nick = Main.name
     password = ""
     port = 6667
-    realname = NAME
+    realname = Main.name
     sasl = False
     server = 'localhost'
     servermodes = ''
     sleep = 60
-    username = NAME
+    username = Main.name
     users = False
 
     def __init__(self):
         Default.__init__(self)
-        self.control = Config.control
         self.channel = Config.channel
         self.commands = Config.commands
         self.nick = Config.nick
@@ -76,6 +74,9 @@ class Config(Default):
         self.realname = Config.realname
         self.server = Config.server
         self.username = Config.username
+
+
+"output"
 
 
 class TextWrap(textwrap.TextWrapper):
@@ -127,7 +128,7 @@ class Output:
             setattr(Output.cache, channel, [])
         self.oqueue.put_nowait((channel, txt))
 
-    def out(self):
+    def output(self):
         while not self.dostop.is_set():
             (channel, txt) = self.oqueue.get()
             if channel is None and txt is None:
@@ -156,11 +157,17 @@ class Output:
             return len(getattr(Output.cache, chan, []))
         return 0
 
+    def start(self):
+        launch(self.output)
 
-class IRC(Reactor, Output):
+
+"irc"
+
+
+class IRC(Client, Output):
 
     def __init__(self):
-        Reactor.__init__(self)
+        Client.__init__(self)
         Output.__init__(self)
         self.buffer = []
         self.cfg = Config()
@@ -192,13 +199,13 @@ class IRC(Reactor, Output):
         self.register('QUIT', cb_quit)
         self.register("366", cb_ready)
         self.ident = ident(self)
-        Fleet.add(self)
 
     def announce(self, txt):
         for channel in self.channels:
             self.oput(channel, txt)
 
     def connect(self, server, port=6667):
+        debug(f"connecting to {server}:{port}")
         self.state.nrconnect += 1
         self.events.connected.clear()
         if self.cfg.password:
@@ -238,8 +245,6 @@ class IRC(Reactor, Output):
                 BrokenPipeError
                ) as _ex:
             pass
-        except Exception as ex:
-            later(ex)
 
     def display(self, evt):
         for txt in evt.result:
@@ -305,7 +310,7 @@ class IRC(Reactor, Output):
             self.events.joined.set()
         elif cmd == '433':
             self.state.error = txt
-            nck = self.cfg.nick + '_'
+            nck = self.cfg.nick = self.cfg.nick + '_'
             self.docommand('NICK', nck)
         return evt
 
@@ -344,7 +349,7 @@ class IRC(Reactor, Output):
         rawstr = rawstr.replace('\u0001', '')
         rawstr = rawstr.replace('\001', '')
         debug(txt)
-        obj = Message()
+        obj = Event()
         obj.args = []
         obj.rawstr = rawstr
         obj.command = ''
@@ -416,7 +421,6 @@ class IRC(Reactor, Output):
                     ConnectionResetError,
                     BrokenPipeError
                    ) as ex:
-                later(ex)
                 self.stop()
                 debug("handler stopped")
                 evt = self.event(str(ex))
@@ -442,19 +446,15 @@ class IRC(Reactor, Output):
                     ssl.SSLZeroReturnError,
                     ConnectionResetError,
                     BrokenPipeError
-                   ) as ex:
-                later(ex)
+                   ):
                 self.stop()
                 return
         self.state.last = time.time()
         self.state.nrsend += 1
 
     def reconnect(self):
-        debug(f"reconnecting to {self.cfg.server}")
-        try:
-            self.disconnect()
-        except (ssl.SSLError, OSError):
-            pass
+        debug(f"reconnecting to {self.cfg.server}:{self.cfg.port}")
+        self.disconnect()
         self.events.connected.clear()
         self.events.joined.clear()
         self.doconnect(self.cfg.server, self.cfg.nick, int(self.cfg.port))
@@ -483,8 +483,8 @@ class IRC(Reactor, Output):
         self.events.ready.clear()
         self.events.connected.clear()
         self.events.joined.clear()
-        launch(Output.out, self)
-        Reactor.start(self)
+        Output.start(self)
+        Client.start(self)
         launch(
                self.doconnect,
                self.cfg.server or "localhost",
@@ -499,7 +499,7 @@ class IRC(Reactor, Output):
         self.disconnect()
         self.dostop.set()
         self.oput(None, None)
-        Reactor.stop(self)
+        Client.stop(self)
 
     def wait(self):
         self.events.ready.wait()
@@ -545,10 +545,8 @@ def cb_h904(evt):
 def cb_kill(bot, evt):
     pass
 
-
 def cb_log(evt):
     pass
-
 
 def cb_ready(evt):
     bot = Fleet.get(evt.orig)
@@ -563,7 +561,7 @@ def cb_001(evt):
 def cb_notice(evt):
     bot = Fleet.get(evt.orig)
     if evt.txt.startswith('VERSION'):
-        txt = f'\001VERSION {NAME.upper()} 140 - {bot.cfg.username}\001'
+        txt = f'\001VERSION {Main.name.upper()} 140 - {bot.cfg.username}\001'
         bot.docommand('NOTICE', evt.channel, txt)
 
 
@@ -572,15 +570,15 @@ def cb_privmsg(evt):
     if not bot.cfg.commands:
         return
     if evt.txt:
-        cmnd = False
-        if evt.txt.startswith(f'{bot.cfg.nick}:'):
-            evt.txt = evt.txt[len(bot.cfg.nick)+1:]
-            cmnd = True
-        elif evt.txt[0] == bot.cfg.control:
+        if evt.txt[0] in ['!',]:
             evt.txt = evt.txt[1:]
+        elif evt.txt.startswith(f'{bot.cfg.nick}:'):
+            evt.txt = evt.txt[len(bot.cfg.nick)+1:]
+        else:
+            return
+        if evt.txt:
             evt.txt = evt.txt[0].lower() + evt.txt[1:]
-            cmnd = True
-        if cmnd:
+        if evt.txt:
             command(evt)
 
 
@@ -607,7 +605,7 @@ def cfg(event):
                    )
     else:
         edit(config, event.sets)
-        write(config, fnm)
+        write(config, fnm or store(ident(config)))
         event.done()
 
 
@@ -640,15 +638,3 @@ def pwd(event):
     base = base64.b64encode(enc)
     dcd = base.decode('ascii')
     event.reply(dcd)
-
-
-def __dir__():
-    return (
-        'Config',
-        'IRC',
-        'cfg',
-        'debug',
-        'init',
-        'mre',
-        'pwd'
-    )

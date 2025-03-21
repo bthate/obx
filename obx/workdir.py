@@ -13,6 +13,7 @@ p = os.path.join
 
 class Workdir:
 
+    name = __file__.rsplit(os.sep, maxsplit=2)[-2]
     wdr  = ""
 
 
@@ -40,8 +41,9 @@ def store(pth="") -> str:
     return p(Workdir.wdr, "store", pth)
 
 
-def strip(pth, nmr=3) -> str:
+def strip(pth, nmr=2) -> str:
     return os.sep.join(pth.split(os.sep)[-nmr:])
+
 
 def types() -> [str]:
     return os.listdir(store())

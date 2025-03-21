@@ -1,7 +1,7 @@
 # This file is placed in the Public Domain.
 
 
-"deferred exceptions handling"
+"deferred exception handling"
 
 
 import traceback
@@ -36,6 +36,9 @@ class Errors:
             result += f"{ownname}:{linenr} "
         del trace
         res = f"{exctype} {result[:-1]} {excvalue}"
+        if "__notes__" in dir(exc):
+            for note in exc.__notes__:
+                res += f" {note}"
         return res
 
     @staticmethod
@@ -47,20 +50,12 @@ class Errors:
         )
 
 
-def errors() -> [str]:
-    return Errors.errors
-
-
-def later(exc) -> None:
-    excp = exc.with_traceback(exc.__traceback__)
-    fmt = Errors.format(excp)
-    if fmt not in Errors.errors:
-        Errors.errors.append(fmt)
+def later(exc, txt="") -> None:
+    Errors.errors.append(exc)
 
 
 def __dir__():
     return (
         'Errors',
-        'errors',
         'later'
     )

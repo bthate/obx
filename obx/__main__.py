@@ -1,46 +1,70 @@
 # This file is placed in the Public Domain.
 
 
-"scripts"
+"main program"
 
 
+import hashlib
 import os
 import pathlib
 import signal
 import sys
 import time
+import types
 import _thread
 
 
-from .clients import Client, Config
-from .command import Commands, command, parse
-from .encoder import dumps
-from .excepts import errors, later
-from .message import Message
-from .package import Table
+sys.path.insert(0, os.getcwd())
+
+
+from .client  import Client
+from .error   import Errors
+from .event   import Event
+from .modules import Commands, Main, command, load, mods, modules, parse, scan
+from .object  import dumps
+from .thread  import launch
+from .utils   import nodebug, spl
 from .workdir import Workdir, pidname
 
 
-from . import modules as MODS
-
-
-"defines"
-
-
-cfg   = Config()
-p     = os.path.join
-pname = f"{cfg.name}.modules"
-
-
-Workdir.wdr    = os.path.expanduser(f"~/.{cfg.name}")
-
-
-def nil(txt):
-    pass
+p = os.path.join
 
 
 def output(txt):
     print(txt)
+
+
+class CLI(Client):
+
+    def __init__(self):
+        Client.__init__(self)
+        self.register("command", command)
+
+    def raw(self, txt):
+        output(txt.encode('utf-8', 'replace').decode("utf-8"))
+
+
+class Console(CLI):
+
+    def announce(self, txt):
+        output(txt)
+
+    def callback(self, evt):
+        CLI.callback(self, evt)
+        evt.wait()
+
+    def poll(self):
+        evt = Event()
+        evt.txt = input("> ")
+        evt.type = "command"
+        return evt
+
+
+"output"
+
+
+def nil(txt):
+    pass
 
 
 def enable():
@@ -53,51 +77,12 @@ def disable():
     output = nil
 
 
-def handler(signum, frame):
-    sys.exit(0)
-
-
-signal.signal(signal.SIGHUP, handler)
-
-
-"clients"
-
-
-class CLI(Client):
-
-    def __init__(self):
-        Client.__init__(self)
-        self.register("command", command)
-
-    def announce(self, txt):
-        pass
-
-    def raw(self, txt):
-        output(txt.encode('utf-8', 'replace').decode("utf-8"))
-
-
-class Console(CLI):
-
-    def announce(self, txt):
-        pass
-
-    def callback(self, evt):
-        CLI.callback(self, evt)
-        evt.wait()
-
-    def poll(self):
-        evt = Message()
-        evt.txt = input("> ")
-        evt.type = "command"
-        return evt
-
-
 "utilities"
 
 
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
-    output(f"{cfg.name.upper()} since {tme}")
+    output(f"{Main.name.upper()} since {tme}")
 
 
 def check(txt):
@@ -139,6 +124,30 @@ def forever():
             _thread.interrupt_main()
 
 
+def inits(names) -> [types.ModuleType]:
+    mods = []
+    for name in spl(names):
+        mod = load(name)
+        if not mod:
+            continue
+        if "init" in dir(mod):
+            thr = launch(mod.init)
+        mods.append((mod, thr))
+    return mods
+
+
+def md5sum(mod):
+    with open(mod.__file__, "r", encoding="utf-8") as file:
+        txt = file.read().encode("utf-8")
+        return str(hashlib.md5(txt).hexdigest())
+
+
+def modnames(path) -> [str]:
+    return [
+            x[:-3] for x in os.listdir(path)
+            if x.endswith(".py") and not x.startswith("__")
+           ]
+
 
 def pidfile(filename):
     if os.path.exists(filename):
@@ -157,32 +166,46 @@ def privileges():
     os.setuid(pwnam2.pw_uid)
 
 
+def setwd(name, path=""):
+    Main.name = name
+    path = path or os.path.expanduser(f"~/.{name}")
+    Workdir.wdr = path
+
+
+"handlers"
+
+
+def handler(signum, frame):
+    _thread.interrupt_main()
+
+
 "scripts"
 
 
 def background():
     daemon("-v" in sys.argv)
+    setwd(Main.name)
     privileges()
     disable()
-    pidfile(pidname(cfg.name))
+    pidfile(pidname(Main.name))
     Commands.add(cmd)
-    Table.inits(cfg.init or "irc,rss", pname)
+    inits(Main.init or "irc,rss")
     forever()
 
 
 def console():
     import readline # noqa: F401
+    setwd(Main.name)
     enable()
     Commands.add(cmd)
-    parse(cfg, " ".join(sys.argv[1:]))
-    cfg.init = cfg.sets.init or cfg.init
-    cfg.opts = cfg.opts
-    if "v" in cfg.opts:
+    parse(Main, " ".join(sys.argv[1:]))
+    Main.init = Main.sets.init or Main.init
+    Main.verbose = Main.sets.verbose or Main.verbose
+    if "v" in Main.opts:
         banner()
-    if "i" in cfg.opts or cfg.init:
-        for _mod, thr in Table.inits(cfg.init, pname):
-            if "w" in cfg.opts:
-                thr.join()
+    for _mod, thr in inits(Main.init):
+        if "w" in Main.opts:
+            thr.join()
     csl = Console()
     csl.start()
     forever()
@@ -191,27 +214,31 @@ def console():
 def control():
     if len(sys.argv) == 1:
         return
+    setwd(Main.name)
+    Workdir.wdr = os.path.expanduser(f"~/.{Main.name}")
     enable()
     Commands.add(cmd)
+    Commands.add(md5)
     Commands.add(srv)
     Commands.add(tbl)
-    parse(cfg, " ".join(sys.argv[1:]))
+    parse(Main, " ".join(sys.argv[1:]))
     csl = CLI()
-    evt = Message()
+    evt = Event()
     evt.orig = repr(csl)
     evt.type = "command"
-    evt.txt = cfg.otxt
+    evt.txt = Main.otxt
     command(evt)
     evt.wait()
 
 
 def service():
     signal.signal(signal.SIGHUP, handler)
-    enable()
+    nodebug()
+    setwd(Main.name)
     privileges()
-    pidfile(pidname(cfg.name))
+    pidfile(pidname(Main.name))
     Commands.add(cmd)
-    Table.inits(cfg.init or "irc,rss", pname)
+    inits(Main.init or "irc,rss")
     forever()
 
 
@@ -219,18 +246,24 @@ def service():
 
 
 def cmd(event):
-    event.reply(",".join(sorted(Commands.names)))
+    event.reply(",".join(sorted([x for x in Commands.names if x not in Main.ignore])))
+
+
+def md5(event):
+    table = mods("tbl")[0]
+    event.reply(md5sum(table))
 
 
 def srv(event):
     import getpass
     name = getpass.getuser()
-    event.reply(TXT % (cfg.name.upper(), name, name, name, cfg.name))
+    event.reply(TXT % (Main.name.upper(), name, name, name, Main.name))
 
 
 def tbl(event):
-    for mod in Table.all(MODS):
-        Commands.scan(mod)
+    import nixt.modules
+    for mod in mods():
+        scan(mod)
     event.reply("# This file is placed in the Public Domain.")
     event.reply("")
     event.reply("")
@@ -238,6 +271,12 @@ def tbl(event):
     event.reply("")
     event.reply("")
     event.reply(f"NAMES = {dumps(Commands.names, indent=4, sort_keys=True)}")
+    event.reply("")
+    event.reply("")
+    event.reply("MD5 = {")
+    for mod in mods():
+        event.reply(f'    "{mod.__name__.split(".")[-1]}": "{md5sum(mod)}",')
+    event.reply("}")
 
 
 "data"
@@ -260,6 +299,15 @@ WantedBy=multi-user.target"""
 "runtime"
 
 
+def wrapped(func):
+    try:
+        func()
+    except (KeyboardInterrupt, EOFError):
+        output("")
+    for exc in Errors.errors:
+        print(Errors.format(exc))
+
+
 def wrap(func):
     import termios
     old = None
@@ -268,29 +316,30 @@ def wrap(func):
     except termios.error:
         pass
     try:
-        func()
-    except (KeyboardInterrupt, EOFError):
-        output("")
-    except Exception as exc:
-        later(exc)
+        wrapped(func)
     finally:
         if old:
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old)
-    for line in errors():
-        output(line)
 
 
 def main():
+    if check("a"):
+        Main.ignore = ""
+        Main.init   = ",".join(modules())
+        for mod in mods():
+            mod.DEBUG = False
+    if check("v"):
+        setattr(Main.opts, "v", True)
+        enable()
     if check("c"):
         wrap(console)
     elif check("d"):
         background()
     elif check("s"):
-        wrap(service)
+        wrapped(service)
     else:
-        control()
+        wrapped(control)
 
 
 if __name__ == "__main__":
     main()
-    sys.exit(0)

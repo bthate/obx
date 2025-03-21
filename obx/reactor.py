@@ -9,13 +9,11 @@ import threading
 import _thread
 
 
-from .excepts import later
-from .message import Message
-from .threads import launch
+from .error  import later
+from .thread import launch
 
 
-cblock      = threading.RLock()
-displaylock = threading.RLock()
+lock = threading.RLock()
 
 
 class Reactor:
@@ -27,31 +25,31 @@ class Reactor:
         self.stopped = threading.Event()
 
     def callback(self, evt) -> None:
-        with cblock:
+        with lock:
             func = self.cbs.get(evt.type, None)
-            if func:
-                try:
-                    evt._thr = launch(func, evt, name=evt.cmd or evt.txt)
-                except Exception as ex:
-                    later(ex)
-                    evt.ready()
+            if not func:
+                evt.ready()
+                return
+            try:
+                evt._thr = launch(func, evt, name=evt.cmd)
+            except Exception as ex:
+                later(ex)
+                evt.ready()
 
     def loop(self) -> None:
-        evt = None
         while not self.stopped.is_set():
+            evt = self.poll()
+            if evt is None:
+                break
+            evt.orig = repr(self)
             try:
-                evt = self.poll()
-                if evt is None:
-                    break
-                evt.orig = repr(self)
                 self.callback(evt)
-            except (KeyboardInterrupt, EOFError):
-                if evt:
-                    evt.ready()
+            except Exception as ex:
+                later(ex)
                 _thread.interrupt_main()
         self.ready.set()
 
-    def poll(self) -> Message:
+    def poll(self):
         return self.queue.get()
 
     def put(self, evt) -> None:
@@ -73,54 +71,7 @@ class Reactor:
         self.ready.wait()
 
 
-class Fleet:
-
-    bots = {}
-
-    @staticmethod
-    def add(bot) -> None:
-        Fleet.bots[repr(bot)] = bot
-
-    @staticmethod
-    def announce(txt) -> None:
-        for bot in Fleet.bots.values():
-            bot.announce(txt)
-
-    @staticmethod
-    def display(evt) -> None:
-        with displaylock:
-            for tme in sorted(evt.result):
-                text = evt.result[tme]
-                Fleet.say(evt.orig, evt.channel, text)
-            evt.ready()
-
-    @staticmethod
-    def first() -> None:
-        bots =  list(Fleet.bots.values())
-        res = None
-        if bots:
-            res = bots[0]
-        return res
-
-    @staticmethod
-    def get(orig) -> None:
-        return Fleet.bots.get(orig, None)
-
-    @staticmethod
-    def say(orig, channel, txt) -> None:
-        bot = Fleet.get(orig)
-        if bot:
-            bot.say(channel, txt)
-
-    @staticmethod
-    def wait() -> None:
-        for bot in Fleet.bots.values():
-            if "wait" in dir(bot):
-                bot.wait()
-
-
 def __dir__():
     return (
-        'Fleet',
-        'Reactor'
+        'Reactor',
     )

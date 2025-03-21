@@ -7,10 +7,11 @@
 import time
 
 
-from ..locater import find, fntime
-from ..objects import Object
-from ..persist import write
-from ..utility import elapsed
+from ..disk    import write
+from ..find    import find, fntime, ident
+from ..object  import Object
+from ..utils   import elapsed
+from ..workdir import store
 
 
 class Todo(Object):
@@ -20,7 +21,7 @@ class Todo(Object):
         self.txt = ''
 
 
-def dne(event) -> None:
+def dne(event):
     if not event.args:
         event.reply("dne <txt>")
         return
@@ -36,7 +37,7 @@ def dne(event) -> None:
         event.reply("nothing todo")
 
 
-def tdo(event) -> None:
+def tdo(event):
     if not event.rest:
         nmr = 0
         for fnm, obj in find('todo'):
@@ -48,12 +49,5 @@ def tdo(event) -> None:
         return
     obj = Todo()
     obj.txt = event.rest
-    write(obj)
+    write(obj, store(ident(obj)))
     event.done()
-
-
-def __dir__():
-    return (
-        'dne',
-        'tdo'
-    )

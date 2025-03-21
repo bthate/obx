@@ -1,12 +1,12 @@
 # This file is placed in the Public Domain.
 
 
-"list of bots"
+"fleet"
 
 
-from ..objects import fmt
-from ..threads import name
-from ..clients import Fleet
+from ..fleet  import Fleet
+from ..object import fmt
+from ..thread import name
 
 
 def flt(event):
@@ -15,9 +15,3 @@ def flt(event):
         event.reply(fmt(list(Fleet.bots.values())[int(event.args[0])]))
     except (KeyError, IndexError, ValueError):
         event.reply(",".join([name(x).split(".")[-1] for x in bots]))
-
-
-def __dir__():
-    return (
-        'flt',
-    )

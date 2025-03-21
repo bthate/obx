@@ -1,24 +1,17 @@
 # This file is placed in the Public Domain.
 
 
-"disk persistence"
+"read/write"
 
 
-import datetime
-import os
 import json
 import pathlib
 import threading
-import typing
 
 
-from .decoder import loads
-from .encoder import dumps
-from .objects import fqn, update
-from .workdir import store
+from .object import loads, dumps, update
 
 
-p    = os.path.join
 lock = threading.RLock()
 
 
@@ -27,33 +20,9 @@ class DecodeError(Exception):
     pass
 
 
-class Cache:
-
-    objs = {}
-
-    @staticmethod
-    def add(path, obj) -> None:
-        Cache.objs[path] = obj
-
-    @staticmethod
-    def get(path) -> typing.Any:
-        return Cache.objs.get(path, None)
-
-    @staticmethod
-    def typed(matcher) -> [typing.Any]:
-        for key in Cache.objs:
-            if matcher not in key:
-                continue
-            yield Cache.objs.get(key)
-
-
 def cdir(pth) -> None:
     path = pathlib.Path(pth)
     path.parent.mkdir(parents=True, exist_ok=True)
-
-
-def ident(obj) -> str:
-    return p(fqn(obj),*str(datetime.datetime.now()).split())
 
 
 def read(obj, pth):
@@ -67,13 +36,10 @@ def read(obj, pth):
     return pth
 
 
-def write(obj, pth=None):
+def write(obj, pth):
     with lock:
-        if pth is None:
-            pth = store(ident(obj))
         cdir(pth)
         txt = dumps(obj, indent=4)
-        Cache.objs[pth] = obj
         with open(pth, 'w', encoding='utf-8') as ofile:
             ofile.write(txt)
     return pth
@@ -81,11 +47,8 @@ def write(obj, pth=None):
 
 def __dir__():
     return (
-        'Cache',
         'DecodeError',
         'cdir',
-        'ident',
         'read',
         'write'
     )
-         

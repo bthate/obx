@@ -1,17 +1,18 @@
 # This file is placed in the Public Domain.
 
 
-"messages"
+"event"
 
 
 import threading
 import time
 
 
-from .default import Default
+from .fleet  import Fleet
+from .object import Default
 
 
-class Message(Default):
+class Event(Default):
 
     def __init__(self):
         Default.__init__(self)
@@ -21,6 +22,9 @@ class Message(Default):
         self.result = {}
         self.type   = "event"
         self.txt    = ""
+
+    def display(self):
+        Fleet.display(self)
 
     def done(self) -> None:
         self.reply("ok")
@@ -39,5 +43,5 @@ class Message(Default):
 
 def __dir__():
     return (
-        'Message',
+        'Event',
     )
