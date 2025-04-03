@@ -9,11 +9,12 @@ import os
 import time
 
 
-from ..disk    import write
-from ..find    import find, ident
-from ..object  import Object, fmt, keys, update
-from ..utils   import elapsed, extract_date
-from ..workdir import store
+from ..persist import find, ident, store, write
+from ..objects import Object, fmt, keys, update
+
+
+from .    import elapsed
+from .tmr import extract_date
 
 
 class Email(Object):
@@ -72,7 +73,7 @@ def eml(event):
     for key in keys(event.silent):
         if key in args:
             args.remove(key)
-    args = set(args)        
+    args = set(args)
     result = sorted(find("email", event.gets), key=lambda x: extract_date(todate(getattr(x[1], "Date", ""))))
     if event.index:
         o = result[event.index][1]

@@ -7,10 +7,10 @@
 import time
 
 
-from ..utils  import elapsed
+from ..runtime import STARTTIME
 
 
-from . import STARTTIME
+from . import elapsed
 
 
 def upt(event):
