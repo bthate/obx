@@ -6,6 +6,7 @@
 
 
 import os
+import random
 import shutil
 import sys
 import termios
@@ -16,25 +17,17 @@ import _thread
 sys.path.insert(0, os.getcwd())
 
 
-from obx.clients import Buffered, Config
-from obx.command import Commands, command, parse
-from obx.excepts import errors, later
-from obx.message import Message
-from obx.objects import Object, items, keys, values
-from obx.package import STARTTIME, Table
-from obx.threads import Thread, launch
-from obx.utility import elapsed
-from obx.workdir import Workdir, skel
+from obx.client  import Client
+from obx.handler import Event
+from obx.modules import Main, command, elapsed, modules, parse, settable, spl
+from obx.object  import Object, keys
+from obx.store   import Workdir, skel
+from obx.thread  import STARTTIME, Errors, full, launch
 
 
-import obx.modules as MODS
-
-
-Workdir.wdr  = ".test"
-
-
-cfg = Config()
-cfg.index = 0
+Main.debug  = True
+Main.md5    = False
+Workdir.wdr = ".test"
 
 
 lap = 1
@@ -44,49 +37,62 @@ percall   = 1
 
 
 events = []
+ignore = "dbg,"
 paylock = _thread.allocate_lock()
 
 
 param = Object()
-param.dpl = ["hnrss title,url", ""]
-param.imp = ["tests/feeds.opml", ""]
-param.nme = ["hnrss hackernews", ""]
-param.pwd = ["bla mekker", ""]
-param.rem = ["hnrss", ""]
-param.res = ["hnrss"]
-param.srv = [""]
-param.thr = [""]
-param.ver = [""]
 param.cmd = [""]
+param.dis = [""]
+param.dpl = ["hnrss title,url", ""]
+param.flt = [""]
+param.fnd = ["log", "rss", "config", "todo", ""]
+param.man = [""]
 param.mod = [""]
 param.mre = [""]
-param.exp = ['']
-param.fnd = ["log", "rss", "config"]
-param.dne = ["mekker", ""]
+param.nme = ["hnrss hackernews", ""]
+param.now = [""]
+param.pwd = ["bla mekker", ""]
+param.req = [""]
+param.res = ["hnrss", ""]
+param.srv = [""]
+param.thr = [""]
+param.upt = [""]
+param.ver = [""]
 
 
 pre = Object()
-pre.log = ["bla", ""]
 pre.cfg = ["cfg nick=mekker", ""]
+pre.imp = ["tests/feeds.opml", ""]
+pre.log = ["bla", ""]
 pre.rss = ["http://hnrss.org/newest", ""]
 pre.tdo = ["mekker", ""]
 
 
-class CLI(Buffered):
+post = Object()
+post.exp = ['']
+post.dne = ["hnrss", ""]
+post.rem = ["hnrss", ""]
+
+
+rand = random.SystemRandom()
+
+
+class CLI(Client):
 
     def __init__(self):
-        Buffered.__init__(self)
+        Client.__init__(self)
         self.register("command", command)
 
     def raw(self, txt):
-        if "v" in cfg.opts:
+        if "v" in Main.opts:
             print(txt)
 
 
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
-    print(f"{Config.name.upper()} since {tme}")
-    print(",".join(sorted(keys(Commands.cmds))))
+    print(f"{Main.name.upper()} since {tme}")
+    print("loaded " + ",".join(sorted(modules())))
 
 
 def consume(evts):
@@ -101,9 +107,15 @@ def consume(evts):
 
 def payload(clt, cmds):
     nmr = 0
-    for cmd, examples in items(cmds):
+    cmdz = sorted(keys(cmds))
+    if "s" in Main.opts:
+        rand.shuffle(cmdz)
+    for cmd in cmdz:
+        if cmd in spl(ignore):
+            continue
+        examples = getattr(cmds, cmd)
         for example in examples:
-            event = Message()
+            event = Event()
             event.txt = cmd + " " + example
             event.type = "command"
             events.append(event)
@@ -122,62 +134,54 @@ def wrap(function):
         function()
     except (KeyboardInterrupt, EOFError):
         pass
-    except Exception as ex:
-        later(ex)
     finally:
         if old3:
             termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old3)
+    for exc in Errors.errors:
+        for line in full(exc):
+            print(line.rstrip())
 
 
 def main():
     global nrs
     global nrcommand
-    parse(cfg, " ".join(sys.argv[1:]))
-    for mod in Table.all(MODS):
-        Commands.scan(mod)
-        mod.DEBUG = True
-    nrcommand = len(Commands.cmds) or 1
-    if "v" in cfg.opts:
+    settable()
+    parse(Main, " ".join(sys.argv[1:]))
+    nrcommand = 0
+    if "v" in Main.opts:
         banner()
-        print("verbose is on")
-    if "f" not in cfg.opts:
+    if "f" not in Main.opts:
         if os.path.exists(Workdir.wdr):
             shutil.rmtree(Workdir.wdr)
     skel()
     clt = CLI()
     clt.start()
-    nrs = cfg.index or 1
+    nrs = Main.index or 1
     thrs = []
     for _nr in range(nrs):
         thrs.append(launch(payload, clt, pre))
     for thr in thrs:
-        thr.join()
+        nr = thr.join()
+        nrcommand += nr
+    thrs = []
     for _nr in range(nrs):
         thrs.append(launch(payload, clt, param))
     for thr in thrs:
-        thr.join()
+        nr = thr.join()
+        nrcommand += nr
+    thrs = []
+    for _nr in range(nrs):
+        thrs.append(launch(payload, clt, post))
+    for thr in thrs:
+        nr = thr.join()
+        nrcommand += nr
     consume(events)
-    clt.stop()
-    if "w" in cfg.opts:
-        clt.wait()
 
 
 if __name__ == "__main__":
     wrap(main)
     endtime = time.time()
     lap = elapsed(endtime-STARTTIME)
-    percall = (endtime-STARTTIME)/(nrs*nrcommand)
-    if "b" in cfg.opts:
-        Thread.bork = True
-    if "v" in cfg.opts:
-        if not list(errors()):
-            print("no errors")
-        for line in errors():
-            print(line)
-        if events:
-            for evt in events:
-                print(evt)
-            print(f"{len(events)} events")
-        print(f"{lap} {nrs} {nrcommand} {percall}")
-    sys.stdout.flush()
-    sys.exit(0)
+    percall = (endtime-STARTTIME)/(nrcommand)
+    if "v" in Main.opts:
+        print(f"total: {lap} nrs: {nrs} cmds: {nrcommand} call: %.6fs" % percall)
