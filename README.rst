@@ -9,7 +9,7 @@
 
 |
 | ``obx <cmd> [key=val] [key==val]``
-| ``obx -cviw
+| ``obx -cviw [init=mod1,mod2]``
 | ``obx -d`` 
 | ``obx -s``
 |
@@ -21,12 +21,6 @@
 perisistence for configuration files, event handler to handle the
 client/server connection, deferred exception handling to not crash
 on an error, etc.
-
-``OBX`` contains all the python3 code to program objects in a functional
-way. It provides a base Object class that has only dunder methods, all
-methods are factored out into functions with the objects as the first
-argument. It is called Object Programming (OP), OOP without the
-oriented.
 
 ``OBX`` allows for easy json save//load to/from disk of objects. It
 provides an "clean namespace" Object class that only has dunder
@@ -81,14 +75,14 @@ see list of commands
 start daemon
 
 |
-| ``$ obxd``
+| ``$ obx -d``
 | ``$``
 |
 
 start service
 
 |
-| ``$ obxs``
+| ``$ obx -s``
 | ``<runs until ctrl-c>``
 |
 
@@ -156,11 +150,10 @@ opml
 
 **PROGRAMMING**
 
-
 ``obx`` runs it's modules in the package, so you have to clone from git
 
 |
-| ``$ git clone ssh://git@github.com/otpcr/obx``
+| ``$ git clone ssh://git@github.com/bthate/obx``
 |
 
 edit a file in obx/modules/<name>.py and add the following for ``hello world``
@@ -171,19 +164,23 @@ edit a file in obx/modules/<name>.py and add the following for ``hello world``
         event.reply("hello world !!")
 
 
-save this and edit ``obx/modules/face.py`` and import your filename in there.
+save this and recreate the dispatch table
+
+|
+| ``$ obx tbl > obx/modules/tbl.py``
+|
+
 install that with ``pipx install . --force``, your program can execute the
 ``hello`` command now.
-
 
 |
 | ``$ obx hello``
 | ``hello world !!``
 |
 
-commands run in their own thread, errors are deferred to not have loops
-blocking/breaking on exception and can contain your own written python3
-code, see the obx/modules directory for examples.
+commands run in their own thread and the program borks on exit, output gets
+flushed on print so exceptions appear in the systemd logs, modules can contain
+your own written python3 code, see the obx/modules directory for examples.
 
 
 **FILES**
