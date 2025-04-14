@@ -12,7 +12,7 @@ import _thread
 
 
 from .client  import Client
-from .event   import Event
+from .handler import Event
 from .json    import dumps
 from .modules import Commands, Main, command, inits, md5sum
 from .modules import mods, modules, parse, scan, settable
@@ -85,7 +85,6 @@ def handler(signum, frame):
 def banner():
     tme = time.ctime(time.time()).replace("  ", " ")
     output(f"{Main.name.upper()} since {tme}")
-    output(",".join(sorted(modules())))
 
 
 def check(txt):
@@ -171,8 +170,6 @@ def cmd(event):
 def md5(event):
     table = mods("tbl")[0]
     event.reply(md5sum(table.__file__))
-
-
 
 
 def srv(event):
