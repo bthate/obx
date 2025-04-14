@@ -14,6 +14,7 @@ import time
 from ..client import Fleet
 from ..object import Object
 from ..thread import launch
+from .        import debug
 
 
 DEBUG = True
@@ -22,6 +23,7 @@ DEBUG = True
 def init():
     udpd = UDP()
     udpd.start()
+    debug(f"udp at http://{Cfg.host}:{Cfg.port}")
     return udpd
 
 

@@ -12,9 +12,9 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
-from ..client import Default
 from ..object import Object
 from ..thread import later, launch
+from .        import Default, debug
 
 
 DEBUG = False
@@ -23,6 +23,7 @@ DEBUG = False
 def init():
     server = HTTP((Cfg.hostname, int(Cfg.port)), HTTPHandler)
     server.start()
+    debug(f"web at http://{Cfg.hostname}:{Cfg.port}")
     return server
 
 

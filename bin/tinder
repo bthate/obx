@@ -18,7 +18,7 @@ sys.path.insert(0, os.getcwd())
 
 
 from obx.client  import Client
-from obx.handler import Event
+from obx.event   import Event
 from obx.modules import Main, command, elapsed, modules, parse, settable, spl
 from obx.object  import Object, keys
 from obx.store   import Workdir, skel

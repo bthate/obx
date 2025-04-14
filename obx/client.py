@@ -5,13 +5,13 @@
 
 
 from .fleet   import Fleet
-from .handler import Handler
+from .reactor import Reactor
 
 
-class Client(Handler):
+class Client(Reactor):
 
     def __init__(self):
-        Handler.__init__(self)
+        Reactor.__init__(self)
         Fleet.add(self)
 
     def announce(self, txt) -> None:

@@ -14,14 +14,14 @@ import threading
 import time
 
 
-from ..client  import Default, Client, Fleet
+from ..client  import Client, Fleet
 from ..disk    import write
-from ..handler import Event
+from ..event   import Event
 from ..object  import Object, keys
 from ..store   import ident, last, store
 from ..thread  import launch
-from .            import debug as ldebug
-from .            import Main, command, edit, fmt
+from .         import debug as ldebug
+from .         import Default, Main, command, edit, fmt
 
 
 IGNORE  = ["PING", "PONG", "PRIVMSG"]
@@ -41,7 +41,7 @@ def init():
     irc = IRC()
     irc.start()
     irc.events.ready.wait()
-    debug(f'{fmt(Config, skip="edited,password")}')
+    debug(f'irc at {Config.server}:{Config.port} {Config.channel}')
     return irc
 
 

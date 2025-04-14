@@ -16,7 +16,7 @@ sys.path.insert(0, os.getcwd())
 
 
 from obx.client  import Client
-from obx.handler import Event
+from obx.event   import Event
 from obx.json    import dumps
 from obx.modules import Commands, Main, command, inits, md5sum
 from obx.modules import mods, modules, parse, scan, settable

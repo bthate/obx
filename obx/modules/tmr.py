@@ -10,9 +10,10 @@ import time
 
 
 from ..disk   import write
+from ..fleet  import Fleet
 from ..store  import find, ident, store
 from ..thread import Timer, launch
-from .           import Fleet, elapsed
+from .        import debug, elapsed
 
 
 def init():
@@ -23,6 +24,7 @@ def init():
         if diff > 0:
             timer = Timer(diff, Fleet.announce, obj.txt)
             timer.start()
+            debug(f"timer at time.ctime(obj.time)")
         else:
             obj.__deleted__ = True
             write(obj, fnm)

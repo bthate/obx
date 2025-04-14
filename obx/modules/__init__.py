@@ -16,10 +16,10 @@ import types
 import _thread
 
 
-from ..client import Default, Fleet
-from ..object import Object as Object
-from ..object import items, keys
-from ..thread import later, launch
+from ..fleet   import Fleet
+from ..object  import Object as Object
+from ..object  import items, keys
+from ..thread  import later, launch
 
 
 CHECKSUM = "7b3aa07511d3d882d07a62bd8c3b6239"
@@ -36,10 +36,16 @@ loadlock = threading.RLock()
 path = os.path.dirname(__file__)
 
 
+class Default(Object):
+
+    def __getattr__(self, key):
+        return self.__dict__.get(key, "")
+
+
 class Main(Default):
 
     debug   = False
-    ignore  = ''
+    ignore  = 'dbg,udp,wsd'
     init    = ""
     md5     = False
     name    = __name__.split(".", maxsplit=1)[0]
