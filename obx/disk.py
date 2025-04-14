@@ -9,8 +9,7 @@ import pathlib
 import threading
 
 
-from .json   import dump, load
-from .object import update
+from .object import dump, load, update
 
 
 lock = threading.RLock()
