@@ -24,7 +24,7 @@ def init():
         if diff > 0:
             timer = Timer(diff, Fleet.announce, obj.txt)
             timer.start()
-            debug(f"timer at time.ctime(obj.time)")
+            debug(f"timer at {time.ctime(obj.time)}")
         else:
             obj.__deleted__ = True
             write(obj, fnm)
