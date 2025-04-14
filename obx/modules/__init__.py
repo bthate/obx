@@ -19,7 +19,7 @@ import _thread
 from ..client import Fleet
 from ..object import Object as Object
 from ..object import items, keys
-from ..thread import later, launch
+from ..run    import later, launch
 
 
 CHECKSUM = "7b3aa07511d3d882d07a62bd8c3b6239"

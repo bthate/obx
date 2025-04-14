@@ -18,8 +18,8 @@ from ..client  import Client, Fleet
 from ..disk    import write
 from ..handler import Event
 from ..object  import Object, keys
+from ..run     import launch
 from ..store   import ident, last, store
-from ..thread  import launch
 from .         import debug as ldebug
 from .         import Default, Main, command, edit, fmt
 

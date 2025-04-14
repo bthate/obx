@@ -21,9 +21,9 @@ from urllib.parse import quote_plus, urlencode
 
 from ..disk   import write
 from ..object import Object, update
+from ..run    import Repeater, launch
 from ..store  import find, fntime, ident, last, store
-from ..thread import Repeater, launch
-from .           import Fleet, elapsed, fmt, spl
+from .        import Fleet, elapsed, fmt, spl
 
 
 DEBUG = False

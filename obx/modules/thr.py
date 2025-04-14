@@ -9,8 +9,8 @@ import time
 
 
 from ..object import Object, update
-from ..thread import STARTTIME
-from .           import elapsed
+from ..run    import STARTTIME
+from .        import elapsed
 
 
 def thr(event):

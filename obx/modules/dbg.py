@@ -8,7 +8,7 @@ import time
 
 
 from ..client import Fleet
-from ..thread import line
+from ..run    import line
 
 
 def dbg(event):

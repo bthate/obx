@@ -11,7 +11,7 @@ import time
 from ..client  import Fleet
 from ..handler import Event
 from ..object  import Object, construct, keys
-from ..thread  import Repeater
+from ..run     import Repeater
 from .         import debug, elapsed
 
 

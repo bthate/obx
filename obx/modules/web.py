@@ -13,7 +13,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
 from ..object import Object
-from ..thread import later, launch
+from ..run    import later, launch
 from .        import Default, debug
 
 
@@ -21,10 +21,13 @@ DEBUG = False
 
 
 def init():
-    server = HTTP((Cfg.hostname, int(Cfg.port)), HTTPHandler)
-    server.start()
-    debug(f"web at http://{Cfg.hostname}:{Cfg.port}")
-    return server
+    try:
+        server = HTTP((Cfg.hostname, int(Cfg.port)), HTTPHandler)
+        server.start()
+        debug(f"web at http://{Cfg.hostname}:{Cfg.port}")
+        return server
+    except OSError as ex:
+        debug(f"web abort {ex}")
 
 
 class Cfg(Default):

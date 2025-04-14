@@ -11,8 +11,8 @@ import time
 
 from ..client import Fleet
 from ..disk   import write
+from ..run    import Timer, launch
 from ..store  import find, ident, store
-from ..thread import Timer, launch
 from .        import debug, elapsed
 
 
