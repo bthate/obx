@@ -18,7 +18,6 @@ j = os.path.join
 
 
 def fns(clz) -> [str]:
-    "filenames per type."
     pth = store(clz)
     for rootdir, dirs, _files in os.walk(pth, topdown=False):
         if dirs:
@@ -30,7 +29,6 @@ def fns(clz) -> [str]:
 
 
 def fntime(daystr) -> int:
-    "path to time."
     datestr = ' '.join(daystr.split(os.sep)[-2:])
     datestr = datestr.replace("_", " ")
     if '.' in datestr:
@@ -44,7 +42,6 @@ def fntime(daystr) -> int:
 
 
 def find(clz, selector=None, deleted=False, matching=False) -> [Object]:
-    "locate object by key,value dict."
     skel()
     res = []
     clz = long(clz)
@@ -63,7 +60,6 @@ def find(clz, selector=None, deleted=False, matching=False) -> [Object]:
 
 
 def last(obj, selector=None) -> Object:
-    "last object saved." 
     if selector is None:
         selector = {}
     result = sorted(
@@ -79,7 +75,6 @@ def last(obj, selector=None) -> Object:
 
 
 def search(obj, selector, matching=None) -> bool:
-    "search an object if it matches key,value dict."
     res = False
     if not selector:
         return res

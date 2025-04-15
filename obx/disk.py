@@ -22,17 +22,15 @@ lock = threading.RLock()
 
 class Error(Exception):
 
-    """ disk error """
+    pass
 
 
 def cdir(pth) -> None:
-    "create directory."
     path = pathlib.Path(pth)
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
 def fqn(obj) -> str:
-    "full qualifies name."
     kin = str(type(obj)).split()[-1][1:-2]
     if kin == "type":
         kin = f"{obj.__module__}.{obj.__name__}"
@@ -40,17 +38,14 @@ def fqn(obj) -> str:
 
 
 def getpath(obj):
-    "return idented path."
     return j(store(ident(obj)))
 
 
 def ident(obj) -> str:
-    "mix full qualified name and a time stamp into a path."
     return j(fqn(obj),*str(datetime.datetime.now()).split())
 
 
 def read(obj, pth) -> str:
-    "read object from path."
     with lock:
         with open(pth, "r", encoding="utf-8") as fpt:
             try:
@@ -61,7 +56,6 @@ def read(obj, pth) -> str:
 
 
 def write(obj, pth=None) -> str:
-    "write object to store, empty pth uses an idented path."
     with lock:
         if pth is None:
             pth = store(ident(obj))

@@ -1,7 +1,7 @@
 # This file is placed in the Public Domain.
 
 
-"paths with working directory"
+"path utilities"
 
 
 import os
@@ -11,16 +11,13 @@ import pathlib
 j = os.path.join
 
 
-class Workdir: # pylint: disable=R0903
-
-    """ path to objects """
+class Workdir:
 
     name = __file__.rsplit(os.sep, maxsplit=2)[-2]
     wdr  = ""
 
 
 def long(name) -> str:
-    "name to long name"
     split = name.split(".")[-1].lower()
     res = name
     for names in types():
@@ -31,12 +28,10 @@ def long(name) -> str:
 
 
 def moddir():
-    "modules directory"
     return j(Workdir.wdr, "mods")
 
 
 def pidname(name) -> str:
-    "path to pid file"
     return j(Workdir.wdr, f"{name}.pid")
 
 
@@ -50,27 +45,22 @@ def skel() -> str:
 
 
 def setwd(path):
-    "set working directory"
     Workdir.wdr = path
 
 
 def store(pth="") -> str:
-    "path to store"
     return j(Workdir.wdr, "store", pth)
 
 
 def strip(pth, nmr=2) -> str:
-    "strip directory"
     return os.sep.join(pth.split(os.sep)[-nmr:])
 
 
 def types() -> [str]:
-    "return available types"
     return os.listdir(store())
 
 
 def wdr(pth):
-    "set working directory"
     return j(Workdir.wdr, pth)
 
 
