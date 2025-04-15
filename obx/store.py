@@ -52,6 +52,10 @@ def skel() -> str:
     return path
 
 
+def setwd(path):
+    Workdir.wdr = path
+
+
 def store(pth="") -> str:
     return p(Workdir.wdr, "store", pth)
 
