@@ -16,8 +16,8 @@ from .object import update
 from .path   import store
 
 
-j = os.path.join
 lock = threading.RLock()
+p = os.path.join
 
 
 class Error(Exception):
@@ -38,11 +38,11 @@ def fqn(obj) -> str:
 
 
 def getpath(obj):
-    return j(store(ident(obj)))
+    return p(store(ident(obj)))
 
 
 def ident(obj) -> str:
-    return j(fqn(obj),*str(datetime.datetime.now()).split())
+    return p(fqn(obj),*str(datetime.datetime.now()).split())
 
 
 def read(obj, pth) -> str:

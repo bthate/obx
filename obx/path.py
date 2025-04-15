@@ -8,7 +8,7 @@ import os
 import pathlib
 
 
-j = os.path.join
+p = os.path.join
 
 
 class Workdir:
@@ -28,11 +28,11 @@ def long(name) -> str:
 
 
 def moddir():
-    return j(Workdir.wdr, "mods")
+    return p(Workdir.wdr, "mods")
 
 
 def pidname(name) -> str:
-    return j(Workdir.wdr, f"{name}.pid")
+    return p(Workdir.wdr, f"{name}.pid")
 
 
 def skel() -> str:
@@ -49,7 +49,7 @@ def setwd(path):
 
 
 def store(pth="") -> str:
-    return j(Workdir.wdr, "store", pth)
+    return p(Workdir.wdr, "store", pth)
 
 
 def strip(pth, nmr=2) -> str:
@@ -61,7 +61,7 @@ def types() -> [str]:
 
 
 def wdr(pth):
-    return j(Workdir.wdr, pth)
+    return p(Workdir.wdr, pth)
 
 
 def __dir__():

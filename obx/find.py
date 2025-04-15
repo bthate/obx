@@ -14,7 +14,7 @@ from .object import Object, items, update
 from .path   import long, skel, store
 
 
-j = os.path.join
+p = os.path.join
 
 
 def fns(clz) -> [str]:
@@ -23,9 +23,9 @@ def fns(clz) -> [str]:
         if dirs:
             for dname in sorted(dirs):
                 if dname.count('-') == 2:
-                    ddd = j(rootdir, dname)
+                    ddd = p(rootdir, dname)
                     for fll in os.listdir(ddd):
-                        yield j(ddd, fll)
+                        yield p(ddd, fll)
 
 
 def fntime(daystr) -> int:
