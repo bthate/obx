@@ -4,9 +4,11 @@
 "objects"
 
 
+from .disk   import getpath, ident, read, write
+from .find   import find, last
 from .object import Object, construct, items, keys, values, update
 from .json   import dumps, loads
-from .store  import find, ident, last, getpath, read, setwd, write
+from .path   import setwd, store
 
 
 __all__ = (

@@ -1,10 +1,17 @@
 # This file is placed in the Public Domain.
 
 
-"working directory"
+"paths with working directory"
 
 
-class Workdir:
+import os
+import pathlib
+
+
+j = os.path.join
+
+
+class Workdir: # pylint: disable=R0903
 
     """ path to objects """
 

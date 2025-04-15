@@ -41,9 +41,6 @@ class Encoder(json.JSONEncoder):
                 return repr(o)
 
 
-"utilities"
-
-
 def dump(*args, **kw) -> None:
     "dump an object"
     kw["cls"] = Encoder
@@ -75,9 +72,6 @@ def loads(*args, **kw) -> Object:
     kw["cls"] = Decoder
     kw["object_hook"] = hook
     return json.loads(*args, **kw)
-
-
-"interface"
 
 
 def __dir__():

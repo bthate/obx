@@ -1,7 +1,28 @@
 # This file is placed in the Public Domain.
 
 
-"object store"
+"read/write"
+
+
+import datetime
+import json
+import os
+import pathlib
+import threading
+
+
+from .json   import dump, load
+from .object import update
+from .path   import store
+
+
+j = os.path.join
+lock = threading.RLock()
+
+
+class Error(Exception):
+
+    """ disk error """
 
 
 def cdir(pth) -> None:
@@ -28,22 +49,6 @@ def ident(obj) -> str:
     return j(fqn(obj),*str(datetime.datetime.now()).split())
 
 
-def last(obj, selector=None) -> Object:
-    "last object saved." 
-    if selector is None:
-        selector = {}
-    result = sorted(
-                    find(fqn(obj), selector),
-                    key=lambda x: fntime(x[0])
-                   )
-    res = None
-    if result:
-        inp = result[-1]
-        update(obj, inp[-1])
-        res = inp[0]
-    return res
-
-
 def read(obj, pth) -> str:
     "read object from path."
     with lock:
@@ -53,25 +58,6 @@ def read(obj, pth) -> str:
             except json.decoder.JSONDecodeError as ex:
                 raise Error(pth) from ex
     return pth
-
-
-def search(obj, selector, matching=None) -> bool:
-    "search an object if it matches key,value dict."
-    res = False
-    if not selector:
-        return res
-    for key, value in items(selector):
-        val = getattr(obj, key, None)
-        if not val:
-            continue
-        if matching and value == val:
-            res = True
-        elif str(value).lower() in str(val).lower() or value == "match":
-            res = True
-        else:
-            res = False
-            break
-    return res
 
 
 def write(obj, pth=None) -> str:
