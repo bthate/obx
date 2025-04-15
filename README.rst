@@ -13,11 +13,16 @@ OBX
 
 ::
 
-    >>> from obr import Object, dumps, loads
+    >>> from obx import Object, read, write
     >>> o = Object()
+    >>> oo = Object()
     >>> o.a = "b"
-    >>> str(loads(dumps(o)))
-    "{'a': 'b'}"
+    >>> pth = write(o)
+    >>> read(oo, pth)
+    'store/obx.object.Object/2025-04-15/13:53:24.685981'
+    >>> print(oo)
+    {'a': 'b'}
+    >>>
 
 
 **DESCRIPTION**
