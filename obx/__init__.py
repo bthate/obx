@@ -1,13 +1,12 @@
 # This file is placed in the Public Domain.
 
 
-__doc__ = __name__.upper()
+"objects"
 
 
 from .object import Object, construct, items, keys, values, update
-from .disk   import read, write
 from .json   import dumps, loads
-from .store  import find, last, setwd
+from .store  import find, ident, last, getpath, read, setwd, write
 
 
 __all__ = (
@@ -15,12 +14,14 @@ __all__ = (
     'construct',
     'dumps',
     'find',
+    'ident',
     'items',
     'keys',
     'last',
     'loads',
     'read',
     'setwd',
+    'store',
     'values',
     'update',
     'write'

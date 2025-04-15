@@ -6,6 +6,8 @@
 
 class Object:
 
+    """ object without any attributes for a clean name space """
+
     def __contains__(self, key):
         return key in dir(self)
 
@@ -20,6 +22,7 @@ class Object:
 
 
 def construct(obj, *args, **kwargs) -> None:
+    "construct an object based on arguments"
     if args:
         val = args[0]
         if isinstance(val, zip):
@@ -33,18 +36,21 @@ def construct(obj, *args, **kwargs) -> None:
 
 
 def items(obj) -> []:
+    "list key, value pairs"
     if isinstance(obj,type({})):
         return obj.items()
     return obj.__dict__.items()
 
 
 def keys(obj) -> [str]:
+    "keys"
     if isinstance(obj, type({})):
         return obj.keys()
     return list(obj.__dict__.keys())
 
 
 def update(obj, data) -> None:
+    "update"
     if not isinstance(data, type({})):
         obj.__dict__.update(vars(data))
     else:
@@ -52,4 +58,5 @@ def update(obj, data) -> None:
 
 
 def values(obj) -> []:
+    "values"
     return obj.__dict__.values()
