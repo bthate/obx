@@ -7,7 +7,7 @@
 import json
 
 
-from .object import Object
+from .object import Object, construct
 
 
 class Decoder(json.JSONDecoder):
@@ -63,9 +63,6 @@ def loads(*args, **kw) -> Object:
     kw["cls"] = Decoder
     kw["object_hook"] = hook
     return json.loads(*args, **kw)
-
-
-"interface"
 
 
 def __dir__():

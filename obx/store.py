@@ -11,7 +11,8 @@ import threading
 import time
 
 
-from .disk   import Cache, read
+from .cache  import Cache
+from .disk   import read
 from .object import Object, items, update
 
 
@@ -36,7 +37,7 @@ def long(name) -> str:
 
 
 def moddir():
-    return os.path.join(Workdir.wdr, "mods")
+    return p(Workdir.wdr, "mods")
 
 
 def pidname(name) -> str:
@@ -64,7 +65,7 @@ def types() -> [str]:
 
 
 def wdr(pth):
-    return os.path.join(Workdir.wdr, pth)
+    return p(Workdir.wdr, pth)
 
 
 "find"
