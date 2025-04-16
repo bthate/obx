@@ -11,7 +11,6 @@ import unittest
 
 
 import obx
-import obx.cache
 import obx.disk
 import obx.find
 import obx.json
@@ -23,7 +22,6 @@ from obx.object import *
 
 
 PACKAGE = [
-    'cache',
     'disk',
     'find',
     'json',
