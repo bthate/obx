@@ -97,9 +97,4 @@ def __dir__():
         'search',
         'write'
     )
-# This file is placed in the Public Domain.
-
-
-"caching"
-
 
