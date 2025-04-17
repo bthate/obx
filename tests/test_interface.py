@@ -11,22 +11,18 @@ import unittest
 
 
 import obx
-import obx.disk
-import obx.find
 import obx.json
 import obx.object
-import obx.path
+import obx.store
 
 
 from obx.object import *
 
 
 PACKAGE = [
-    'disk',
-    'find',
     'json',
     'object',
-    'path'
+    'store',
 ]
 
 
