@@ -32,6 +32,13 @@ def construct(obj, *args, **kwargs) -> None:
         update(obj, kwargs)
 
 
+def fqn(obj) -> str:
+    kin = str(type(obj)).split()[-1][1:-2]
+    if kin == "type":
+        kin = f"{obj.__module__}.{obj.__name__}"
+    return kin
+
+
 def items(obj) -> []:
     if isinstance(obj,type({})):
         return obj.items()
